@@ -9,7 +9,7 @@
  * Plugin Name: Market Exporter
  * Plugin URI: http://www.vanyukov.su/market-exporter/
  * Description: Market Exporter provides a way to export products from WooCommerce installations into a YML file for use in Yandex Market.
- * Version: 0.0.4
+ * Version: 0.0.5
  * Author: Anton Vanyukov
  * Author URI: http://www.vanyukov.su
  * License: GPLv2 or later
@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Glogal variables
 define( 'MARKET_EXPORTER__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 /**

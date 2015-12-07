@@ -60,18 +60,19 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		$this->version = '0.0.4';
+		$this->version = '0.0.5';
 
 		$this->load_dependencies();
 		$this->set_locale();
-		$this->define_admin_hooks();
 
 		// Check if plugin has WooCommerce installed and active.
 		$this->loader->add_action( 'admin_init', $this, 'run_plugin' );
 		if ( !self::check_prerequisites() ) {
 			$this->loader->add_action( 'admin_notices', $this, 'plugin_activation_message' ) ;
 			return;
-		}
+		}		
+		
+		$this->define_admin_hooks();
 
 	}
 
@@ -144,9 +145,17 @@ class Market_Exporter {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		// Add Plugin page.
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_admin_page' );
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_page' );
+		// Add Settings page.
+		//$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_page' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
+		// Add Settings page to WooCommerce.
+		$this->loader->add_filter( 'woocommerce_get_sections_products', $plugin_admin, 'add_section_page' );
+		$this->loader->add_filter( 'woocommerce_get_settings_products', $plugin_admin, 'add_section_page_settings', 10, 2 );
+		// Add Settings link to plugin in plugins list.
+		$basename = plugin_basename( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
+		$this->loader->add_filter( 'plugin_action_links_'.$basename, $plugin_admin, 'plugin_add_settings_link' );
 	}
 
 	/**
