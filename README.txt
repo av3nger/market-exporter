@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=a%2ev
 Tags: market, export, yml, woocommerce, yandex market 
 Requires at least: 4.0.0
 Tested up to: 4.3.1
-Stable tag: 0.0.2
+Stable tag: 0.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,6 +70,9 @@ Yes.
 
 == Changelog ==
 
+= 0.0.3 =
+* FIXED: Bugfixes.
+
 = 0.0.2 =
 * NEW: YML generation: products with status 'hidden' are not exported.
 * NEW: YML generation: use SKU field as vendorCode.
@@ -82,7 +85,10 @@ Yes.
 
 == Upgrade Notice ==
 
-- 0.0.2 =
+= 0.0.3 =
+Fixed various bugs.
+
+= 0.0.2 =
 Utilize SKU field as vendorCode in YML file. Hidden products no longer export. Full changelog can be found at (https://wordpress.org/plugins/market-exporter/changelog/).
 
 = 0.0.1 =

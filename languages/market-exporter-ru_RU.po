@@ -70,7 +70,7 @@ msgstr ""
 #: class-market-exporter.php:369
 #, php-format
 msgid "File exported successfully: <a href=\"%s\">%s</a>."
-msgstr "Файл YML успешно сгенерирован: <a href=‘%s’>%s</a>."
+msgstr "Файл YML успешно сгенерирован: <a href=\"%s\">%s</a>."
 
 #: class-market-exporter.php:376
 msgid ""
