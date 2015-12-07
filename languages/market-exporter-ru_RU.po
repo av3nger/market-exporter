@@ -1,0 +1,107 @@
+# Market Exporter POT file
+# Copyright (C) 2015
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Market Exporter v0.0.1\n"
+"POT-Creation-Date: 2015-11-28 12:24+0300\n"
+"PO-Revision-Date: \n"
+"Language-Team: Anton Vanyukov <a.vanyukov@testor.ru>\n"
+"Report-Msgid-Bugs-To: Anton Vanyukov <a.vanyukov@testor.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 1.8.6\n"
+"Last-Translator: \n"
+"Language: ru_RU\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: class-market-exporter.php:133
+msgid ""
+"The Market Exporter plugin requires <a href=\"https://wordpress.org/plugins/"
+"woocommerce/\">WooCommerce</a> to be installed and activated. Please check "
+"your configuration."
+msgstr ""
+"Для работы плагина Market Exporter требуется установить и активировать "
+"плагин <a href=\"https://wordpress.org/plugins/woocommerce/\">WooCommerce</"
+"a>. Пожалуйста, проверьте Вашу конфигурацию."
+
+#: class-market-exporter.php:164 class-market-exporter.php:165
+#: class-market-exporter.php:226
+msgid "Market Exporter"
+msgstr "Market Exporter"
+
+#: class-market-exporter.php:206
+msgid "Error creating directory."
+msgstr "Ошибка при создании папки."
+
+#: class-market-exporter.php:212
+msgid "Error uploading file."
+msgstr "Ошибка при сохранении файла."
+
+#: class-market-exporter.php:231
+msgid "Silence is golden"
+msgstr "Молчание - золото."
+
+#: class-market-exporter.php:265
+#, php-format
+msgid ""
+"Currently only Russian Ruble (RUB) currency is supported. Please <a "
+"href='%s'>update currency</a>."
+msgstr ""
+"На данный момент в качестве валюты доступен только Российский рубль (RUB). "
+"Пожалуйста, <a href=‘%s’>обновите настройки валюты</a> в WooCommerce."
+
+#: class-market-exporter.php:296
+#, php-format
+msgid "Unable to find any products. Are you sure <a href='%s'>some exist</a>?"
+msgstr ""
+"Не найдено ни одного товара. Попробуйте <a href=‘%s’>добавить</a> несколько "
+"товаров в WooCommerce."
+
+#: class-market-exporter.php:369
+#, php-format
+msgid "File exported successfully: <a href=\"%s\">%s</a>."
+msgstr "Файл YML успешно сгенерирован: <a href=‘%s’>%s</a>."
+
+#: class-market-exporter.php:376
+msgid ""
+"This plugin is used to generate a valid YML file for exporting your products "
+"in WooCommerce to Yandex Market."
+msgstr ""
+"Данный плагин используется для генерации валидного YML файла для "
+"экспортированная товаров из WooCommerce в Яндекс Маркет."
+
+#: class-market-exporter.php:378
+msgid ""
+"Please be patient while the YML file is generated. This can take a while if "
+"your server is slow (inexpensive hosting) or if you have many products in "
+"WooCommerce. Do not navigate away from this page until this script is done "
+"or the YML file will not be created. You will be notified via this page when "
+"the proccess is completed."
+msgstr ""
+"Пожалуйста, будьте терпеливы в то время как файл YML генерируется. Это может "
+"занять некоторое время если ваш сервер медленно работает (например, если "
+"используется недорогой хостинг) или если у Вас много продуктов в "
+"WooCommerce. Не уходите с этой страницы, пока этот процесс не будет "
+"завершен, или файл YML не будет создан. Вы будете уведомлены при завершении."
+
+#: class-market-exporter.php:380
+msgid "To begin, just press the button below."
+msgstr "Чтобы начать, нажмите на кнопку ниже."
+
+#: class-market-exporter.php:382
+msgid "Generate YML file"
+msgstr "Генерировать YML файл"
+
+#: class-market-exporter.php:384
+msgid "You must enable Javascript in order to proceed!"
+msgstr "Чтобы продолжить необходимо включить Javascript!"
