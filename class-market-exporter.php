@@ -37,7 +37,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		$this->version = '0.0.2';
+		$this->version = '0.0.3';
 		
 		// Check if plugin has WooCommerce installed and active.
 		add_action( 'admin_init', array( &$this, 'run_plugin' ) );
@@ -290,10 +290,10 @@ class Market_Exporter {
 											WHERE p.post_type = 'product'
 												AND p.post_status = 'publish'
 												AND p.post_password = ''
-												AND ( SELECT m.meta_value FROM wp_postmeta m WHERE m.post_id = p.ID AND m.meta_key = '_visibility' ) != 'hidden'
+												AND ( SELECT m.meta_value FROM $wpdb->postmeta m WHERE m.post_id = p.ID AND m.meta_key = '_visibility' ) != 'hidden'
 											ORDER BY p.ID DESC" ) )
 				{
-					echo '	<p>' . sprintf( __( "Unable to find any products. Are you sure <a href='%s'>some exist</a>?", 'market-exporter' ), admin_url( 'post-new.php?post_type=product' ) ) . "</p>";
+					echo '	<p>' . sprintf( __( "Unable to find any products. Are you sure <a href=\"%s\">some exist</a>?", 'market-exporter' ), admin_url( 'post-new.php?post_type=product' ) ) . "</p>";
 					return;
 				}
 
@@ -347,7 +347,8 @@ class Market_Exporter {
 					$yml .= '        <local_delivery_cost>'.$ya_local_delivery["fee"].'</local_delivery_cost>'.PHP_EOL;
 					$yml .= '        <name>'.$offer->name.'</name>'.PHP_EOL;
 					$yml .= '        <description>'.$offer->description.'</description>'.PHP_EOL;
-					$yml .= '        <vendorCode>'.$offer->vendorCode.'</vendorCode>'.PHP_EOL;
+					if ($offer->vendorCode)
+						$yml .= '        <vendorCode>'.$offer->vendorCode.'</vendorCode>'.PHP_EOL;
 					$yml .= '      </offer>'.PHP_EOL;
 				endforeach;
 				$yml .= '    </offers>'.PHP_EOL;
@@ -360,9 +361,9 @@ class Market_Exporter {
 				$wpdb->flush();
 
 				/* Debugging: */
-				echo "<pre>";
-				echo strtr($yml,Array("<"=>"&lt;","&"=>"&amp;"));
-				echo "</pre>";
+				//echo "<pre>";
+				//echo strtr($yml,Array("<"=>"&lt;","&"=>"&amp;"));
+				//echo "</pre>";
 				//*/
 				
 				$file_path = self::write_file( $yml );
