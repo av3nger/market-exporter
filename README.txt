@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=a%2ev
 Tags: market, export, yml, woocommerce, yandex market 
 Requires at least: 4.0.0
 Tested up to: 4.3.1
-Stable tag: 0.0.3
+Stable tag: 0.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,17 +27,6 @@ Are you using WooCommerce and want to export all your products to Yandex Market?
 This is the first release of the plugin. For now it can export only using the basic offer format which includes these product fields: title, description, price, url, picture. It supports unlimited amount of categories and subcategories.
 
 == Installation ==
-
-**Установка плагина:**
-
-1. Загрузите 'Market Exporter' в папку с плагинами на Вашем сайте WordPress (`/wp-content/plugins/`).
-2. Активируйте 'Market Exporter' через раздел 'Плагины' в WordPress.
-3. Выберите 'Market Exporter' в разделе 'Инструменты' в WordPress.
-4. Нажмите кнопку 'Генерировать YML файл'.
-
-После этого будет сгенерирован файл YML и дана ссылка на сам файл, который Вы можете загрузить в Яндекс Маркет.
-
-**Installation is very simple:**
 
 1. Upload 'Market Exporter' plugin to your WordPress website (`/wp-content/plugins/`).
 2. Activate 'Market Exporter' through the 'Plugins' menu in WordPress.
@@ -67,8 +56,14 @@ Yes.
 == Screenshots ==
 
 1. Screenshot of the plugin main page.
+2. Screenshot of the setup page.
 
 == Changelog ==
+
+= 0.0.4 =
+* NEW: Flat rate shipping support. Plugin first checks if local delivery is enabled. If not - get the price of flat rate shipping.
+* NEW: NAME and COMPANY fields are now customizable.
+* FIXED: Remove all HTML tags on all text fields in YML file.
 
 = 0.0.3 =
 * FIXED: Bugfixes.
@@ -84,6 +79,9 @@ Yes.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 0.0.4 =
+Fixed delivery price issues. Added support for flat rate shipping method. NAME and COMPANY fields now customizable.
 
 = 0.0.3 =
 Fixed various bugs.
