@@ -20,8 +20,8 @@
 		check_admin_referer( $this->plugin_name );
 
 		// Check currency.
-		if ( $this->get_currecny() != 'RUB' ) {
-			echo '	<p>' . sprintf( __( 'Currently only Russian Ruble (RUB) currency is supported. Please <a href="%s">update currency</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings' ) ) . "</p>";
+		if ( !$currency = $this->get_currecny() ) {
+			echo '	<p>' . sprintf( __( 'Currently only the following currency is supported: Russian Ruble (RUB), Ukrainian Hryvnia (UAH), US Dollar (USD) and Euro (EUR). Please <a href="%s">update currency</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings' ) ) . "</p>";
 			return;
 		}
 
@@ -31,18 +31,22 @@
 			return;
 		}
 		
-		$website_name = get_option( $this->plugin_prefix.'_website_name' );
-		$company_name = get_option( $this->plugin_prefix.'_company_name' );
+		$shop_settings = get_option( 'market_exporter_shop_settings' );
 
 		$yml = '<?xml version="1.0" encoding="'.get_bloginfo( "charset" ).'"?>'.PHP_EOL;
 		$yml .= '<!DOCTYPE yml_catalog SYSTEM "shops.dtd">'.PHP_EOL;
 		$yml .= '<yml_catalog date="'.Date("Y-m-d H:i").'">'.PHP_EOL;
 		$yml .= '  <shop>'.PHP_EOL;
-		$yml .= '    <name>'.esc_html( $website_name ).'</name>'.PHP_EOL;
-		$yml .= '    <company>'.esc_html( $company_name ).'</company>'.PHP_EOL;
+		$yml .= '    <name>'.esc_html( $shop_settings['website_name'] ).'</name>'.PHP_EOL;
+		$yml .= '    <company>'.esc_html( $shop_settings['company_name'] ).'</company>'.PHP_EOL;
 		$yml .= '    <url>'.get_site_url().'</url>'.PHP_EOL;
 		$yml .= '    <currencies>'.PHP_EOL;
-		$yml .= '      <currency id="RUR" rate="1" plus="0"/>'.PHP_EOL;
+		if ( $currency == 'USD' || $currency == 'EUR' ) {
+			$yml .= '      <currency id="RUR" rate="1"/>'.PHP_EOL;
+			$yml .= '      <currency id="'.$currency.'" rate="СВ"/>'.PHP_EOL;
+		} else {
+			$yml .= '      <currency id="'.$currency.'" rate="1"/>'.PHP_EOL;
+		}
 		$yml .= '    </currencies>'.PHP_EOL;
 		$yml .= '    <categories>'.PHP_EOL;
 		foreach ( $this->get_categories() as $category ):
@@ -57,17 +61,19 @@
 		$yml .= '    <offers>'.PHP_EOL;
 		foreach ( $ya_offers as $offer ):
 			$price = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_price' AND post_id = '$offer->ID'");
-			$image = $wpdb->get_var("SELECT guid FROM $wpdb->posts WHERE post_parent = '$offer->ID' AND post_mime_type = 'image/png' LIMIT 0,1");
+			$images = $wpdb->get_col("SELECT guid FROM $wpdb->posts WHERE post_parent = '$offer->ID' AND post_mime_type = 'image/png' OR post_mime_type = 'image/jpeg' LIMIT 10");
 			$categoryId = get_the_terms( $offer->ID, 'product_cat' );
 			
 			$yml .= '      <offer id="'.$offer->ID.'" available="true">'.PHP_EOL;
 			$yml .= '        <url>'.get_permalink($offer->ID).'</url>'.PHP_EOL;
 			$yml .= '        <price>'.$price.'</price>'.PHP_EOL;
-			$yml .= '        <currencyId>RUR</currencyId>'.PHP_EOL;
+			$yml .= '        <currencyId>'.$currency.'</currencyId>'.PHP_EOL;
 			$yml .= '        <categoryId>'.$categoryId[0]->term_id.'</categoryId>'.PHP_EOL;
-			$yml .= '        <picture>'.$image.'</picture>'.PHP_EOL;
+			foreach ( $images as $image ):
+				if ( strlen( utf8_decode( $image ) ) <= 512 )
+					$yml .= '        <picture>'.$image.'</picture>'.PHP_EOL;
+			endforeach;
 			$yml .= '        <delivery>true</delivery>'.PHP_EOL;
-			$yml .= '        <local_delivery_cost>'.$this->get_delivery().'</local_delivery_cost>'.PHP_EOL;
 			$yml .= '        <name>'.wp_strip_all_tags( $offer->name ).'</name>'.PHP_EOL;
 			$yml .= '        <description>'.wp_strip_all_tags( $offer->description ).'</description>'.PHP_EOL;
 			if ($offer->vendorCode)

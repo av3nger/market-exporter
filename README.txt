@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=a%2ev
 Tags: market, export, yml, woocommerce, yandex market 
 Requires at least: 4.0.0
 Tested up to: 4.3.1
-Stable tag: 0.0.4
+Stable tag: 0.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,11 @@ Are you using WooCommerce and want to export all your products to Yandex Market?
 
 This is the first release of the plugin. For now it can export only using the basic offer format which includes these product fields: title, description, price, url, picture. It supports unlimited amount of categories and subcategories.
 
+Supported functions:
+* Custom store and company name;
+* Support for the following currencies: RUB, UAH, USD and EUR;
+* Product images in JPEG or PNG format;
+
 == Installation ==
 
 1. Upload 'Market Exporter' plugin to your WordPress website (`/wp-content/plugins/`).
@@ -36,6 +41,10 @@ This is the first release of the plugin. For now it can export only using the ba
 That's it! After the export process completes, you will get a link to the YML file which you should upload to Yandex Market.
 
 == Frequently Asked Questions ==
+
+= What currencies are supported? =
+
+Yandex Market support six types of currency: Russian Ruble (RUB), Ukrainian Hryvnia (UAH), Belarusian Ruble (BYR), Kazakhstani Tenge (KZT), US Dollar (USD) and Euro (EUR). But WooCommerce doesn't support Belarusian Ruble (BYR) and Kazakhstani Tenge (KZT). So the plugin checks what currency you are using. If it's Russian Ruble (RUB) or Ukrainian Hryvnia (UAH), then the products are exported under that currency. If you are using US Dollar (USD) or Euro (EUR), then the products are exporter under that currency *but* Yandex Market will list all the products in Russian Ruble (RUB) making a USD-RUB or EUR-RUB conversion using the bank exchange rate of the country of the shop. Country is selected in the partner interface of Yandex Market.
 
 = Does this plugin work with newest WP version and also older versions? =
 
@@ -60,6 +69,14 @@ Yes.
 
 == Changelog ==
 
+= 0.0.5 =
+* NEW: Added support for the following currencies: RUB, UAH, USD and EUR.
+* CHANGED: Export up to 10 product images.
+* CHANGED: Use arrays for storing plugin options in DB instead of single values. Better for performance in the long run.
+* CHANGED: Items out of stock will not be exported.
+* CHANGED: Moved settings page to WooCommerce settings page under Products tab.
+* FIXED: Image export.
+
 = 0.0.4 =
 * NEW: Flat rate shipping support. Plugin first checks if local delivery is enabled. If not - get the price of flat rate shipping.
 * NEW: NAME and COMPANY fields are now customizable.
@@ -79,6 +96,9 @@ Yes.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 0.0.5 =
+Now supports RUB, UAH, USD and EUR currencies. Export up to 10 product images. Items out of stock are not exported anymore. Fixed various bugs.
 
 = 0.0.4 =
 Fixed delivery price issues. Added support for flat rate shipping method. NAME and COMPANY fields now customizable.

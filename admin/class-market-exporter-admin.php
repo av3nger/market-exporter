@@ -22,15 +22,6 @@ class Market_Exporter_Admin {
 	 * @var				string							$plugin_name			The ID of this plugin.
 	 */
 	private $plugin_name;
-	
-	/**
-	 * The function prefix.
-	 *
-	 * @since			0.0.4
-	 * @access		private
-	 * @var				string							$plugin_prefix		THe function prefix.
-	 */
-	private $plugin_prefix;
 
 	/**
 	 * The version of this plugin.
@@ -52,7 +43,6 @@ class Market_Exporter_Admin {
 	public function __construct( $plugin_name, $version ) {
 
 		$this->plugin_name = $plugin_name;
-		$this->plugin_prefix = 'market_exporter';
 		$this->version = $version;
 
 	}
@@ -129,10 +119,54 @@ class Market_Exporter_Admin {
 	}
 	
 	/**
+	 * Create the section beneath the products tab
+	 **/
+	public function add_section_page( $sections ) {
+		$sections['market-exporter-settings'] = __( 'Market Exporter', 'market-exporter' );
+		return $sections;
+	}
+	
+	/**
+	 * Add settings to the specific section we created before.
+	 *
+	 * @since			0.0.5
+	 */
+	public function add_section_page_settings( $settings, $current_section ) {
+		// Check if the current section is what we want.
+		if ( $current_section == 'market-exporter-settings' ) {
+			$settings_slider = array();
+			// Add Title to the Settings
+			$settings_slider[] = array( 'name' => __( '&lt;shop&gt; element settings', 'market-exporter' ), 'type' => 'title', 'desc' => __( 'Settings that are only used in the <b>shop</b> section of the YML file. Website name is the <i>name</i> field, Company name is used for the <i>company</i> field.', 'market-exporter' ), 'id' => 'market-exporter-settings' );
+			// Add website name text field option
+			$settings_slider[] = array(
+				'name'     => __( 'Website Name', 'market-exporter' ),
+				'desc_tip' => __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
+				'id'       => 'market_exporter_shop_settings[website_name]',
+				'type'     => 'text'
+			);
+			// Add company name text field option
+			$settings_slider[] = array(
+				'name'     => __( 'Company Name', 'market-exporter' ),
+				'desc_tip' => __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
+				'id'       => 'market_exporter_shop_settings[company_name]',
+				'type'     => 'text'
+			);
+			
+			$settings_slider[] = array( 'type' => 'sectionend', 'id' => 'market-exporter-settings' );
+			return $settings_slider;
+
+		// If not, return the standard settings.
+		} else {
+			return $settings;
+		}
+	}
+	
+	/**
 	 * Add options page.
 	 *
 	 * @since			0.0.4
 	 */
+	/*
 	public function add_options_page() {
 		add_options_page(
 				__( 'Market Exporter Settings', 'market-exporter' ),
@@ -141,89 +175,55 @@ class Market_Exporter_Admin {
 				$this->plugin_name.'-settings',
 				array( $this, 'display_options_page' )
 		);
-	}
-	
+	*/
+
 	/**
 	 * Display options page.
 	 *
 	 * @since			0.0.4
 	 */
+	/*
 	public function display_options_page() {
 		require_once plugin_dir_path( __FILE__ ).'partials/market-exporter-options-display.php';
 	}
+	*/
 	
 	/**
-	 * Add settings section.
-	 *
-	 * Here we add a new section to the settings page and populate it with settings fields.
+	 * Add settings fields.
 	 *
 	 * @since			0.0.4
 	 */
-	public function register_settings() {
-		// Add new section to settings pages.
-		add_settings_section(
-				$this->plugin_prefix.'_general',
-				__( 'Shop settings', 'market-exporter' ),
-				array( $this, $this->plugin_prefix.'_general_cb' ),
-				$this->plugin_name
-		);
-		
-		// Register settings fields.
-		// Website name
-		add_settings_field(
-				$this->plugin_prefix.'_website_name',
-				__( 'Website name', 'market-exporter' ),
-				array( $this, $this->plugin_prefix.'_website_name_cb' ),
-				$this->plugin_name,
-				$this->plugin_prefix.'_general',
-				array( 'label_for', $this->plugin_prefix.'_website_name' )
-		);
-		
-		// Company name
-		add_settings_field(
-				$this->plugin_prefix.'_company_name',
-				__( 'Company name', 'market-exporter' ),
-				array( $this, $this->plugin_prefix.'_company_name_cb' ),
-				$this->plugin_name,
-				$this->plugin_prefix.'_general',
-				array( 'label_for', $this->plugin_prefix.'_company_name' )
-		);
-		
-		register_setting( $this->plugin_name, $this->plugin_prefix.'_website_name', 'sanitize_text_field' );
-		register_setting( $this->plugin_name, $this->plugin_prefix.'_company_name', 'sanitize_text_field' );
+	public function register_settings() {		
+		register_setting( $this->plugin_name, 'market_exporter_shop_settings', array( $this, 'validate_shop_settings_array') );
 	}
 
 	/**
-	 * Render the text for the general settings section.
+	 * Sanitize shop settings array.
 	 *
-	 * @since			0.0.4
-	 */
-	public function market_exporter_general_cb() {
-		echo '<p>' . __( 'Settings that are only used in the <b>shop</b> section of the YML file. Website name is the <i>name</i> field, Company name is used for the <i>company</i> field.', 'market-exporter' ) . '</p>';
+	 * @since			0.0.5
+	 * @param			array							$input      				Current settings.
+	 * @return		array							$output							Sanitized settings.
+	 */	
+	public function validate_shop_settings_array( $input ) {
+  	$output = get_option( 'market_exporter_shop_settings' );
+		
+		$output['website_name'] = sanitize_text_field( $input['website_name'] );
+		$output['company_name'] = sanitize_text_field( $input['company_name'] );	 
+
+    return $output;
 	}
 	
 	/**
-	 * Render the website name input.
+	 * Add Setings link to plugin in plugins list.
 	 *
-	 * @since			0.0.4
+	 * @since			0.0.5
+	 * @param			array							$links      				Links for the current plugin.
+	 * @return		array																	New links array for the current plugin.
 	 */
-	public function market_exporter_website_name_cb() {
-		$website_name = get_option( $this->plugin_prefix.'_website_name' );
-		echo '<input type="text" name="'.$this->plugin_prefix.'_website_name'.'"
-														 id="'.$this->plugin_prefix.'_website_name'.'"
-														 value="'.esc_html( $website_name ).'">';
-	}
-	
-	/**
-	 * Render the company name input.
-	 *
-	 * @since			0.0.4
-	 */
-	public function market_exporter_company_name_cb() {
-		$company_name = get_option( $this->plugin_prefix.'_company_name' );
-		echo '<input type="text" name="'.$this->plugin_prefix.'_company_name'.'"
-														 id="'.$this->plugin_prefix.'_company_name'.'"
-														 value="'.esc_html( $company_name ).'">';
+	public function plugin_add_settings_link( $links ) {
+		$settings_link = '<a href="admin.php?page=wc-settings&tab=products&section=market-exporter-settings">' . __( 'Settings' ) . '</a>';
+    array_unshift( $links, $settings_link );
+  	return $links;
 	}
 	
   /**
@@ -277,15 +277,31 @@ class Market_Exporter_Admin {
 	/**
 	 * Get currency
 	 *
+	 * Checks if the selected currency in WooCommerce is supported by Yandex Market.
+	 * As of today it is allowed to list products in six currencies: RUB, UAH, BYR, KZT, USD and EUR.
+	 * But! WooCommerce doesn't support BYR and KZT. And USD and EUR can be used only to export products.
+	 * They will still be listed in RUB or UAH.
+	 *
 	 * @since			0.0.4
-	 * @return		string																Returns the currency set in WooCommerce.
+	 * @return		string																Returns currency if it is supported, else false.
 	 */
 	public function get_currecny() {
 		global $wpdb;
-		return $wpdb->get_var(
+		$currency = $wpdb->get_var(
 									"SELECT option_value
 									 FROM $wpdb->options
 									 WHERE option_name = 'woocommerce_currency'" );
+									 
+		switch ( $currency ) {
+			case 'RUB':
+				return 'RUR';
+			case 'UAH':
+			case 'USD';
+			case 'EUR':
+				return $currency;
+			default:
+				return false;
+		}
 	}
 	
 	/**
@@ -344,10 +360,12 @@ class Market_Exporter_Admin {
 									FROM $wpdb->posts p
 									INNER JOIN $wpdb->postmeta m1 ON p.ID = m1.post_id AND m1.meta_key = '_sku'
 									INNER JOIN $wpdb->postmeta m2 ON p.ID = m2.post_id AND m2.meta_key = '_visibility'
+									INNER JOIN $wpdb->postmeta m3 ON p.ID = m3.post_id AND m3.meta_key = '_stock_status'
 									WHERE p.post_type = 'product'
 											AND p.post_status = 'publish'
 											AND p.post_password = ''
 											AND m2.meta_value != 'hidden'
+											AND m3.meta_value != 'outofstock'
 									ORDER BY p.ID DESC" );
 	}
 

@@ -21,7 +21,6 @@ class Market_Exporter_Deactivator {
 	 * @since    0.0.1
 	 */
 	public static function deactivate() {
-
 	}
 
 }

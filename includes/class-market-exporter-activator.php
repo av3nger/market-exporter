@@ -27,9 +27,21 @@ class Market_Exporter_Activator {
 									"SELECT option_id
 									 FROM $wpdb->options
 									 WHERE option_name = 'market_exporter_website_name'" );
-		if ( !isset( $market_exporter_table ) ) {
-			update_option( 'market_exporter_website_name', get_bloginfo( "name" ) );
-			update_option( 'market_exporter_company_name', get_bloginfo( "name" ) );
+		if ( isset( $market_exporter_table ) ) {
+			// Leave this for now, so it deletes for everyone.
+			delete_option( 'market_exporter_website_name' );
+			delete_option( 'market_exporter_company_name' );
+		}
+		$market_exporter_options = $wpdb->get_var(
+									"SELECT option_id
+									 FROM $wpdb->options
+									 WHERE option_name = 'market_exporter_shop_settings'" );
+		if ( !isset( $market_exporter_options ) ) {
+			$settings = array(
+				'website_name' => get_bloginfo( "name" ),
+				'company_name' => get_bloginfo( "name" )
+			);
+			update_option( 'market_exporter_shop_settings', $settings );
 		}
 	}
 
