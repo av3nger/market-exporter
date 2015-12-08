@@ -32,6 +32,8 @@
 		}
 		
 		$shop_settings = get_option( 'market_exporter_shop_settings' );
+		if ( !isset( $shop_settings['image_count'] ) )
+			$shop_settings['image_count'] = 10;
 
 		$yml = '<?xml version="1.0" encoding="'.get_bloginfo( "charset" ).'"?>'.PHP_EOL;
 		$yml .= '<!DOCTYPE yml_catalog SYSTEM "shops.dtd">'.PHP_EOL;
@@ -60,8 +62,9 @@
 		$yml .= '    <local_delivery_cost>'.$this->get_delivery().'</local_delivery_cost>'.PHP_EOL;
 		$yml .= '    <offers>'.PHP_EOL;
 		foreach ( $ya_offers as $offer ):
-			$price = $wpdb->get_var("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_price' AND post_id = '$offer->ID'");
-			$images = $wpdb->get_col("SELECT guid FROM $wpdb->posts WHERE post_parent = '$offer->ID' AND post_mime_type = 'image/png' OR post_mime_type = 'image/jpeg' LIMIT 10");
+		
+			$price = $this->get_price( $offer->ID );
+			$images = $this->get_images( $offer->ID, $shop_settings['image_count'] );
 			$categoryId = get_the_terms( $offer->ID, 'product_cat' );
 			
 			$yml .= '      <offer id="'.$offer->ID.'" available="true">'.PHP_EOL;
