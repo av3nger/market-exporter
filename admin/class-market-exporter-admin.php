@@ -151,6 +151,13 @@ class Market_Exporter_Admin {
 				'id'       => 'market_exporter_shop_settings[company_name]',
 				'type'     => 'text'
 			);
+			// Add image coutn text field option
+			$settings_slider[] = array(
+				'name'     => __( 'Number of images', 'market-exporter' ),
+				'desc_tip' => __( 'Max number of images to export for product. Max 10 images.', 'market-exporter' ),
+				'id'       => 'market_exporter_shop_settings[image_count]',
+				'type'     => 'text'
+			);
 			
 			$settings_slider[] = array( 'type' => 'sectionend', 'id' => 'market-exporter-settings' );
 			return $settings_slider;
@@ -160,33 +167,6 @@ class Market_Exporter_Admin {
 			return $settings;
 		}
 	}
-	
-	/**
-	 * Add options page.
-	 *
-	 * @since			0.0.4
-	 */
-	/*
-	public function add_options_page() {
-		add_options_page(
-				__( 'Market Exporter Settings', 'market-exporter' ),
-				__( 'Market Exporter', 'market-exporter' ),
-				'manage_options',
-				$this->plugin_name.'-settings',
-				array( $this, 'display_options_page' )
-		);
-	*/
-
-	/**
-	 * Display options page.
-	 *
-	 * @since			0.0.4
-	 */
-	/*
-	public function display_options_page() {
-		require_once plugin_dir_path( __FILE__ ).'partials/market-exporter-options-display.php';
-	}
-	*/
 	
 	/**
 	 * Add settings fields.
@@ -207,8 +187,16 @@ class Market_Exporter_Admin {
 	public function validate_shop_settings_array( $input ) {
   	$output = get_option( 'market_exporter_shop_settings' );
 		
-		$output['website_name'] = sanitize_text_field( $input['website_name'] );
-		$output['company_name'] = sanitize_text_field( $input['company_name'] );	 
+		$output['website_name']	= sanitize_text_field( $input['website_name'] );
+		$output['company_name']	= sanitize_text_field( $input['company_name'] );
+		
+		// According to Yandex up to 10 images per product.
+		$images = intval( $input['image_count'] );
+		if ( $images > 10 ) {
+			$output['image_count']	= 10;
+		} else {
+			$output['image_count']	= $images;
+		}
 
     return $output;
 	}
@@ -367,6 +355,41 @@ class Market_Exporter_Admin {
 											AND m2.meta_value != 'hidden'
 											AND m3.meta_value != 'outofstock'
 									ORDER BY p.ID DESC" );
+	}
+
+	/**
+	 * Get price.
+	 *
+	 * @since			0.0.6
+   * @param			int								$id									Product ID for which to get images.
+	 * @return		int																		Return the price of product.
+	 */
+	public function get_price( $id ) {
+		global $wpdb;
+		return $wpdb->get_var(
+									"SELECT meta_value
+									 FROM $wpdb->postmeta
+									 WHERE meta_key = '_price'
+									 		AND post_id = $id" );
+	}
+
+	/**
+	 * Get images.
+	 *
+	 * @since			0.0.6
+   * @param			int								$id									Product ID for which to get images.
+   * @param			int								$count							Number of images to get.
+	 * @return		array																	Return the array of images.
+	 */
+	public function get_images( $id, $count ) {
+		global $wpdb;
+		return $wpdb->get_col(
+									"SELECT guid
+									 FROM $wpdb->posts
+									 WHERE post_parent = $id
+									 		AND ( post_mime_type = 'image/png' OR post_mime_type = 'image/jpeg' )
+									 ORDER BY ID ASC
+									 LIMIT $count" );
 	}
 
 }
