@@ -89,4 +89,4 @@ WooCommerce также тестировался на последних верс
 * Первый выпуск.
 
 ## Поддержка
-<iframe frameborder="0" allowtransparency="true" scrolling="no" src="https://money.yandex.ru/embed/donate.xml?account=41001982223656&quickpay=donate&payment-type-choice=on&default-sum=300&targets=%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0+%D0%BF%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD%D0%B0+Market+Exporter+%D0%B4%D0%BB%D1%8F+WordPress&target-visibility=on&project-name=Market+Exporter&project-site=https%3A%2F%2Fgithub.com%2Fav3nger%2Fmarket-exporter&button-text=05&mail=on&successURL=" width="509" height="131"></iframe>
+Поддержать плагин и разработчика можно через [Яндекс.Деньги](https://money.yandex.ru/embed/donate.xml?account=41001982223656&quickpay=donate&payment-type-choice=on&default-sum=300&targets=%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0+%D0%BF%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD%D0%B0+Market+Exporter+%D0%B4%D0%BB%D1%8F+WordPress&target-visibility=on&project-name=Market+Exporter&project-site=https%3A%2F%2Fgithub.com%2Fav3nger%2Fmarket-exporter&button-text=05&mail=on&successURL=)
