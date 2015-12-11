@@ -40,7 +40,8 @@ class Market_Exporter_Activator {
 			$settings = array(
 				'website_name'	=> get_bloginfo( "name" ),
 				'company_name'	=> get_bloginfo( "name" ),
-				'image_count'		=> 10
+				'image_count'		=> 10,
+				'vendor'				=> 'no_vendor'
 			);
 			update_option( 'market_exporter_shop_settings', $settings );
 		}

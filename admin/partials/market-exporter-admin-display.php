@@ -79,7 +79,14 @@
 			$yml .= '        <delivery>true</delivery>'.PHP_EOL;
 			$yml .= '        <name>'.wp_strip_all_tags( $offer->name ).'</name>'.PHP_EOL;
 			$yml .= '        <description>'.wp_strip_all_tags( $offer->description ).'</description>'.PHP_EOL;
-			if ($offer->vendorCode)
+			// Vendor.
+			if ( isset( $shop_settings['vendor'] ) && $shop_settings['vendor'] != 'no_vendor' ) {
+				$vendor = wc_get_product_terms( $offer->ID, 'pa_'.$shop_settings['vendor'], array( 'fields' => 'names' ) );
+				if ( $vendor )
+					$yml .= '        <vendor>'.wp_strip_all_tags( array_shift( $vendor ) ).'</vendor>'.PHP_EOL;
+			}
+			// Vendor code.
+			if ( $offer->vendorCode )
 				$yml .= '        <vendorCode>'.wp_strip_all_tags( $offer->vendorCode ).'</vendorCode>'.PHP_EOL;
 			$yml .= '      </offer>'.PHP_EOL;
 		endforeach;

@@ -136,27 +136,38 @@ class Market_Exporter_Admin {
 		if ( $current_section == 'market-exporter-settings' ) {
 			$settings_slider = array();
 			// Add Title to the Settings
-			$settings_slider[] = array( 'name' => __( '&lt;shop&gt; element settings', 'market-exporter' ), 'type' => 'title', 'desc' => __( 'Settings that are only used in the <b>shop</b> section of the YML file. Website name is the <i>name</i> field, Company name is used for the <i>company</i> field.', 'market-exporter' ), 'id' => 'market-exporter-settings' );
+			$settings_slider[] = array( 'name' => __( 'Global settings', 'market-exporter' ), 'type' => 'title', 'desc' => __( 'Settings that are  used in the export process.', 'market-exporter' ), 'id' => 'market-exporter-settings' );
 			// Add website name text field option
 			$settings_slider[] = array(
-				'name'     => __( 'Website Name', 'market-exporter' ),
-				'desc_tip' => __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
-				'id'       => 'market_exporter_shop_settings[website_name]',
-				'type'     => 'text'
+				'name'			=> __( 'Website Name', 'market-exporter' ),
+				'desc_tip'	=> __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
+				'id'				=> 'market_exporter_shop_settings[website_name]',
+				'type'			=> 'text'
 			);
 			// Add company name text field option
 			$settings_slider[] = array(
-				'name'     => __( 'Company Name', 'market-exporter' ),
-				'desc_tip' => __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
-				'id'       => 'market_exporter_shop_settings[company_name]',
-				'type'     => 'text'
+				'name'			=> __( 'Company Name', 'market-exporter' ),
+				'desc_tip'	=> __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
+				'id'				=> 'market_exporter_shop_settings[company_name]',
+				'type'			=> 'text'
 			);
 			// Add image coutn text field option
 			$settings_slider[] = array(
-				'name'     => __( 'Number of images', 'market-exporter' ),
-				'desc_tip' => __( 'Max number of images to export for product. Max 10 images.', 'market-exporter' ),
-				'id'       => 'market_exporter_shop_settings[image_count]',
-				'type'     => 'text'
+				'name'			=> __( 'Images per product', 'market-exporter' ),
+				'desc_tip'	=> __( 'Max number of images to export for product. Max 10 images.', 'market-exporter' ),
+				'id'				=> 'market_exporter_shop_settings[image_count]',
+				'type'			=> 'text'
+			);
+			// Add selection of 'vendor' property
+			$attributes_array['no_vendor'] = __( 'Disabled', 'market-exporter' );
+			foreach ( $this->get_attributes() as $attribute )
+				$attributes_array[ $attribute[0] ] = $attribute[1];
+			$settings_slider[] = array(
+				'name'			=> __( 'Vendor property', 'market-exporter' ),
+				'desc_tip'	=> __( 'Custom property used to specify vendor.', 'market-exporter' ),
+				'id'				=> 'market_exporter_shop_settings[vendor]',
+				'type'			=> 'select',
+				'options'		=> $attributes_array
 			);
 			
 			$settings_slider[] = array( 'type' => 'sectionend', 'id' => 'market-exporter-settings' );
@@ -197,6 +208,8 @@ class Market_Exporter_Admin {
 		} else {
 			$output['image_count']	= $images;
 		}
+		
+		$output['vendor'] = sanitize_text_field( $input['vendor'] );
 
     return $output;
 	}
@@ -390,6 +403,21 @@ class Market_Exporter_Admin {
 									 		AND ( post_mime_type = 'image/png' OR post_mime_type = 'image/jpeg' )
 									 ORDER BY ID ASC
 									 LIMIT $count" );
+	}
+	
+	/**
+	 * Get custom attributes.
+	 *
+	 * Used on WooCommerce settings page. It lets the user choose which of the custom attributes to use for vendor value.
+	 *
+	 * @since			0.0.7
+	 * @return		array																	Return the array of custom attributes.
+	 */
+	public function get_attributes() {
+		global $wpdb;
+		return $wpdb->get_results(
+									"SELECT attribute_name AS attr_key, attribute_label AS attr_value
+									 FROM $wpdb->prefix"."woocommerce_attribute_taxonomies", ARRAY_N );
 	}
 
 }
