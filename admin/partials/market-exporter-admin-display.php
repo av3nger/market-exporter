@@ -63,24 +63,35 @@
 		$yml .= '    <offers>'.PHP_EOL;
 		foreach ( $ya_offers as $offer ):
 		
-			$price = $this->get_price( $offer->ID );
 			$images = $this->get_images( $offer->ID, $shop_settings['image_count'] );
 			$categoryId = get_the_terms( $offer->ID, 'product_cat' );
 			
 			$yml .= '      <offer id="'.$offer->ID.'" available="true">'.PHP_EOL;
 			$yml .= '        <url>'.get_permalink($offer->ID).'</url>'.PHP_EOL;
-			$yml .= '        <price>'.$price.'</price>'.PHP_EOL;
+			// Price.
+			$price = $this->get_price( $offer->ID );
+			if ( $price['sale_price'] && ( $price['sale_price'] < $price['price'] ) ) {
+				$yml .= '        <price>'.$price['sale_price'].'</price>'.PHP_EOL;
+				$yml .= '        <oldprice>'.$price['price'].'</oldprice>'.PHP_EOL;
+			} else {
+				$yml .= '        <price>'.$price['price'].'</price>'.PHP_EOL;
+			}
 			$yml .= '        <currencyId>'.$currency.'</currencyId>'.PHP_EOL;
 			$yml .= '        <categoryId>'.$categoryId[0]->term_id.'</categoryId>'.PHP_EOL;
+			// Market category.
+			if ( isset( $shop_settings['market_category'] ) && $shop_settings['market_category'] != 'not_set' ) {
+				$market_category = wc_get_product_terms( $offer->ID, 'pa_'.$shop_settings['market_category'], array( 'fields' => 'names' ) );
+				if ( $market_category )
+					$yml .= '        <market_category>'.wp_strip_all_tags( array_shift( $market_category ) ).'</market_category>'.PHP_EOL;
+			}
 			foreach ( $images as $image ):
 				if ( strlen( utf8_decode( $image ) ) <= 512 )
 					$yml .= '        <picture>'.$image.'</picture>'.PHP_EOL;
 			endforeach;
 			$yml .= '        <delivery>true</delivery>'.PHP_EOL;
 			$yml .= '        <name>'.wp_strip_all_tags( $offer->name ).'</name>'.PHP_EOL;
-			$yml .= '        <description>'.wp_strip_all_tags( $offer->description ).'</description>'.PHP_EOL;
 			// Vendor.
-			if ( isset( $shop_settings['vendor'] ) && $shop_settings['vendor'] != 'no_vendor' ) {
+			if ( isset( $shop_settings['vendor'] ) && $shop_settings['vendor'] != 'not_set' ) {
 				$vendor = wc_get_product_terms( $offer->ID, 'pa_'.$shop_settings['vendor'], array( 'fields' => 'names' ) );
 				if ( $vendor )
 					$yml .= '        <vendor>'.wp_strip_all_tags( array_shift( $vendor ) ).'</vendor>'.PHP_EOL;
@@ -88,6 +99,12 @@
 			// Vendor code.
 			if ( $offer->vendorCode )
 				$yml .= '        <vendorCode>'.wp_strip_all_tags( $offer->vendorCode ).'</vendorCode>'.PHP_EOL;
+			// Description
+			if ( $offer->description )
+				$yml .= '        <description>'.wp_strip_all_tags( $offer->description ).'</description>'.PHP_EOL;
+			// Sales notes.
+			if ( ( $shop_settings['sales_notes'] == 'yes' ) && ( $offer->sales_notes ) )
+				$yml .= '        <sales_notes>'.wp_strip_all_tags( $offer->sales_notes ).'</sales_notes>'.PHP_EOL;
 			$yml .= '      </offer>'.PHP_EOL;
 		endforeach;
 		$yml .= '    </offers>'.PHP_EOL;

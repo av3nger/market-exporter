@@ -31,6 +31,7 @@ class Market_Exporter_Activator {
 			// Leave this for now, so it deletes for everyone.
 			delete_option( 'market_exporter_website_name' );
 			delete_option( 'market_exporter_company_name' );
+			delete_option( 'market-exporter-settings' );
 		}
 		$market_exporter_options = $wpdb->get_var(
 									"SELECT option_id
@@ -38,10 +39,12 @@ class Market_Exporter_Activator {
 									 WHERE option_name = 'market_exporter_shop_settings'" );
 		if ( !isset( $market_exporter_options ) ) {
 			$settings = array(
-				'website_name'	=> get_bloginfo( "name" ),
-				'company_name'	=> get_bloginfo( "name" ),
-				'image_count'		=> 10,
-				'vendor'				=> 'no_vendor'
+				'website_name'		=> get_bloginfo( "name" ),
+				'company_name'		=> get_bloginfo( "name" ),
+				'image_count'			=> 10,
+				'vendor'					=> 'not_set',
+				'market_category'	=> 'not_set',
+				'sales_notes'			=> 'no'
 			);
 			update_option( 'market_exporter_shop_settings', $settings );
 		}

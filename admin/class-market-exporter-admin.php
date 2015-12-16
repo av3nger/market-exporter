@@ -134,43 +134,73 @@ class Market_Exporter_Admin {
 	public function add_section_page_settings( $settings, $current_section ) {
 		// Check if the current section is what we want.
 		if ( $current_section == 'market-exporter-settings' ) {
-			$settings_slider = array();
-			// Add Title to the Settings
-			$settings_slider[] = array( 'name' => __( 'Global settings', 'market-exporter' ), 'type' => 'title', 'desc' => __( 'Settings that are  used in the export process.', 'market-exporter' ), 'id' => 'market-exporter-settings' );
-			// Add website name text field option
-			$settings_slider[] = array(
-				'name'			=> __( 'Website Name', 'market-exporter' ),
-				'desc_tip'	=> __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
-				'id'				=> 'market_exporter_shop_settings[website_name]',
-				'type'			=> 'text'
-			);
-			// Add company name text field option
-			$settings_slider[] = array(
-				'name'			=> __( 'Company Name', 'market-exporter' ),
-				'desc_tip'	=> __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
-				'id'				=> 'market_exporter_shop_settings[company_name]',
-				'type'			=> 'text'
-			);
-			// Add image coutn text field option
-			$settings_slider[] = array(
-				'name'			=> __( 'Images per product', 'market-exporter' ),
-				'desc_tip'	=> __( 'Max number of images to export for product. Max 10 images.', 'market-exporter' ),
-				'id'				=> 'market_exporter_shop_settings[image_count]',
-				'type'			=> 'text'
-			);
-			// Add selection of 'vendor' property
-			$attributes_array['no_vendor'] = __( 'Disabled', 'market-exporter' );
+
+			// Used for selection of 'vendor' property.
+			$attributes_array['not_set'] = __( 'Disabled', 'market-exporter' );
 			foreach ( $this->get_attributes() as $attribute )
 				$attributes_array[ $attribute[0] ] = $attribute[1];
-			$settings_slider[] = array(
-				'name'			=> __( 'Vendor property', 'market-exporter' ),
-				'desc_tip'	=> __( 'Custom property used to specify vendor.', 'market-exporter' ),
-				'id'				=> 'market_exporter_shop_settings[vendor]',
-				'type'			=> 'select',
-				'options'		=> $attributes_array
+
+
+			$settings_slider = array(
+					// Add Title to the Settings.
+					array(
+							'name'		=> __( 'Global settings', 'market-exporter' ),
+							'type'		=> 'title',
+							'desc'		=> __( 'Settings that are  used in the export process.', 'market-exporter' ),
+							'id'			=> 'market-exporter-settings'
+					),
+					// Add website name text field option.
+					array(
+							'name'		=> __( 'Website Name', 'market-exporter' ),
+							'desc_tip'=> __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
+							'id'			=> 'market_exporter_shop_settings[website_name]',
+							'type'		=> 'text'
+					),
+					// Add company name text field option.
+					array(
+							'name'		=> __( 'Company Name', 'market-exporter' ),
+							'desc_tip'=> __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
+							'id'			=> 'market_exporter_shop_settings[company_name]',
+							'type'		=> 'text'
+					),
+					// Add image count text field option.
+					array(
+							'name'		=> __( 'Images per product', 'market-exporter' ),
+							'desc_tip'=> __( 'Max number of images to export for product. Max 10 images.', 'market-exporter' ),
+							'id'			=> 'market_exporter_shop_settings[image_count]',
+							'type'		=> 'text'
+					),
+					// Add selection of 'vendor' property.
+					array(
+							'name'		=> __( 'Vendor property', 'market-exporter' ),
+							'desc_tip'=> __( 'Custom property used to specify vendor.', 'market-exporter' ),
+							'id'			=> 'market_exporter_shop_settings[vendor]',
+							'type'		=> 'select',
+							'options'	=> $attributes_array
+					),
+					// Add market_category text field option.
+					array(
+							'name'		=> __( 'Market category property', 'market-exporter' ),
+							'desc'		=> sprintf( __( 'Can be set to a value from <a href="%s" target="_blank">this list</a> only.', 'market-exporter' ), 'http://download.cdn.yandex.net/market/market_categories.xls' ),
+							'desc_tip'=> __( 'Category of product on Yandex Market.', 'market-exporter' ),
+							'id'			=> 'market_exporter_shop_settings[market_category]',
+							'type'		=> 'select',
+							'options'	=> $attributes_array
+					),
+					// Add sales_notes field option.
+					array(
+							'name'		=> __( 'Enable sales_notes', 'market-exporter' ),
+							'desc'		=> __( 'If enabled will use product field "short description" as value for property "sales_notes".', 'market-exporter' ),
+							'desc_tip'=> __( 'Not longer than 50 characters.', 'market-exporter' ),
+							'id'			=> 'market_exporter_shop_settings[sales_notes]',
+							'type'		=> 'checkbox'
+					),					
+					array(
+							'type'		=> 'sectionend',
+							'id'			=> 'market-exporter-settings'
+					)
 			);
-			
-			$settings_slider[] = array( 'type' => 'sectionend', 'id' => 'market-exporter-settings' );
+
 			return $settings_slider;
 
 		// If not, return the standard settings.
@@ -208,8 +238,10 @@ class Market_Exporter_Admin {
 		} else {
 			$output['image_count']	= $images;
 		}
-		
+
 		$output['vendor'] = sanitize_text_field( $input['vendor'] );
+		$output['market_category'] = sanitize_text_field( $input['market_category'] );
+		$output['sales_notes'] = sanitize_text_field( $input['sales_notes'] );
 
     return $output;
 	}
@@ -357,7 +389,7 @@ class Market_Exporter_Admin {
 	public function get_products() {
 		global $wpdb;
 		return $wpdb->get_results(
-								 "SELECT p.ID, p.post_title AS name, p.post_excerpt AS description, m1.meta_value AS vendorCode
+								 "SELECT p.ID, p.post_title AS name, p.post_content AS description, m1.meta_value AS vendorCode, p.post_excerpt AS sales_notes
 									FROM $wpdb->posts p
 									INNER JOIN $wpdb->postmeta m1 ON p.ID = m1.post_id AND m1.meta_key = '_sku'
 									INNER JOIN $wpdb->postmeta m2 ON p.ID = m2.post_id AND m2.meta_key = '_visibility'
@@ -375,15 +407,16 @@ class Market_Exporter_Admin {
 	 *
 	 * @since			0.0.6
    * @param			int								$id									Product ID for which to get images.
-	 * @return		int																		Return the price of product.
+	 * @return		array																	Return the price and sale_price of product.
 	 */
 	public function get_price( $id ) {
 		global $wpdb;
-		return $wpdb->get_var(
-									"SELECT meta_value
-									 FROM $wpdb->postmeta
-									 WHERE meta_key = '_price'
-									 		AND post_id = $id" );
+		return $wpdb->get_row(
+									"SELECT p1.meta_value AS price, p2.meta_value AS sale_price
+									 FROM $wpdb->postmeta p1
+									 INNER JOIN $wpdb->postmeta p2 ON p2.post_id = p1.post_id AND p2.meta_key = '_sale_price'
+									 WHERE p1.meta_key = '_regular_price'
+									 		AND p1.post_id = $id", ARRAY_A );
 	}
 
 	/**
