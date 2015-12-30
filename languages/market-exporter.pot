@@ -5,7 +5,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter v0.0.1\n"
+<<<<<<< HEAD
+"POT-Creation-Date: 2015-12-30 09:36+0300\n"
+=======
 "POT-Creation-Date: 2015-12-16 14:34+0300\n"
+>>>>>>> master
 "PO-Revision-Date: \n"
 "Last-Translator: Anton Vanyukov <a.vanyukov@testor.ru>\n"
 "Language-Team: Anton Vanyukov <a.vanyukov@testor.ru>\n"
@@ -55,6 +59,73 @@ msgid "Full company name. Not published in Yandex Market."
 msgstr ""
 
 #: admin/class-market-exporter-admin.php:168
+<<<<<<< HEAD
+msgid "Add date to YML file name"
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:169
+msgid "If enabled YML file will have current date at the end (for example, ym-export-2015-12-30.yml)."
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:175
+msgid "Images per product"
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:176
+msgid "Max number of images to export for product. Max 10 images."
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:182
+msgid "Vendor property"
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:183
+msgid "Custom property used to specify vendor."
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:190
+msgid "Market category property"
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:191
+#, php-format
+msgid "Can be set to a value from <a href=\"%s\" target=\"_blank\">this list</a> only."
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:192
+msgid "Category of product on Yandex Market."
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:199
+msgid "Enable sales_notes"
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:200
+msgid "If enabled will use product field \"short description\" as value for property \"sales_notes\"."
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:201
+msgid "Not longer than 50 characters."
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:207
+msgid "Export products with backorders"
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:208
+msgid "If enabled products that are available for backorder will be exported to YML."
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:273
+msgid "Settings"
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:333
+msgid "Error creating directory."
+msgstr ""
+
+#: admin/class-market-exporter-admin.php:339
+=======
 msgid "Images per product"
 msgstr ""
 
@@ -104,6 +175,7 @@ msgid "Error creating directory."
 msgstr ""
 
 #: admin/class-market-exporter-admin.php:304
+>>>>>>> master
 msgid "Error uploading file."
 msgstr ""
 
@@ -118,27 +190,77 @@ msgid ""
 "(EUR). Please <a href=\"%s\">update currency</a>."
 msgstr ""
 
+<<<<<<< HEAD
+#: admin/partials/market-exporter-admin-display.php:33
+=======
 #: admin/partials/market-exporter-admin-display.php:30
+>>>>>>> master
 #, php-format
 msgid "Unable to find any products. Are you sure <a href=\"%s\">some exist</a>?"
 msgstr ""
 
+<<<<<<< HEAD
+#: admin/partials/market-exporter-admin-display.php:132
+=======
 #: admin/partials/market-exporter-admin-display.php:129
+>>>>>>> master
 #, php-format
 msgid "File exported successfully: <a href=\"%s\">%s</a>."
 msgstr ""
 
+<<<<<<< HEAD
+#: admin/partials/market-exporter-admin-display.php:139
+msgid "This plugin is used to generate a valid YML file for exporting your products in WooCommerce to Yandex Market."
+msgstr ""
+
+#: admin/partials/market-exporter-admin-display.php:141
+=======
 #: admin/partials/market-exporter-admin-display.php:136
 msgid "This plugin is used to generate a valid YML file for exporting your products in WooCommerce to Yandex Market."
 msgstr ""
 
 #: admin/partials/market-exporter-admin-display.php:138
+>>>>>>> master
 msgid ""
 "Please be patient while the YML file is generated. This can take a while if your server is slow (inexpensive hosting) or if you "
 "have many products in WooCommerce. Do not navigate away from this page until this script is done or the YML file will not be "
 "created. You will be notified via this page when the process is completed."
 msgstr ""
 
+<<<<<<< HEAD
+#: admin/partials/market-exporter-admin-display.php:143
+msgid "To begin, just press the button below."
+msgstr ""
+
+#: admin/partials/market-exporter-admin-display.php:145
+msgid "Generate YML file"
+msgstr ""
+
+#: admin/partials/market-exporter-admin-display.php:147 admin/partials/market-exporter-admin-display.php:186
+msgid "You must enable Javascript in order to proceed!"
+msgstr ""
+
+#: admin/partials/market-exporter-admin-display.php:159
+msgid "Generated YML files:"
+msgstr ""
+
+#: admin/partials/market-exporter-admin-display.php:166
+msgid "File name"
+msgstr ""
+
+#: admin/partials/market-exporter-admin-display.php:167
+msgid "Action"
+msgstr ""
+
+#: admin/partials/market-exporter-admin-display.php:179
+msgid "Open file"
+msgstr ""
+
+#: admin/partials/market-exporter-admin-display.php:184
+msgid "Delete selected files"
+msgstr ""
+
+=======
 #: admin/partials/market-exporter-admin-display.php:140
 msgid "To begin, just press the button below."
 msgstr ""
@@ -151,6 +273,7 @@ msgstr ""
 msgid "You must enable Javascript in order to proceed!"
 msgstr ""
 
+>>>>>>> master
 #: includes/class-market-exporter.php:252
 msgid ""
 "The Market Exporter plugin requires <a href=\"https://wordpress.org/plugins/woocommerce/\">WooCommerce</a> to be installed and "

@@ -163,6 +163,16 @@ class Market_Exporter_Admin {
 							'id'			=> 'market_exporter_shop_settings[company_name]',
 							'type'		=> 'text'
 					),
+<<<<<<< HEAD
+					// Add backorders field option.
+					array(
+							'name'		=> __( 'Add date to YML file name', 'market-exporter' ),
+							'desc'		=> __( 'If enabled YML file will have current date at the end (for example, ym-export-2015-12-30.yml).', 'market-exporter' ),
+							'id'			=> 'market_exporter_shop_settings[file_date]',
+							'type'		=> 'checkbox'
+					),
+=======
+>>>>>>> master
 					// Add image count text field option.
 					array(
 							'name'		=> __( 'Images per product', 'market-exporter' ),
@@ -194,7 +204,18 @@ class Market_Exporter_Admin {
 							'desc_tip'=> __( 'Not longer than 50 characters.', 'market-exporter' ),
 							'id'			=> 'market_exporter_shop_settings[sales_notes]',
 							'type'		=> 'checkbox'
+<<<<<<< HEAD
+					),
+					// Add backorders field option.
+					array(
+							'name'		=> __( 'Export products with backorders', 'market-exporter' ),
+							'desc'		=> __( 'If enabled products that are available for backorder will be exported to YML.', 'market-exporter' ),
+							'id'			=> 'market_exporter_shop_settings[backorders]',
+							'type'		=> 'checkbox'
+					),
+=======
 					),					
+>>>>>>> master
 					array(
 							'type'		=> 'sectionend',
 							'id'			=> 'market-exporter-settings'
@@ -242,6 +263,11 @@ class Market_Exporter_Admin {
 		$output['vendor'] = sanitize_text_field( $input['vendor'] );
 		$output['market_category'] = sanitize_text_field( $input['market_category'] );
 		$output['sales_notes'] = sanitize_text_field( $input['sales_notes'] );
+<<<<<<< HEAD
+		$output['backorders'] = sanitize_text_field( $input['backorders'] );
+		$output['file_date'] = sanitize_text_field( $input['file_date'] );
+=======
+>>>>>>> master
 
     return $output;
 	}
@@ -259,15 +285,13 @@ class Market_Exporter_Admin {
   	return $links;
 	}
 	
-  /**
-   * Write YML file to /wp-content/uploads/ dir.
-   *
-   * @since			0.0.1
-   * @param			string							$yml							Variable to display contents of the YML file.
-   * @return		string																Return the path of the saved file.
-   */
-	public function write_file( $yml ) {
-		
+	/**
+	 * Initiate file system for read/write operations.
+	 *
+	 * @since			0.0.8
+	 * @return		bool																		Return true if everything ok.
+	 */
+	function init_fs() {
 		$url = wp_nonce_url( 'tools.php?page=market-exporter', $this->plugin_name );
 		if (false === ($creds = request_filesystem_credentials($url, '', false, false, null) ) ) {
 	    // If we get here, then we don't have credentials yet,
@@ -282,16 +306,37 @@ class Market_Exporter_Admin {
 	    request_filesystem_credentials($url, $method, true, false, $form_fields);
 	    return true;
 		}
-							
+		
+		return true;
+	}
+	
+  /**
+   * Write YML file to /wp-content/uploads/ dir.
+   *
+   * @since			0.0.1
+   * @param			string							$yml							Variable to display contents of the YML file.
+   * @param			string							$date							Yes or No for date at the end of the file.
+   * @return		string																Return the path of the saved file.
+   */
+	public function write_file( $yml, $date ) {
+		// If unable to initialize filesystem, quit.
+		if ( !$this->init_fs() )
+			return false;
+			
+		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.		
+		global $wp_filesystem;							
+		
 		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.
 		$upload_dir = wp_upload_dir();		
-		$filename = 'ym-export-'.Date("Y-m-d").'.yml';
 		$folder = trailingslashit( $upload_dir['basedir'] ).trailingslashit( $this->plugin_name );
+		if ( $date == 'yes' ) {
+			$filename = 'ym-export-'.Date("Y-m-d").'.yml';
+		} else {
+			$filename = 'ym-export.yml';
+		}
+		
 		$filepath = $folder.$filename;
 
-		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
-		global $wp_filesystem;
-		
 		// Check if 'uploads/market-exporter' folder exists. If not - create it.
 		if ( !$wp_filesystem->exists( $folder ) ) {
 			if ( !$wp_filesystem->mkdir( $folder, FS_CHMOD_DIR ) ) {
@@ -305,6 +350,50 @@ class Market_Exporter_Admin {
 		}
 
 		return $upload_dir['baseurl'].'/'.$this->plugin_name.'/'.$filename;
+	}
+	
+	/**
+	 * Get a list of generated YML files.
+	 *
+	 * @since			0.0.8
+	 * @return		array																	Returns an array of generated files.
+	 */
+	function get_files() {
+		// If unable to initialize filesystem, quit.
+		if ( !$this->init_fs() )
+			return false;
+			
+		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.		
+		global $wp_filesystem;
+		
+		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.
+		$upload_dir = wp_upload_dir();
+		$folder = trailingslashit( $upload_dir['basedir'] ).trailingslashit( $this->plugin_name );
+		
+		return $wp_filesystem->dirlist( $folder );
+	}
+
+	/**
+	 * Delete selected files.
+	 *
+	 * @since			0.0.8
+	 * @param			array																	Array of filenames to delete.
+	 */
+	function delete_files( $files ) {
+		// If unable to initialize filesystem, quit.
+		if ( !$this->init_fs() )
+			return false;
+			
+		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.		
+		global $wp_filesystem;
+
+		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.
+		$upload_dir = wp_upload_dir();
+		$folder = trailingslashit( $upload_dir['basedir'] ).trailingslashit( $this->plugin_name );
+		
+		foreach( $files as $file ):
+			$wp_filesystem->delete( $folder.$file );
+		endforeach;
 	}
 
 	/**
@@ -383,22 +472,31 @@ class Market_Exporter_Admin {
 	/**
 	 * Get products.
 	 *
+	 * Get products that are either in stock or avavilable for backorder.
+	 *
 	 * @since			0.0.4
+	 * @param			string					$backorders						Yes or No for backorders.
 	 * @return		array																	Return the array of products.
 	 */
-	public function get_products() {
+	public function get_products( $backorders ) {
 		global $wpdb;
 		return $wpdb->get_results(
+<<<<<<< HEAD
+								 "SELECT p.ID, p.post_title AS name, p.post_content AS description, m1.meta_value AS vendorCode, p.post_excerpt AS sales_notes, m3.meta_value AS stock, m4.meta_value AS backorders
+=======
 								 "SELECT p.ID, p.post_title AS name, p.post_content AS description, m1.meta_value AS vendorCode, p.post_excerpt AS sales_notes
+>>>>>>> master
 									FROM $wpdb->posts p
 									INNER JOIN $wpdb->postmeta m1 ON p.ID = m1.post_id AND m1.meta_key = '_sku'
 									INNER JOIN $wpdb->postmeta m2 ON p.ID = m2.post_id AND m2.meta_key = '_visibility'
 									INNER JOIN $wpdb->postmeta m3 ON p.ID = m3.post_id AND m3.meta_key = '_stock_status'
+									INNER JOIN $wpdb->postmeta m4 ON p.ID = m4.post_id AND m4.meta_key = '_backorders'
 									WHERE p.post_type = 'product'
 											AND p.post_status = 'publish'
 											AND p.post_password = ''
 											AND m2.meta_value != 'hidden'
-											AND m3.meta_value != 'outofstock'
+											".( $backorders == 'no' ? "AND m3.meta_value = 'instock'" : "" )."
+											AND (m3.meta_value != 'outofstock' OR m4.meta_value = 'yes')
 									ORDER BY p.ID DESC" );
 	}
 
