@@ -67,6 +67,10 @@
 		$yml .= '    <local_delivery_cost>'.$this->get_delivery().'</local_delivery_cost>'.PHP_EOL;
 		$yml .= '    <offers>'.PHP_EOL;
 		foreach ( $ya_offers as $offer ):
+<<<<<<< HEAD
+=======
+		
+>>>>>>> master
 			$images = $this->get_images( $offer->ID, $shop_settings['image_count'] );
 			$categoryId = get_the_terms( $offer->ID, 'product_cat' );
 			$yml .= '      <offer id="'.$offer->ID.'" available="'.( $offer->stock != "outofstock" ? "true" : "false" ).'">'.PHP_EOL;
@@ -102,9 +106,15 @@
 			// Vendor code.
 			if ( $offer->vendorCode )
 				$yml .= '        <vendorCode>'.wp_strip_all_tags( $offer->vendorCode ).'</vendorCode>'.PHP_EOL;
+<<<<<<< HEAD
 			// Description.
 			if ( $offer->description )
 				$yml .= '        <description>'.htmlspecialchars( html_entity_decode( wp_strip_all_tags( $offer->description ), ENT_COMPAT, "UTF-8" ) ).'</description>'.PHP_EOL;
+=======
+			// Description
+			if ( $offer->description )
+				$yml .= '        <description>'.wp_strip_all_tags( $offer->description ).'</description>'.PHP_EOL;
+>>>>>>> master
 			// Sales notes.
 			if ( ( $shop_settings['sales_notes'] == 'yes' ) && ( $offer->sales_notes ) )
 				$yml .= '        <sales_notes>'.wp_strip_all_tags( $offer->sales_notes ).'</sales_notes>'.PHP_EOL;

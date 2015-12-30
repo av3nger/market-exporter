@@ -163,6 +163,7 @@ class Market_Exporter_Admin {
 							'id'			=> 'market_exporter_shop_settings[company_name]',
 							'type'		=> 'text'
 					),
+<<<<<<< HEAD
 					// Add backorders field option.
 					array(
 							'name'		=> __( 'Add date to YML file name', 'market-exporter' ),
@@ -170,6 +171,8 @@ class Market_Exporter_Admin {
 							'id'			=> 'market_exporter_shop_settings[file_date]',
 							'type'		=> 'checkbox'
 					),
+=======
+>>>>>>> master
 					// Add image count text field option.
 					array(
 							'name'		=> __( 'Images per product', 'market-exporter' ),
@@ -201,6 +204,7 @@ class Market_Exporter_Admin {
 							'desc_tip'=> __( 'Not longer than 50 characters.', 'market-exporter' ),
 							'id'			=> 'market_exporter_shop_settings[sales_notes]',
 							'type'		=> 'checkbox'
+<<<<<<< HEAD
 					),
 					// Add backorders field option.
 					array(
@@ -209,6 +213,9 @@ class Market_Exporter_Admin {
 							'id'			=> 'market_exporter_shop_settings[backorders]',
 							'type'		=> 'checkbox'
 					),
+=======
+					),					
+>>>>>>> master
 					array(
 							'type'		=> 'sectionend',
 							'id'			=> 'market-exporter-settings'
@@ -256,8 +263,11 @@ class Market_Exporter_Admin {
 		$output['vendor'] = sanitize_text_field( $input['vendor'] );
 		$output['market_category'] = sanitize_text_field( $input['market_category'] );
 		$output['sales_notes'] = sanitize_text_field( $input['sales_notes'] );
+<<<<<<< HEAD
 		$output['backorders'] = sanitize_text_field( $input['backorders'] );
 		$output['file_date'] = sanitize_text_field( $input['file_date'] );
+=======
+>>>>>>> master
 
     return $output;
 	}
@@ -471,7 +481,11 @@ class Market_Exporter_Admin {
 	public function get_products( $backorders ) {
 		global $wpdb;
 		return $wpdb->get_results(
+<<<<<<< HEAD
 								 "SELECT p.ID, p.post_title AS name, p.post_content AS description, m1.meta_value AS vendorCode, p.post_excerpt AS sales_notes, m3.meta_value AS stock, m4.meta_value AS backorders
+=======
+								 "SELECT p.ID, p.post_title AS name, p.post_content AS description, m1.meta_value AS vendorCode, p.post_excerpt AS sales_notes
+>>>>>>> master
 									FROM $wpdb->posts p
 									INNER JOIN $wpdb->postmeta m1 ON p.ID = m1.post_id AND m1.meta_key = '_sku'
 									INNER JOIN $wpdb->postmeta m2 ON p.ID = m2.post_id AND m2.meta_key = '_visibility'
