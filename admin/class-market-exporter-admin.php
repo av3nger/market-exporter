@@ -163,7 +163,6 @@ class Market_Exporter_Admin {
 							'id'			=> 'market_exporter_shop_settings[company_name]',
 							'type'		=> 'text'
 					),
-<<<<<<< HEAD
 					// Add backorders field option.
 					array(
 							'name'		=> __( 'Add date to YML file name', 'market-exporter' ),
@@ -171,8 +170,6 @@ class Market_Exporter_Admin {
 							'id'			=> 'market_exporter_shop_settings[file_date]',
 							'type'		=> 'checkbox'
 					),
-=======
->>>>>>> master
 					// Add image count text field option.
 					array(
 							'name'		=> __( 'Images per product', 'market-exporter' ),
@@ -204,7 +201,6 @@ class Market_Exporter_Admin {
 							'desc_tip'=> __( 'Not longer than 50 characters.', 'market-exporter' ),
 							'id'			=> 'market_exporter_shop_settings[sales_notes]',
 							'type'		=> 'checkbox'
-<<<<<<< HEAD
 					),
 					// Add backorders field option.
 					array(
@@ -213,9 +209,6 @@ class Market_Exporter_Admin {
 							'id'			=> 'market_exporter_shop_settings[backorders]',
 							'type'		=> 'checkbox'
 					),
-=======
-					),					
->>>>>>> master
 					array(
 							'type'		=> 'sectionend',
 							'id'			=> 'market-exporter-settings'
@@ -263,11 +256,8 @@ class Market_Exporter_Admin {
 		$output['vendor'] = sanitize_text_field( $input['vendor'] );
 		$output['market_category'] = sanitize_text_field( $input['market_category'] );
 		$output['sales_notes'] = sanitize_text_field( $input['sales_notes'] );
-<<<<<<< HEAD
 		$output['backorders'] = sanitize_text_field( $input['backorders'] );
 		$output['file_date'] = sanitize_text_field( $input['file_date'] );
-=======
->>>>>>> master
 
     return $output;
 	}
@@ -470,9 +460,9 @@ class Market_Exporter_Admin {
 	}
 		
 	/**
-	 * Get products.
+	 * Get simple products.
 	 *
-	 * Get products that are either in stock or avavilable for backorder.
+	 * Get simple products that are either in stock or avavilable for backorder.
 	 *
 	 * @since			0.0.4
 	 * @param			string					$backorders						Yes or No for backorders.
@@ -481,12 +471,9 @@ class Market_Exporter_Admin {
 	public function get_products( $backorders ) {
 		global $wpdb;
 		return $wpdb->get_results(
-<<<<<<< HEAD
-								 "SELECT p.ID, p.post_title AS name, p.post_content AS description, m1.meta_value AS vendorCode, p.post_excerpt AS sales_notes, m3.meta_value AS stock, m4.meta_value AS backorders
-=======
-								 "SELECT p.ID, p.post_title AS name, p.post_content AS description, m1.meta_value AS vendorCode, p.post_excerpt AS sales_notes
->>>>>>> master
+								 "SELECT p.ID, p.post_title AS name, p.post_content AS description, m1.meta_value AS vendorCode, p.post_excerpt AS sales_notes, m3.meta_value AS stock, m0.meta_value AS options
 									FROM $wpdb->posts p
+									INNER JOIN wp_postmeta m0 ON p.ID = m0.post_id AND m0.meta_key = '_product_attributes'
 									INNER JOIN $wpdb->postmeta m1 ON p.ID = m1.post_id AND m1.meta_key = '_sku'
 									INNER JOIN $wpdb->postmeta m2 ON p.ID = m2.post_id AND m2.meta_key = '_visibility'
 									INNER JOIN $wpdb->postmeta m3 ON p.ID = m3.post_id AND m3.meta_key = '_stock_status'
@@ -501,10 +488,53 @@ class Market_Exporter_Admin {
 	}
 
 	/**
+	 * Get IDs and SKU of variable products.
+	 *
+	 * Get IDs for variable product that are either in stock or avavilable for backorder.
+	 *
+	 * @since			0.2.0
+	 * @param			int							$prodID								Product ID for which to fetch variable products.
+	 * @return		array																	Return the array of variable product IDs and SKU.
+	 */
+	public function get_var_products( $prodID ) {
+		global $wpdb;
+		return $wpdb->get_results(
+								 "SELECT p.ID, m1.meta_value AS vendorCode
+									FROM $wpdb->posts p
+									INNER JOIN $wpdb->postmeta m1 ON p.ID = m1.post_id AND m1.meta_key = '_sku'
+									WHERE p.post_type = 'product_variation'
+											AND p.post_status = 'publish'
+											AND p.post_password = ''
+											AND p.post_parent = $prodID" );
+	}
+	
+	/**
+	 * Get the variable product link.
+	 *
+	 * For variable products you have to provide a direct link to the product.
+	 * In WooCommerce this link is the same as the parent link plus it has added this appended
+	 * to it: ?attribute_pa_[attribute_name]=[attribute_value].
+	 * For example: ?attribute_pa_color=black.
+	 *
+	 * @since			0.2.0
+	 * @param			int							$prodID								Product ID for which to fetch data.
+	 * @param			string					$attr									Attribute in format pa_[attribute_name].
+	 * @return		array																	Return the attribute value for the link.
+	 */
+	public function get_var_link( $prodID, $attr ) {
+		global $wpdb;
+		return $wpdb->get_row(
+								 "SELECT meta_value
+								  FROM $wpdb->postmeta
+								  WHERE post_id = $prodID
+								  		AND meta_key = 'attribute_$attr'");
+	}
+	
+	/**
 	 * Get price.
 	 *
 	 * @since			0.0.6
-   * @param			int								$id									Product ID for which to get images.
+   * @param			int								$id									Product ID for which to get price.
 	 * @return		array																	Return the price and sale_price of product.
 	 */
 	public function get_price( $id ) {

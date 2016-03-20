@@ -67,58 +67,83 @@
 		$yml .= '    <local_delivery_cost>'.$this->get_delivery().'</local_delivery_cost>'.PHP_EOL;
 		$yml .= '    <offers>'.PHP_EOL;
 		foreach ( $ya_offers as $offer ):
-<<<<<<< HEAD
-=======
-		
->>>>>>> master
-			$images = $this->get_images( $offer->ID, $shop_settings['image_count'] );
-			$categoryId = get_the_terms( $offer->ID, 'product_cat' );
-			$yml .= '      <offer id="'.$offer->ID.'" available="'.( $offer->stock != "outofstock" ? "true" : "false" ).'">'.PHP_EOL;
-			$yml .= '        <url>'.get_permalink($offer->ID).'</url>'.PHP_EOL;
-			// Price.
-			$price = $this->get_price( $offer->ID );
-			if ( $price['sale_price'] && ( $price['sale_price'] < $price['price'] ) ) {
-				$yml .= '        <price>'.$price['sale_price'].'</price>'.PHP_EOL;
-				$yml .= '        <oldprice>'.$price['price'].'</oldprice>'.PHP_EOL;
-			} else {
-				$yml .= '        <price>'.$price['price'].'</price>'.PHP_EOL;
+			/* 
+				So what we do here is basically assume the product is a simple product and has no variations.
+				We then check for variations. And if the product is indeed a variable product, we will list all variations as simple products.
+			*/
+			$has_variations = false;
+			$variation_count = 1;
+			
+			// Check if product has variations.
+			$unser = array_values( unserialize($offer->options) );
+			if ( $unser[0]['is_variation'] == 1 ) {
+				$has_variations = true;
+				$variations = $this->get_var_products( $offer->ID );
+				$variation_count = count( $variations );
 			}
-			$yml .= '        <currencyId>'.$currency.'</currencyId>'.PHP_EOL;
-			$yml .= '        <categoryId>'.$categoryId[0]->term_id.'</categoryId>'.PHP_EOL;
-			// Market category.
-			if ( isset( $shop_settings['market_category'] ) && $shop_settings['market_category'] != 'not_set' ) {
-				$market_category = wc_get_product_terms( $offer->ID, 'pa_'.$shop_settings['market_category'], array( 'fields' => 'names' ) );
-				if ( $market_category )
-					$yml .= '        <market_category>'.wp_strip_all_tags( array_shift( $market_category ) ).'</market_category>'.PHP_EOL;
-			}
-			foreach ( $images as $image ):
-				if ( strlen( utf8_decode( $image ) ) <= 512 )
-					$yml .= '        <picture>'.$image.'</picture>'.PHP_EOL;
-			endforeach;
-			$yml .= '        <delivery>true</delivery>'.PHP_EOL;
-			$yml .= '        <name>'.wp_strip_all_tags( $offer->name ).'</name>'.PHP_EOL;
-			// Vendor.
-			if ( isset( $shop_settings['vendor'] ) && $shop_settings['vendor'] != 'not_set' ) {
-				$vendor = wc_get_product_terms( $offer->ID, 'pa_'.$shop_settings['vendor'], array( 'fields' => 'names' ) );
-				if ( $vendor )
-					$yml .= '        <vendor>'.wp_strip_all_tags( array_shift( $vendor ) ).'</vendor>'.PHP_EOL;
-			}
-			// Vendor code.
-			if ( $offer->vendorCode )
-				$yml .= '        <vendorCode>'.wp_strip_all_tags( $offer->vendorCode ).'</vendorCode>'.PHP_EOL;
-<<<<<<< HEAD
-			// Description.
-			if ( $offer->description )
-				$yml .= '        <description>'.htmlspecialchars( html_entity_decode( wp_strip_all_tags( $offer->description ), ENT_COMPAT, "UTF-8" ) ).'</description>'.PHP_EOL;
-=======
-			// Description
-			if ( $offer->description )
-				$yml .= '        <description>'.wp_strip_all_tags( $offer->description ).'</description>'.PHP_EOL;
->>>>>>> master
-			// Sales notes.
-			if ( ( $shop_settings['sales_notes'] == 'yes' ) && ( $offer->sales_notes ) )
-				$yml .= '        <sales_notes>'.wp_strip_all_tags( $offer->sales_notes ).'</sales_notes>'.PHP_EOL;
-			$yml .= '      </offer>'.PHP_EOL;
+			
+			////// TODO: GET SKU OF VARIATION PRODUCT
+
+			while ( $variation_count > 0 ):
+				$variation_count--;
+				$var_link = '';
+				$offerID = $has_variations ? $variations[$variation_count]->ID : $offer->ID;
+				$offerSKU = $offer->vendorCode;
+				
+				// Probably there is a better way to get this value, but...
+				// We are getting the last bit for the link: for example ?attribute_pa_color=black
+				if ($has_variations) {
+					$offer_options = unserialize($offer->options);
+					$link = $this->get_var_link( $offerID, array_values( $offer_options )[0]['name'] );
+					$var_link = '?attribute_'.array_values( $offer_options )[0]['name'].'='.$link->meta_value;
+					
+					if ( $variations[$variation_count]->vendorCode )
+						$offerSKU = $variations[$variation_count]->vendorCode;
+				}
+
+				$images = $this->get_images( $offerID, $shop_settings['image_count'] );
+				$categoryId = get_the_terms( $offer->ID, 'product_cat' );
+				$yml .= '      <offer id="'.$offerID.'" available="'.( $offer->stock != "outofstock" ? "true" : "false" ).'">'.PHP_EOL;
+				$yml .= '        <url>'.get_permalink($offer->ID).$var_link.'</url>'.PHP_EOL;
+				// Price.
+				$price = $this->get_price( $offerID );
+				if ( $price['sale_price'] && ( $price['sale_price'] < $price['price'] ) ) {
+					$yml .= '        <price>'.$price['sale_price'].'</price>'.PHP_EOL;
+					$yml .= '        <oldprice>'.$price['price'].'</oldprice>'.PHP_EOL;
+				} else {
+					$yml .= '        <price>'.$price['price'].'</price>'.PHP_EOL;
+				}
+				$yml .= '        <currencyId>'.$currency.'</currencyId>'.PHP_EOL;
+				$yml .= '        <categoryId>'.$categoryId[0]->term_id.'</categoryId>'.PHP_EOL;
+				// Market category.
+				if ( isset( $shop_settings['market_category'] ) && $shop_settings['market_category'] != 'not_set' ) {
+					$market_category = wc_get_product_terms( $offer->ID, 'pa_'.$shop_settings['market_category'], array( 'fields' => 'names' ) );
+					if ( $market_category )
+						$yml .= '        <market_category>'.wp_strip_all_tags( array_shift( $market_category ) ).'</market_category>'.PHP_EOL;
+				}
+				foreach ( $images as $image ):
+					if ( strlen( utf8_decode( $image ) ) <= 512 )
+						$yml .= '        <picture>'.$image.'</picture>'.PHP_EOL;
+				endforeach;
+				$yml .= '        <delivery>true</delivery>'.PHP_EOL;
+				$yml .= '        <name>'.wp_strip_all_tags( $offer->name ).'</name>'.PHP_EOL;
+				// Vendor.
+				if ( isset( $shop_settings['vendor'] ) && $shop_settings['vendor'] != 'not_set' ) {
+					$vendor = wc_get_product_terms( $offer->ID, 'pa_'.$shop_settings['vendor'], array( 'fields' => 'names' ) );
+					if ( $vendor )
+						$yml .= '        <vendor>'.wp_strip_all_tags( array_shift( $vendor ) ).'</vendor>'.PHP_EOL;
+				}
+				// Vendor code.
+				if ( $offer->vendorCode )
+					$yml .= '        <vendorCode>'.wp_strip_all_tags( $offerSKU ).'</vendorCode>'.PHP_EOL;
+				// Description.
+				if ( $offer->description )
+					$yml .= '        <description>'.htmlspecialchars( html_entity_decode( wp_strip_all_tags( $offer->description ), ENT_COMPAT, "UTF-8" ) ).'</description>'.PHP_EOL;
+				// Sales notes.
+				if ( ( $shop_settings['sales_notes'] == 'yes' ) && ( $offer->sales_notes ) )
+					$yml .= '        <sales_notes>'.wp_strip_all_tags( $offer->sales_notes ).'</sales_notes>'.PHP_EOL;
+				$yml .= '      </offer>'.PHP_EOL;
+			endwhile;
 		endforeach;
 		$yml .= '    </offers>'.PHP_EOL;
 		$yml .= '  </shop>'.PHP_EOL;

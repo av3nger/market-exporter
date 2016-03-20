@@ -34,11 +34,7 @@ class Market_Exporter_Activator {
 			delete_option( 'market_exporter_website_name' );
 			delete_option( 'market_exporter_company_name' );
 			delete_option( 'market-exporter-settings' );
-<<<<<<< HEAD
 		//}
-=======
-		}
->>>>>>> master
 		$market_exporter_options = $wpdb->get_var(
 									"SELECT option_id
 									 FROM $wpdb->options
@@ -50,13 +46,9 @@ class Market_Exporter_Activator {
 				'image_count'			=> 10,
 				'vendor'					=> 'not_set',
 				'market_category'	=> 'not_set',
-<<<<<<< HEAD
 				'sales_notes'			=> 'no',
 				'backorders'			=> 'no',
 				'file_date'				=> 'yes'
-=======
-				'sales_notes'			=> 'no'
->>>>>>> master
 			);
 			update_option( 'market_exporter_shop_settings', $settings );
 		}
