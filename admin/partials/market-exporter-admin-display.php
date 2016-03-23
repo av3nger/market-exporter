@@ -138,7 +138,8 @@
 					$yml .= '        <vendorCode>'.wp_strip_all_tags( $offerSKU ).'</vendorCode>'.PHP_EOL;
 				// Description.
 				if ( $offer->description )
-					$yml .= '        <description>'.htmlspecialchars( html_entity_decode( wp_strip_all_tags( $offer->description ), ENT_COMPAT, "UTF-8" ) ).'</description>'.PHP_EOL;
+					//$yml .= '        <description>'.htmlspecialchars( html_entity_decode( wp_strip_all_tags( $offer->description ), ENT_COMPAT, "UTF-8" ) ).'</description>'.PHP_EOL;
+					$yml .= ' <description><![CDATA['.html_entity_decode( $offer->description, ENT_COMPAT, "UTF-8" ).']]></description>'.PHP_EOL;
 				// Sales notes.
 				if ( ( $shop_settings['sales_notes'] == 'yes' ) && ( $offer->sales_notes ) )
 					$yml .= '        <sales_notes>'.wp_strip_all_tags( $offer->sales_notes ).'</sales_notes>'.PHP_EOL;
@@ -152,7 +153,8 @@
 		// Reset Query.
 		wp_reset_query();
 		// Clear the SQL result cache.
-		$wpdb->flush();
+		// TODO: doesn't work!!!
+		//$wpdb->flush();
 
 		/* Debugging: */
 		
@@ -162,7 +164,7 @@
 		//echo strtr($yml,Array("<"=>"&lt;","&"=>"&amp;"));
 		//echo "</pre>";
 		/**/
-		
+
 		$file_path = $this->write_file( $yml, $shop_settings['file_date'] );
 		echo '	<p>' . sprintf( __( 'File exported successfully: <a href="%s">%s</a>.', 'market-exporter' ), $file_path, $file_path ) . '</p>';
 		
@@ -206,14 +208,16 @@
 				$folder = trailingslashit( $upload_dir['baseurl'] ).trailingslashit( $this->plugin_name );
 				
 				$files = $this->get_files();
-				foreach( $files as $file ):
-				?>
-				<tr>
-					<td><input type="checkbox" name="files[]" value="<?=$file['name'];?>"></td>
-					<td><?=$file['name'];?></td>
-					<td><a href="<?=$folder.$file['name'];?>" target="_blank"><?php _e( 'Open file', 'market-exporter' ); ?></a></td>
-				</tr>
-				<?php endforeach; ?>
+				if ( $files ):
+					foreach( $files as $file ):
+					?>
+					<tr>
+						<td><input type="checkbox" name="files[]" value="<?=$file['name'];?>"></td>
+						<td><?=$file['name'];?></td>
+						<td><a href="<?=$folder.$file['name'];?>" target="_blank"><?php _e( 'Open file', 'market-exporter' ); ?></a></td>
+					</tr>
+					<?php endforeach;
+				endif; ?>
 			</table>
 			
 			<p><input type="submit" class="button hide-if-no-js" name="market-exporter-delete" id="market-exporter-delete123" value="<?php _e( 'Delete selected files', 'market-exporter' ) ?>" /></p>

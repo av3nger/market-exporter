@@ -60,7 +60,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		$this->version = '0.2.0';
+		$this->version = '0.3.0';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -156,6 +156,9 @@ class Market_Exporter {
 		// Add Settings link to plugin in plugins list.
 		$basename = plugin_basename( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
 		$this->loader->add_filter( 'plugin_action_links_'.$basename, $plugin_admin, 'plugin_add_settings_link' );
+		// Add cron support
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'crontab_activate' );
+		$this->loader->add_action( 'market_exporter_daily', $plugin_admin, 'generate_YML' );
 	}
 
 	/**

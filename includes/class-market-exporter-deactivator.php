@@ -21,6 +21,10 @@ class Market_Exporter_Deactivator {
 	 * @since    0.0.1
 	 */
 	public static function deactivate() {
+		// find out when the last event was scheduled
+		$timestamp = wp_next_scheduled( 'market_exporter_daily' );
+		// unschedule previous event if any
+		wp_unschedule_event( $timestamp, 'market_exporter_daily' );
 	}
 
 }
