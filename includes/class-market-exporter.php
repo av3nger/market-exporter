@@ -60,7 +60,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		$this->version = '0.3.0';
+		$this->version = '0.2.3';
 
 		$this->load_dependencies();
 		$this->set_locale();

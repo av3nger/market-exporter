@@ -19,155 +19,18 @@
 			
 		check_admin_referer( $this->plugin_name.'-generate' );
 
-		// Check currency.
-		if ( !$currency = $this->get_currecny() ) {
-			echo '	<p>' . sprintf( __( 'Currently only the following currency is supported: Russian Ruble (RUB), Ukrainian Hryvnia (UAH), US Dollar (USD) and Euro (EUR). Please <a href="%s">update currency</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings' ) ) . "</p>";
-			return;
+		$return_code = $this->generate_YML();
+		switch ($return_code) {
+			case 100:
+				echo ' <p>' . sprintf( __( 'Currently only the following currency is supported: Russian Ruble (RUB), Ukrainian Hryvnia (UAH), US Dollar (USD) and Euro (EUR). Please <a href="%s">update currency</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings' ) ) . '</p>';
+				break;
+			case 200:
+				echo '	<p>' . sprintf( __( 'Unable to find any products. Are you sure <a href="%s">some exist</a>?', 'market-exporter' ), admin_url( 'post-new.php?post_type=product' ) ) . '</p>';
+				break;
+			default:
+				echo '	<p>' . sprintf( __( 'File exported successfully: <a href="%s">%s</a>.', 'market-exporter' ), $return_code, $return_code ) . '</p>';
 		}
 
-		// Get plugin settings.
-		$shop_settings = get_option( 'market_exporter_shop_settings' );
-
-		// Get products.
-		if ( !$ya_offers = $this->get_products( $shop_settings['backorders'] ) ) {
-			echo '	<p>' . sprintf( __( 'Unable to find any products. Are you sure <a href="%s">some exist</a>?', 'market-exporter' ), admin_url( 'post-new.php?post_type=product' ) ) . "</p>";
-			return;
-		}
-		
-		if ( !isset( $shop_settings['file_date'] ) )
-			$shop_settings['file_date'] = 'yes';
-			
-		if ( !isset( $shop_settings['image_count'] ) )
-			$shop_settings['image_count'] = 10;
-
-		$yml = '<?xml version="1.0" encoding="'.get_bloginfo( "charset" ).'"?>'.PHP_EOL;
-		$yml .= '<!DOCTYPE yml_catalog SYSTEM "shops.dtd">'.PHP_EOL;
-		$yml .= '<yml_catalog date="'.Date("Y-m-d H:i").'">'.PHP_EOL;
-		$yml .= '  <shop>'.PHP_EOL;
-		$yml .= '    <name>'.esc_html( $shop_settings['website_name'] ).'</name>'.PHP_EOL;
-		$yml .= '    <company>'.esc_html( $shop_settings['company_name'] ).'</company>'.PHP_EOL;
-		$yml .= '    <url>'.get_site_url().'</url>'.PHP_EOL;
-		$yml .= '    <currencies>'.PHP_EOL;
-		if ( $currency == 'USD' || $currency == 'EUR' ) {
-			$yml .= '      <currency id="RUR" rate="1"/>'.PHP_EOL;
-			$yml .= '      <currency id="'.$currency.'" rate="СВ"/>'.PHP_EOL;
-		} else {
-			$yml .= '      <currency id="'.$currency.'" rate="1"/>'.PHP_EOL;
-		}
-		$yml .= '    </currencies>'.PHP_EOL;
-		$yml .= '    <categories>'.PHP_EOL;
-		foreach ( $this->get_categories() as $category ):
-			if ($category->parent == 0) {
-				$yml .= '      <category id="'.$category->id.'">'.wp_strip_all_tags( $category->name ).'</category>'.PHP_EOL;
-			} else {
-				$yml .= '      <category id="'.$category->id.'" parentId="'.$category->parent.'">'.wp_strip_all_tags( $category->name).'</category>'.PHP_EOL;
-			}
-		endforeach;
-		$yml .= '    </categories>'.PHP_EOL;				
-		$yml .= '    <local_delivery_cost>'.$this->get_delivery().'</local_delivery_cost>'.PHP_EOL;
-		$yml .= '    <offers>'.PHP_EOL;
-		foreach ( $ya_offers as $offer ):
-			/* 
-				So what we do here is basically assume the product is a simple product and has no variations.
-				We then check for variations. And if the product is indeed a variable product, we will list all variations as simple products.
-			*/
-			$has_variations = false;
-			$variation_count = 1;
-			
-			// Check if product has variations.
-			$unser = array_values( unserialize($offer->options) );
-			if ( $unser[0]['is_variation'] == 1 ) {
-				$has_variations = true;
-				$variations = $this->get_var_products( $offer->ID );
-				$variation_count = count( $variations );
-			}
-			
-			////// TODO: GET SKU OF VARIATION PRODUCT
-
-			while ( $variation_count > 0 ):
-				$variation_count--;
-				$var_link = '';
-				$offerID = $has_variations ? $variations[$variation_count]->ID : $offer->ID;
-				$offerSKU = $offer->vendorCode;
-				
-				// Probably there is a better way to get this value, but...
-				// We are getting the last bit for the link: for example ?attribute_pa_color=black
-				if ($has_variations) {
-					$offer_options = unserialize($offer->options);
-					$link = $this->get_var_link( $offerID, array_values( $offer_options )[0]['name'] );
-					$var_link = '?attribute_'.array_values( $offer_options )[0]['name'].'='.$link->meta_value;
-					
-					if ( $variations[$variation_count]->vendorCode )
-						$offerSKU = $variations[$variation_count]->vendorCode;
-				}
-
-				$images = $this->get_images( $offerID, $shop_settings['image_count'] );
-				$categoryId = get_the_terms( $offer->ID, 'product_cat' );
-				$yml .= '      <offer id="'.$offerID.'" available="'.( $offer->stock != "outofstock" ? "true" : "false" ).'">'.PHP_EOL;
-				$yml .= '        <url>'.get_permalink($offer->ID).$var_link.'</url>'.PHP_EOL;
-				// Price.
-				$price = $this->get_price( $offerID );
-				if ( $price['sale_price'] && ( $price['sale_price'] < $price['price'] ) ) {
-					$yml .= '        <price>'.$price['sale_price'].'</price>'.PHP_EOL;
-					$yml .= '        <oldprice>'.$price['price'].'</oldprice>'.PHP_EOL;
-				} else {
-					$yml .= '        <price>'.$price['price'].'</price>'.PHP_EOL;
-				}
-				$yml .= '        <currencyId>'.$currency.'</currencyId>'.PHP_EOL;
-				$yml .= '        <categoryId>'.$categoryId[0]->term_id.'</categoryId>'.PHP_EOL;
-				// Market category.
-				if ( isset( $shop_settings['market_category'] ) && $shop_settings['market_category'] != 'not_set' ) {
-					$market_category = wc_get_product_terms( $offer->ID, 'pa_'.$shop_settings['market_category'], array( 'fields' => 'names' ) );
-					if ( $market_category )
-						$yml .= '        <market_category>'.wp_strip_all_tags( array_shift( $market_category ) ).'</market_category>'.PHP_EOL;
-				}
-				foreach ( $images as $image ):
-					if ( strlen( utf8_decode( $image ) ) <= 512 )
-						$yml .= '        <picture>'.$image.'</picture>'.PHP_EOL;
-				endforeach;
-				$yml .= '        <delivery>true</delivery>'.PHP_EOL;
-				$yml .= '        <name>'.wp_strip_all_tags( $offer->name ).'</name>'.PHP_EOL;
-				// Vendor.
-				if ( isset( $shop_settings['vendor'] ) && $shop_settings['vendor'] != 'not_set' ) {
-					$vendor = wc_get_product_terms( $offer->ID, 'pa_'.$shop_settings['vendor'], array( 'fields' => 'names' ) );
-					if ( $vendor )
-						$yml .= '        <vendor>'.wp_strip_all_tags( array_shift( $vendor ) ).'</vendor>'.PHP_EOL;
-				}
-				// Vendor code.
-				if ( $offer->vendorCode )
-					$yml .= '        <vendorCode>'.wp_strip_all_tags( $offerSKU ).'</vendorCode>'.PHP_EOL;
-				// Description.
-				if ( $offer->description )
-					//$yml .= '        <description>'.htmlspecialchars( html_entity_decode( wp_strip_all_tags( $offer->description ), ENT_COMPAT, "UTF-8" ) ).'</description>'.PHP_EOL;
-					$yml .= ' <description><![CDATA['.html_entity_decode( $offer->description, ENT_COMPAT, "UTF-8" ).']]></description>'.PHP_EOL;
-				// Sales notes.
-				if ( ( $shop_settings['sales_notes'] == 'yes' ) && ( $offer->sales_notes ) )
-					$yml .= '        <sales_notes>'.wp_strip_all_tags( $offer->sales_notes ).'</sales_notes>'.PHP_EOL;
-				$yml .= '      </offer>'.PHP_EOL;
-			endwhile;
-		endforeach;
-		$yml .= '    </offers>'.PHP_EOL;
-		$yml .= '  </shop>'.PHP_EOL;
-		$yml .= '</yml_catalog>'.PHP_EOL;
-
-		// Reset Query.
-		wp_reset_query();
-		// Clear the SQL result cache.
-		// TODO: doesn't work!!!
-		//$wpdb->flush();
-
-		/* Debugging: */
-		
-		/* Debugging: */
-		//echo "<pre>";
-		//print_r($ya_offers);
-		//echo strtr($yml,Array("<"=>"&lt;","&"=>"&amp;"));
-		//echo "</pre>";
-		/**/
-
-		$file_path = $this->write_file( $yml, $shop_settings['file_date'] );
-		echo '	<p>' . sprintf( __( 'File exported successfully: <a href="%s">%s</a>.', 'market-exporter' ), $file_path, $file_path ) . '</p>';
-		
 	// Display the form by default.
 	} else {
 	?>
