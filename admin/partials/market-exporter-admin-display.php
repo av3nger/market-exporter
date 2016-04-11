@@ -19,7 +19,9 @@
 			
 		check_admin_referer( $this->plugin_name.'-generate' );
 
-		$return_code = $this->generate_YML();
+		$market_exporter = new Market_Exporter_YML( $this->plugin_name );
+		$return_code = $market_exporter->generate_YML();
+
 		switch ($return_code) {
 			case 100:
 				echo ' <p>' . sprintf( __( 'Currently only the following currency is supported: Russian Ruble (RUB), Ukrainian Hryvnia (UAH), US Dollar (USD) and Euro (EUR). Please <a href="%s">update currency</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings' ) ) . '</p>';
@@ -50,9 +52,10 @@
 		
 		<?php
 		// If someone clicks on Delete file button.
+		$market_exporter_fs = new Market_Exporter_FS( $this->plugin_name );
 		if ( !empty( $_POST[ $this->plugin_name.'-delete' ] ) ) {
 			if ( isset( $_POST['files'] ) )
-				$this->delete_files( $_POST['files'] );
+				$market_exporter_fs->delete_files( $_POST['files'] );
 		}			
 		?>
 
@@ -69,8 +72,8 @@
 				<?php
 				$upload_dir = wp_upload_dir();
 				$folder = trailingslashit( $upload_dir['baseurl'] ).trailingslashit( $this->plugin_name );
-				
-				$files = $this->get_files();
+
+				$files = $market_exporter_fs->get_files();
 				if ( $files ):
 					foreach( $files as $file ):
 					?>
@@ -83,7 +86,7 @@
 				endif; ?>
 			</table>
 			
-			<p><input type="submit" class="button hide-if-no-js" name="market-exporter-delete" id="market-exporter-delete123" value="<?php _e( 'Delete selected files', 'market-exporter' ) ?>" /></p>
+			<p><input type="submit" class="button hide-if-no-js" name="market-exporter-delete" id="market-exporter-delete" value="<?php _e( 'Delete selected files', 'market-exporter' ) ?>" /></p>
 			
 			<noscript><p><em><?php _e( 'You must enable Javascript in order to proceed!', 'market-exporter' ); ?></em></p></noscript>
 		</form>

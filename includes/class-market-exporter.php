@@ -60,7 +60,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		$this->version = '0.2.3';
+		$this->version = '0.2.4';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -109,6 +109,8 @@ class Market_Exporter {
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-fs.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-yml.php';
 
 		$this->loader = new Market_Exporter_Loader();
 
