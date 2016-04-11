@@ -31,7 +31,6 @@ class Market_Exporter_Admin {
 	 * @since      0.0.1
 	 *
 	 * @param      string $plugin_name   The name of this plugin.
-	 * @param      string $plugin_prefix Prefix for options. Also hardcoded into plugin activation.
 	 * @param      string $version       The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
@@ -290,7 +289,7 @@ class Market_Exporter_Admin {
 		// Mow we have some credentials, try to get the wp_filesystem running.
 		if ( ! WP_Filesystem( $creds ) ) {
 			// Our credentials were no good, ask the user for them again.
-			request_filesystem_credentials( $url, $method, true, false, $form_fields );
+			request_filesystem_credentials( $url, "", true, false, null );
 
 			return true;
 		}
@@ -370,7 +369,7 @@ class Market_Exporter_Admin {
 	 *
 	 * @since      0.0.8
 	 *
-	 * @param      array                        Array of filenames to delete.
+	 * @param      array  $files                        Array of filenames to delete.
 	 */
 	function delete_files( $files ) {
 		// If unable to initialize filesystem, quit.
@@ -653,7 +652,7 @@ class Market_Exporter_Admin {
 
 		$yml = '<?xml version="1.0" encoding="'.get_bloginfo( "charset" ).'"?>'.PHP_EOL;
 		$yml .= '<!DOCTYPE yml_catalog SYSTEM "shops.dtd">'.PHP_EOL;
-		$yml .= '<yml_catalog date="'.Date("Y-m-d H:i").'">'.PHP_EOL;
+		$yml .= '<yml_catalog date="'.date("Y-m-d H:i").'">'.PHP_EOL;
 		$yml .= '  <shop>'.PHP_EOL;
 		$yml .= '    <name>'.esc_html( $shop_settings['website_name'] ).'</name>'.PHP_EOL;
 		$yml .= '    <company>'.esc_html( $shop_settings['company_name'] ).'</company>'.PHP_EOL;
@@ -687,7 +686,7 @@ class Market_Exporter_Admin {
 
 			// Check if product has variations.
 			$unser = array_values( unserialize( $offer->options ) );
-			if ( $unser[0]['is_variation'] == 1 ) {
+			if ( ( $unser != null ) && ( $unser[0]['is_variation'] == 1 ) ) {
 				$has_variations  = true;
 				$variations      = $this->get_var_products( $offer->ID );
 				$variation_count = count( $variations );
@@ -706,9 +705,11 @@ class Market_Exporter_Admin {
 					// TODO: optimize code. maybe we don't need to unserialize again? Did that on top
 					// TODO: unserialize only part of array?
 
-					$offer_options = unserialize($offer->options);
-					$link = $this->get_var_link( $offerID, array_values( $offer_options )[0]['name'] );
-					$var_link = '?attribute_'.array_values( $offer_options )[0]['name'].'='.$link->meta_value;
+					//$offer_options = array_values( unserialize( $offer->options ) );
+					//$link = $this->get_var_link( $offerID, $offer_options[0]['name'] );
+					//$var_link = '?attribute_'.$offer_options[0]['name'].'='.$link->meta_value;
+					$link = $this->get_var_link( $offerID, $unser[0]['name'] );
+					$var_link = '?attribute_'.$unser[0]['name'].'='.$link->meta_value;
 
 					if ( $variations[$variation_count]->vendorCode )
 						$offerSKU = $variations[$variation_count]->vendorCode;
