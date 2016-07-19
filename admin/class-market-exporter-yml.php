@@ -1,6 +1,8 @@
 <?php
 /**
- * The YML specific functionality of the plugin.
+ * Class Market_Exporter_YML
+ *
+ * A class that utilizes YML specific functionality of the plugin.
  */
 
 class Market_Exporter_YML {
@@ -24,6 +26,7 @@ class Market_Exporter_YML {
 	 */
 	private function get_currecny() {
 		global $wpdb;
+
 		$currency = $wpdb->get_var(
 			"SELECT option_value
 	               FROM $wpdb->options
@@ -68,6 +71,7 @@ class Market_Exporter_YML {
 	 */
 	private function get_delivery() {
 		global $wpdb;
+
 		$local_shipping = maybe_unserialize( $wpdb->get_var(
 			"SELECT option_value
 									 FROM $wpdb->options
@@ -80,7 +84,6 @@ class Market_Exporter_YML {
 									 WHERE option_name = 'woocommerce_flat_rate_settings'" ) );
 
 			return $flat_rate['cost'];
-
 		} else {
 			return $local_shipping['fee'];
 		}
@@ -107,13 +110,11 @@ class Market_Exporter_YML {
 									INNER JOIN $wpdb->postmeta m1 ON p.ID = m1.post_id AND m1.meta_key = '_sku'
 									INNER JOIN $wpdb->postmeta m2 ON p.ID = m2.post_id AND m2.meta_key = '_visibility'
 									INNER JOIN $wpdb->postmeta m3 ON p.ID = m3.post_id AND m3.meta_key = '_stock_status'
-									INNER JOIN $wpdb->postmeta m4 ON p.ID = m4.post_id AND m4.meta_key = '_backorders'
 									WHERE p.post_type = 'product'
 											AND p.post_status = 'publish'
 											AND p.post_password = ''
 											AND m2.meta_value != 'hidden'
 											" . ( $backorders == 'no' ? "AND m3.meta_value = 'instock'" : "" ) . "
-											AND (m3.meta_value != 'outofstock' OR m4.meta_value = 'yes')
 									ORDER BY p.ID DESC" );
 	}
 
@@ -216,15 +217,10 @@ class Market_Exporter_YML {
 	 * @since     0.2.0
 	 * @return    int         Return code
 	 *                        100 - invalid currency
-	 *                        200 - no products
+	 *                        300 - no products
 	 *                        $file_path - everything is ok
 	 */
 	public function generate_YML() {
-		//global $wpdb;
-
-		// Check currency.
-		//$currency = $this->get_currecny();
-
 		// Check currency.
 		if ( !$currency = $this->get_currecny() )
 			return 100;
@@ -234,7 +230,7 @@ class Market_Exporter_YML {
 
 		// Get products.
 		if ( !$ya_offers = $this->get_products( $shop_settings['backorders'] ) )
-			return 200;
+			return 300;
 
 		if ( ! isset( $shop_settings['file_date'] ) )
 			$shop_settings['file_date'] = 'yes';
@@ -278,10 +274,14 @@ class Market_Exporter_YML {
 
 			// Check if product has variations.
 			$unser = array_values( unserialize( $offer->options ) );
-			if ( ( $unser != null ) && ( $unser[0]['is_variation'] == 1 ) ) {
-				$has_variations  = true;
-				$variations      = $this->get_var_products( $offer->ID );
-				$variation_count = count( $variations );
+			if ( $unser != null ) {
+				foreach ( $unser as $uns ) {
+					if ( $uns['is_variation'] == 1 ) {
+						$has_variations  = true;
+						$variations      = $this->get_var_products( $offer->ID );
+						$variation_count = count( $variations );
+					}
+				}
 			}
 
 			while ( $variation_count > 0 ):
@@ -293,8 +293,12 @@ class Market_Exporter_YML {
 				// Probably there is a better way to get this value, but...
 				// We are getting the last bit for the link: for example ?attribute_pa_color=black
 				if ($has_variations) {
-					$link = $this->get_var_link( $offerID, $unser[0]['name'] );
-					$var_link = '?attribute_' . $unser[0]['name'] . '=' . $link->{'meta_value'};
+					foreach ( $unser as $uns ) {
+						if ( $uns['is_variation'] == 1 ) {
+							$link = $this->get_var_link( $offerID, $uns['name'] );
+							$var_link = '?attribute_' . $uns['name'] . '=' . $link->{'meta_value'};
+						}
+					}
 
 					if ( $variations[$variation_count]->vendorCode )
 						$offerSKU = $variations[$variation_count]->vendorCode;
@@ -352,15 +356,7 @@ class Market_Exporter_YML {
 		// Reset Query.
 		wp_reset_query();
 		// Clear the SQL result cache.
-		// TODO: doesn't work!!!
 		//$wpdb->flush();
-
-		/* Debugging: */
-		//echo "<pre>";
-		//print_r($ya_offers);
-		//echo strtr($yml,Array("<"=>"&lt;","&"=>"&amp;"));
-		//echo "</pre>";
-		/**/
 
 		$market_exporter_fs = new Market_Exporter_FS( $this->plugin_name );
 		$file_path = $market_exporter_fs->write_file( $yml, $shop_settings['file_date'] );
@@ -368,4 +364,3 @@ class Market_Exporter_YML {
 	}
 
 }
-

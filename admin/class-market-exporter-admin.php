@@ -87,8 +87,8 @@ class Market_Exporter_Admin {
 	 */
 	public function add_admin_page() {
 		add_management_page(
-			__( 'Market Exporter', 'market-exporter' ),
-			__( 'Market Exporter', 'market-exporter' ),
+			__( 'Market Exporter', $this->plugin_name ),
+			__( 'Market Exporter', $this->plugin_name ),
 			'manage_options',
 			$this->plugin_name,
 			array( $this, 'display_admin_page' )
@@ -108,7 +108,7 @@ class Market_Exporter_Admin {
 	 * Create the section beneath the products tab
 	 **/
 	public function add_section_page( $sections ) {
-		$sections['market-exporter-settings'] = __( 'Market Exporter', 'market-exporter' );
+		$sections['market-exporter-settings'] = __( 'Market Exporter', $this->plugin_name );
 
 		return $sections;
 	}
@@ -120,86 +120,111 @@ class Market_Exporter_Admin {
 	 */
 	public function add_section_page_settings( $settings, $current_section ) {
 		// Check if the current section is what we want.
+
+		/*
+		 * TODO: The API saves creates to rows in the database.
+		 * TODO: One is for the empty 'market-exporter-settings' and one is for 'market_exporter_shop_settings'.
+		 * TODO: Wise thing to do is to remove one of them... But not sure of a good way how to do it.
+		 */
 		if ( $current_section == 'market-exporter-settings' ) {
 
 			// Used for selection of 'vendor' property.
-			$attributes_array['not_set'] = __( 'Disabled', 'market-exporter' );
+			$attributes_array['not_set'] = __( 'Disabled', $this->plugin_name );
 			foreach ( $this->get_attributes() as $attribute ) {
 				$attributes_array[ $attribute[0] ] = $attribute[1];
 			}
-
+			// We need to attributes arrays. One with 'Disabled' property, one without.
+			// So we just copy the existing array and remove 'Disabled' item.
+			$attributes = $attributes_array;
+			unset( $attributes['not_set'] );
 
 			$settings_slider = array(
-				// Add Title to the Settings.
+				// Global settings section.
 				array(
-					'name' => __( 'Global settings', 'market-exporter' ),
+					'name' => __( 'Global settings', $this->plugin_name ),
 					'type' => 'title',
-					'desc' => __( 'Settings that are  used in the export process.', 'market-exporter' ),
+					'desc' => __( 'Settings that are used in the export process.', $this->plugin_name ),
 					'id'   => 'market-exporter-settings'
 				),
 				// Add website name text field option.
 				array(
-					'name'     => __( 'Website Name', 'market-exporter' ),
-					'desc_tip' => __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
+					'name'     => __( 'Website Name', $this->plugin_name ),
+					'desc_tip' => __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', $this->plugin_name ),
 					'id'       => 'market_exporter_shop_settings[website_name]',
 					'type'     => 'text'
 				),
 				// Add company name text field option.
 				array(
-					'name'     => __( 'Company Name', 'market-exporter' ),
-					'desc_tip' => __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
+					'name'     => __( 'Company Name', $this->plugin_name ),
+					'desc_tip' => __( 'Full company name. Not published in Yandex Market.', $this->plugin_name ),
 					'id'       => 'market_exporter_shop_settings[company_name]',
 					'type'     => 'text'
 				),
 				// Add backorders field option.
 				array(
-					'name' => __( 'Add date to YML file name', 'market-exporter' ),
-					'desc' => __( 'If enabled YML file will have current date at the end (for example, ym-export-2015-12-30.yml).', 'market-exporter' ),
+					'name' => __( 'Add date to YML file name', $this->plugin_name ),
+					'desc' => __( 'If enabled YML file will have current date at the end: ym-export-yyyy-mm-dd.yml.', $this->plugin_name ),
 					'id'   => 'market_exporter_shop_settings[file_date]',
 					'type' => 'checkbox'
 				),
 				// Add image count text field option.
 				array(
-					'name'     => __( 'Images per product', 'market-exporter' ),
-					'desc_tip' => __( 'Max number of images to export for product. Max 10 images.', 'market-exporter' ),
+					'name'     => __( 'Images per product', $this->plugin_name ),
+					'desc_tip' => __( 'Max number of images to export for product. Max 10 images.', $this->plugin_name ),
 					'id'       => 'market_exporter_shop_settings[image_count]',
 					'type'     => 'text'
 				),
 				// Add selection of 'vendor' property.
 				array(
-					'name'     => __( 'Vendor property', 'market-exporter' ),
-					'desc_tip' => __( 'Custom property used to specify vendor.', 'market-exporter' ),
+					'name'     => __( 'Vendor property', $this->plugin_name ),
+					'desc_tip' => __( 'Custom property used to specify vendor.', $this->plugin_name ),
 					'id'       => 'market_exporter_shop_settings[vendor]',
 					'type'     => 'select',
 					'options'  => $attributes_array
 				),
 				// Add market_category text field option.
 				array(
-					'name'     => __( 'Market category property', 'market-exporter' ),
-					'desc'     => sprintf( __( 'Can be set to a value from <a href="%s" target="_blank">this list</a> only.', 'market-exporter' ), 'http://download.cdn.yandex.net/market/market_categories.xls' ),
-					'desc_tip' => __( 'Category of product on Yandex Market.', 'market-exporter' ),
+					'name'     => __( 'Market category property', $this->plugin_name ),
+					'desc'     => sprintf( __( 'Can be set to a value from <a href="%s" target="_blank">this list</a> only.', $this->plugin_name ), 'http://download.cdn.yandex.net/market/market_categories.xls' ),
+					'desc_tip' => __( 'Category of product on Yandex Market.', $this->plugin_name ),
 					'id'       => 'market_exporter_shop_settings[market_category]',
 					'type'     => 'select',
 					'options'  => $attributes_array
 				),
 				// Add sales_notes field option.
 				array(
-					'name'     => __( 'Enable sales_notes', 'market-exporter' ),
-					'desc'     => __( 'If enabled will use product field "short description" as value for property "sales_notes".', 'market-exporter' ),
+					'name'     => __( 'Enable sales_notes', $this->plugin_name ),
+					'desc'     => __( 'If enabled will use product field "short description" as value for property "sales_notes".', $this->plugin_name ),
 					'desc_tip' => __( 'Not longer than 50 characters.', 'market-exporter' ),
 					'id'       => 'market_exporter_shop_settings[sales_notes]',
 					'type'     => 'checkbox'
 				),
 				// Add backorders field option.
 				array(
-					'name' => __( 'Export products with backorders', 'market-exporter' ),
-					'desc' => __( 'If enabled products that are available for backorder will be exported to YML.', 'market-exporter' ),
-					'id'   => 'market_exporter_shop_settings[backorders]',
-					'type' => 'checkbox'
+					'name'     => __( 'Export products with backorders', $this->plugin_name ),
+					'desc'     => __( 'If enabled products that are available for backorder will be exported to YML.', $this->plugin_name ),
+					'id'       => 'market_exporter_shop_settings[backorders]',
+					'type'     => 'checkbox'
 				),
+				// Export selected categories.
+				/*array(
+					'name'     => __( 'Param properties', $this->plugin_name ),
+					'desc_tip' => __( 'Selected parameters will be used in property "param.".', $this->plugin_name ),
+					'id'       => 'market_exporter_shop_settings[params]',
+					'type'     => 'multiselect',
+					'css'      => 'width: 189px',
+					'options'  => $attributes
+				),
+				// Add new version field option.
 				array(
-					'type' => 'sectionend',
-					'id'   => 'market-exporter-settings'
+					'name'     => __( 'Use dev version', $this->plugin_name ),
+					'desc'     => __( 'Use development functions of the plugin.', $this->plugin_name ),
+					'id'       => 'market_exporter_shop_settings[develop]',
+					'type'     => 'checkbox'
+				),*/
+				array(
+					'type'     => 'sectionend',
+					'id'       => 'market-exporter-settings'
 				)
 			);
 
@@ -217,8 +242,8 @@ class Market_Exporter_Admin {
 	 * @since   0.0.4
 	 */
 	public function register_settings() {
-		register_setting( $this->plugin_name, 'market_exporter_shop_settings', array(
-			$this,
+			register_setting( $this->plugin_name, 'market_exporter_shop_settings', array(
+			&$this,
 			'validate_shop_settings_array'
 		) );
 	}
@@ -246,11 +271,15 @@ class Market_Exporter_Admin {
 			$output['image_count'] = $images;
 		}
 
+		print_r( $input['params'] );
+
 		$output['vendor']          = sanitize_text_field( $input['vendor'] );
 		$output['market_category'] = sanitize_text_field( $input['market_category'] );
 		$output['sales_notes']     = sanitize_text_field( $input['sales_notes'] );
 		$output['backorders']      = sanitize_text_field( $input['backorders'] );
 		$output['file_date']       = sanitize_text_field( $input['file_date'] );
+		//$output['params']          = $input['params'];
+		//$output['develop']          = sanitize_text_field( $input['develop'] );
 
 		return $output;
 	}

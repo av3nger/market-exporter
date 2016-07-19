@@ -4,10 +4,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter v0.0.1\n"
-"POT-Creation-Date: 2016-04-11 11:50+0300\n"
-"PO-Revision-Date: \n"
-"Language-Team: Anton Vanyukov <a.vanyukov@testor.ru>\n"
 "Report-Msgid-Bugs-To: Anton Vanyukov <a.vanyukov@testor.ru>\n"
+"POT-Creation-Date: 2016-07-19 10:40+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Anton Vanyukov <a.vanyukov@testor.ru>\n"
+"Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,9 +21,7 @@ msgstr ""
 "esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
 "_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Generator: Poedit 1.8.6\n"
-"Last-Translator: \n"
-"Language: ru_RU\n"
+"X-Generator: Poedit 1.8.7\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: admin/class-market-exporter-admin.php:90
@@ -30,23 +30,23 @@ msgstr ""
 msgid "Market Exporter"
 msgstr "Market Exporter"
 
-#: admin/class-market-exporter-admin.php:126
+#: admin/class-market-exporter-admin.php:132
 msgid "Disabled"
 msgstr "Отключено"
 
-#: admin/class-market-exporter-admin.php:135
+#: admin/class-market-exporter-admin.php:144
 msgid "Global settings"
 msgstr "Основные настройки"
 
-#: admin/class-market-exporter-admin.php:137
-msgid "Settings that are  used in the export process."
-msgstr "Параметры, которые используются в процессе экспорта."
+#: admin/class-market-exporter-admin.php:146
+msgid "Settings that are used in the export process."
+msgstr "Настройки экспорта."
 
-#: admin/class-market-exporter-admin.php:142
+#: admin/class-market-exporter-admin.php:151
 msgid "Website Name"
 msgstr "Название сайта"
 
-#: admin/class-market-exporter-admin.php:143
+#: admin/class-market-exporter-admin.php:152
 msgid ""
 "Not longer than 20 characters. Has to be the name of the shop, that is "
 "configured in Yandex Market."
@@ -54,69 +54,69 @@ msgstr ""
 "Не более 20 символов. Должно совпадать с названием магазина, который "
 "настроен в Яндекс Маркет."
 
-#: admin/class-market-exporter-admin.php:149
+#: admin/class-market-exporter-admin.php:158
 msgid "Company Name"
 msgstr "Название организации"
 
-#: admin/class-market-exporter-admin.php:150
+#: admin/class-market-exporter-admin.php:159
 msgid "Full company name. Not published in Yandex Market."
 msgstr "Полное наименование организации. Не публикуется на Яндекс Маркет."
 
-#: admin/class-market-exporter-admin.php:156
+#: admin/class-market-exporter-admin.php:165
 msgid "Add date to YML file name"
 msgstr "Добавить дату в имя файла YML"
 
-#: admin/class-market-exporter-admin.php:157
+#: admin/class-market-exporter-admin.php:166
 msgid ""
-"If enabled YML file will have current date at the end (for example, ym-"
-"export-2015-12-30.yml)."
+"If enabled YML file will have current date at the end: ym-export-yyyy-mm-dd."
+"yml."
 msgstr ""
-"Если опция включена, то файлы YML будут содержать текущую дату в конце "
-"(например, ym export-2015-12-30.ml)."
+"Если активна, то к имена файла YML будет добавляться текущая дата: yml-"
+"export-yyyy-mm-dd.yml"
 
-#: admin/class-market-exporter-admin.php:163
+#: admin/class-market-exporter-admin.php:172
 msgid "Images per product"
 msgstr "Изображений на товарное предложение"
 
-#: admin/class-market-exporter-admin.php:164
+#: admin/class-market-exporter-admin.php:173
 msgid "Max number of images to export for product. Max 10 images."
 msgstr ""
 "Максимальное количество изображений для товарного предложения. Макс 10 "
 "изображений."
 
-#: admin/class-market-exporter-admin.php:170
+#: admin/class-market-exporter-admin.php:179
 msgid "Vendor property"
 msgstr "Элемент vendor"
 
-#: admin/class-market-exporter-admin.php:171
+#: admin/class-market-exporter-admin.php:180
 msgid "Custom property used to specify vendor."
 msgstr ""
 "Атрибут, который отвечает за значение элемента vendor на Яндекс Маркет."
 
-#: admin/class-market-exporter-admin.php:178
+#: admin/class-market-exporter-admin.php:187
 msgid "Market category property"
 msgstr "Элемент market_catergory"
 
-#: admin/class-market-exporter-admin.php:179
+#: admin/class-market-exporter-admin.php:188
 #, php-format
 msgid ""
 "Can be set to a value from <a href=\"%s\" target=\"_blank\">this list</a> "
 "only."
 msgstr ""
-"Может принимать любое значение из <a href=«%s» target=«_blank»>этого списка</"
-"a>."
+"Может принимать любое значение из <a href=\"%s\" target=\"_blank\">этого "
+"списка</a>."
 
-#: admin/class-market-exporter-admin.php:180
+#: admin/class-market-exporter-admin.php:189
 msgid "Category of product on Yandex Market."
 msgstr ""
 "Атрибут, который отвечает за значение элемента market_category на Яндекс "
 "Маркет."
 
-#: admin/class-market-exporter-admin.php:187
+#: admin/class-market-exporter-admin.php:196
 msgid "Enable sales_notes"
 msgstr "Использовать элемент sales_notes"
 
-#: admin/class-market-exporter-admin.php:188
+#: admin/class-market-exporter-admin.php:197
 msgid ""
 "If enabled will use product field \"short description\" as value for "
 "property \"sales_notes\"."
@@ -124,22 +124,22 @@ msgstr ""
 "Если активно, то будет использовано значение поля товара «короткое описание» "
 "в качестве значения элемента «sales_notes»."
 
-#: admin/class-market-exporter-admin.php:189
+#: admin/class-market-exporter-admin.php:198
 msgid "Not longer than 50 characters."
 msgstr "Не более 50 символов."
 
-#: admin/class-market-exporter-admin.php:195
+#: admin/class-market-exporter-admin.php:204
 msgid "Export products with backorders"
 msgstr "Экспорт товаров со статусом предзаказ"
 
-#: admin/class-market-exporter-admin.php:196
+#: admin/class-market-exporter-admin.php:205
 msgid ""
 "If enabled products that are available for backorder will be exported to YML."
 msgstr ""
 "Если активна, то товары, доступные для предзаказа, будут экспортированы в "
 "YML."
 
-#: admin/class-market-exporter-admin.php:268
+#: admin/class-market-exporter-admin.php:297
 msgid "Settings"
 msgstr "Настройки"
 
@@ -155,7 +155,7 @@ msgstr "Ошибка при сохранении файла."
 msgid "Silence is golden"
 msgstr "Silence is golden"
 
-#: admin/partials/market-exporter-admin-display.php:27
+#: admin/partials/market-exporter-admin-display.php:40
 #, php-format
 msgid ""
 "Currently only the following currency is supported: Russian Ruble (RUB), "
@@ -165,20 +165,29 @@ msgstr ""
 "Данные о ценах принимаются в рублях (RUR, RUB), гривнах (UAH), долларах "
 "(USD) и евро (EUR). Пожалуйста, <a href=«%s»>обновите валюту</a>."
 
-#: admin/partials/market-exporter-admin-display.php:30
+#: admin/partials/market-exporter-admin-display.php:43
+#, php-format
+msgid ""
+"No shipping methods are available. Please <a href=\"%s\">update or add at "
+"least one</a>."
+msgstr ""
+"Нет доступных способов доставки. Пожалуйста <a href=\"%s\">обновите "
+"параметры доставки</a>."
+
+#: admin/partials/market-exporter-admin-display.php:46
 #, php-format
 msgid ""
 "Unable to find any products. Are you sure <a href=\"%s\">some exist</a>?"
 msgstr ""
-"Не найдено ни одного товара. Попробуйте <a href=«%s»>добавить</a> несколько "
-"товаров в WooCommerce."
+"Не найдено ни одного товара. Попробуйте <a href=\"%s\">добавить</a> "
+"несколько товаров в WooCommerce."
 
-#: admin/partials/market-exporter-admin-display.php:33
+#: admin/partials/market-exporter-admin-display.php:49
 #, php-format
 msgid "File exported successfully: <a href=\"%s\">%s</a>."
-msgstr "Файл YML успешно сгенерирован: <a href=«%s»>%s</a>."
+msgstr "Файл YML успешно сгенерирован: <a href=\"%s\">%s</a>."
 
-#: admin/partials/market-exporter-admin-display.php:41
+#: admin/partials/market-exporter-admin-display.php:57
 msgid ""
 "This plugin is used to generate a valid YML file for exporting your products "
 "in WooCommerce to Yandex Market."
@@ -186,7 +195,7 @@ msgstr ""
 "Данный плагин используется для генерации валидного YML файла для "
 "экспортированная товаров из WooCommerce в Яндекс Маркет."
 
-#: admin/partials/market-exporter-admin-display.php:43
+#: admin/partials/market-exporter-admin-display.php:59
 msgid ""
 "Please be patient while the YML file is generated. This can take a while if "
 "your server is slow (inexpensive hosting) or if you have many products in "
@@ -200,45 +209,59 @@ msgstr ""
 "WooCommerce. Не уходите с этой страницы, пока этот процесс не будет "
 "завершен, или файл YML не будет создан. Вы будете уведомлены при завершении."
 
-#: admin/partials/market-exporter-admin-display.php:45
+#: admin/partials/market-exporter-admin-display.php:61
 msgid "To begin, just press the button below."
 msgstr "Чтобы начать, нажмите на кнопку ниже."
 
-#: admin/partials/market-exporter-admin-display.php:47
+#: admin/partials/market-exporter-admin-display.php:63
 msgid "Generate YML file"
 msgstr "Генерировать YML файл"
 
-#: admin/partials/market-exporter-admin-display.php:49
-#: admin/partials/market-exporter-admin-display.php:91
+#: admin/partials/market-exporter-admin-display.php:65
+#: admin/partials/market-exporter-admin-display.php:107
 msgid "You must enable Javascript in order to proceed!"
 msgstr "Чтобы продолжить необходимо включить Javascript!"
 
-#: admin/partials/market-exporter-admin-display.php:62
+#: admin/partials/market-exporter-admin-display.php:78
 msgid "Generated YML files:"
 msgstr "Генерированные файлы:"
 
-#: admin/partials/market-exporter-admin-display.php:69
+#: admin/partials/market-exporter-admin-display.php:85
 msgid "File name"
 msgstr "Имя файла"
 
-#: admin/partials/market-exporter-admin-display.php:70
+#: admin/partials/market-exporter-admin-display.php:86
 msgid "Action"
 msgstr "Действие"
 
-#: admin/partials/market-exporter-admin-display.php:83
+#: admin/partials/market-exporter-admin-display.php:99
 msgid "Open file"
 msgstr "Открыть файл"
 
-#: admin/partials/market-exporter-admin-display.php:89
+#: admin/partials/market-exporter-admin-display.php:105
 msgid "Delete selected files"
 msgstr "Удалить выбранные файлы"
 
-#: includes/class-market-exporter.php:257
+#: admin/partials/market-exporter-admin-display.php:111
+msgid "News:"
+msgstr "Новости:"
+
+#: includes/class-market-exporter.php:258
 msgid ""
 "The Market Exporter plugin requires <a href=\"https://wordpress.org/plugins/"
 "woocommerce/\">WooCommerce</a> to be installed and activated. Please check "
 "your configuration."
 msgstr ""
 "Для работы плагина Market Exporter требуется установить и активировать "
-"плагин <a href=«https://wordpress.org/plugins/woocommerce/«>WooCommerce</a>. "
-"Пожалуйста, проверьте Вашу конфигурацию."
+"плагин <a href=\"https://wordpress.org/plugins/woocommerce/\">WooCommerce</"
+"a>. Пожалуйста, проверьте Вашу конфигурацию."
+
+#~ msgid "Settings that are  used in the export process."
+#~ msgstr "Параметры, которые используются в процессе экспорта."
+
+#~ msgid ""
+#~ "If enabled YML file will have current date at the end (for example, ym-"
+#~ "export-2015-12-30.yml)."
+#~ msgstr ""
+#~ "Если опция включена, то файлы YML будут содержать текущую дату в конце "
+#~ "(например, ym export-2015-12-30.ml)."

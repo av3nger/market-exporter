@@ -60,7 +60,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		$this->version = '0.2.4';
+		$this->version = '0.2.6';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -111,6 +111,7 @@ class Market_Exporter {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-admin.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-fs.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-yml.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-wc.php';
 
 		$this->loader = new Market_Exporter_Loader();
 
