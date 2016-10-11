@@ -15,7 +15,6 @@ class ME_WC {
 	 * @since     0.3.0
 	 */
 	public function __construct() {
-
 		// Get plugin settings.
 		$this->settings = get_option( 'market_exporter_shop_settings' );
 
@@ -25,7 +24,6 @@ class ME_WC {
 
 		if ( ! isset( $this->settings['image_count'] ) )
 			$this->settings['image_count'] = 10;
-
 	}
 
 	/**
@@ -87,7 +85,6 @@ class ME_WC {
 			default:
 				return false;
 		}
-
 	}
 
 	/**
@@ -101,23 +98,34 @@ class ME_WC {
 		$args = array(
 			'posts_per_page' => -1,
 			//'post_type' => array('product', 'product_variation'),
-			'post_type' => array('product'),
-			'post_status' => 'publish',
-			'meta_query' => array(
+			'post_type'     => array('product'),
+			'post_status'   => 'publish',
+			'meta_query'    => array(
 				array(
-					'key' => '_price',
+					'key'   => '_price',
 					'value' => 0,
 					'compare' => '>',
-					'type' => 'NUMERIC'
+					'type'  => 'NUMERIC'
 				),
 				array(
-					'key' => '_stock_status',
+					'key'   => '_stock_status',
 					'value' => 'instock'
 				)
 			),
-			'orderby' => 'ID',
-			'order' => 'DESC'
+			'orderby'   => 'ID',
+			'order'     => 'DESC'
 		);
+
+        // If in options some specific categories are defined for export only.
+        if ( isset( $this->settings[ 'include_cat' ] ) ) {
+            $args['tax_query'] = [
+                [
+                    'taxonomy'  => 'product_cat',
+                    'field'     => 'term_id',
+                    'terms'     => $this->settings[ 'include_cat' ]
+                ]
+            ];
+        }
 
 		$query = new WP_Query( $args );
 
@@ -125,8 +133,24 @@ class ME_WC {
 			return $query;
 
 		return false;
-
 	}
+
+    /**
+     * Replace characters that are not allowed in the YML file.
+     *
+     * @since     0.3.0
+     * @param     $string
+     * @return    mixed
+     */
+	private function clean( $string ) {
+	    $string = str_replace( '"', '&quot;', $string);
+        $string = str_replace( '&', '&amp;', $string);
+        $string = str_replace( '>', '&gt;', $string);
+        $string = str_replace( '<', '&lt;', $string);
+        $string = str_replace( '\'', '&apos;', $string);
+        //$string = str_replace( '&nbsp;', '', $string );
+	    return $string;
+    }
 
 	/**
 	 * Generate YML header.
@@ -156,7 +180,7 @@ class ME_WC {
 		$yml .= '    </currencies>'.PHP_EOL;
 
 		$yml .= '    <categories>'.PHP_EOL;
-		foreach ( get_categories( array( 'taxonomy' => 'product_cat' ) ) as $category ):
+		foreach ( get_categories( array( 'taxonomy' => 'product_cat', 'orderby' => 'term_id' ) ) as $category ):
 			if ( $category->parent == 0 ) {
 				$yml .= '      <category id="' . $category->cat_ID . '">' . wp_strip_all_tags( $category->name ) . '</category>'.PHP_EOL;
 			} else {
@@ -167,7 +191,6 @@ class ME_WC {
 		$yml .= '    <offers>'.PHP_EOL;
 
 		return $yml;
-
 	}
 
 	/**
@@ -253,7 +276,7 @@ class ME_WC {
 				//endforeach;
 
 				$yml .= '        <delivery>true</delivery>'.PHP_EOL;
-				$yml .= '        <name>' . $offer->get_title() . '</name>'.PHP_EOL;
+				$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>'.PHP_EOL;
 
 				// Vendor.
 				if ( isset( $this->settings['vendor'] ) && $this->settings['vendor'] != 'not_set' ) {

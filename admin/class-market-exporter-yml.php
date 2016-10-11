@@ -8,9 +8,20 @@
 class Market_Exporter_YML {
 
 	private $plugin_name;
+    private $settings;
 
 	public function __construct( $plugin_name ) {
 		$this->plugin_name = $plugin_name;
+
+        // Get plugin settings.
+        $this->settings = get_option( 'market_exporter_shop_settings' );
+
+        // Init default values if not set in config.
+        if ( ! isset( $this->settings['file_date'] ) )
+            $this->settings['file_date'] = 'yes';
+
+        if ( ! isset( $this->settings['image_count'] ) )
+            $this->settings['image_count'] = 10;
 	}
 
 	/**
@@ -262,7 +273,8 @@ class Market_Exporter_YML {
 			}
 		endforeach;
 		$yml .= '    </categories>'.PHP_EOL;
-		$yml .= '    <local_delivery_cost>'.$this->get_delivery().'</local_delivery_cost>'.PHP_EOL;
+        // TODO: <delivery-options>
+		//$yml .= '    <local_delivery_cost>'.$this->get_delivery().'</local_delivery_cost>'.PHP_EOL;
 		$yml .= '    <offers>'.PHP_EOL;
 		foreach ( $ya_offers as $offer ):
 			/*
@@ -346,6 +358,51 @@ class Market_Exporter_YML {
 				// Sales notes.
 				if ( ( $shop_settings['sales_notes'] == 'yes' ) && ( $offer->sales_notes ) )
 					$yml .= '        <sales_notes>'.wp_strip_all_tags( $offer->sales_notes ).'</sales_notes>'.PHP_EOL;
+
+
+
+				/*
+				// Params.
+				echo "<pre>";
+				// If some parameters are selected in options, go through all of them
+				if ( $shop_settings['params'] != null ) {
+					echo 'Offer'. $offerID." : <br>";
+					//print_r( $shop_settings['params'] );
+					$param_keys = array_keys( unserialize( $offer->{'options'} ) );
+					if ( $param_keys != null ) {
+						echo "found variations";
+
+						//print_r($param_keys);
+						foreach ( $shop_settings['params'] as $param ) {
+							//echo "getting param value<br>";
+							if ( in_array( 'pa_' . $param, $param_keys ) ) {
+								//echo "$offerID param found: $param<br>";
+								//$param_key = '';
+
+
+								//print_r(get_post_meta($offerID, 'pa_color', true));
+				
+								//if ( !$has_variations ) {
+									//$param_value = wc_get_product_terms( $offerID, 'pa_' . $param, array( 'fields' => 'names' ) );
+								//}
+
+								$param_value = wc_get_product_terms( $offerID, 'pa_' . $param, array( 'fields' => 'names' ) );
+								print_r($param_value);
+								//echo 'param name="' . $param_key . '"' . $param_value[0] . '/param';
+							}
+						}
+
+
+
+					}
+				}
+
+
+				//print_r( $offer );
+				echo "</pre>";
+				*/
+
+
 				$yml .= '      </offer>'.PHP_EOL;
 			endwhile;
 		endforeach;

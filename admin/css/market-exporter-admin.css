@@ -2,25 +2,29 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
- 
-#market-exporter table {
-	width: 100%;
-	border-collapse: collapse;
-	border-spacing: 0;
-	line-height: 20px;
+
+#me_pages .nav-tab-wrapper {
+	margin: 10px 0 25px;
 }
 
-#market-exporter table tr:first-child {
-	background-color: #bfbfbf;;
-	font-weight: bold;
-	text-transform: uppercase;
-	line-height: 30px;
+#me_pages .version {
+	position: absolute;
+	top: 15px;
+	right: 20px;
 }
 
-#market-exporter table .id {
-	width: 30px;
+#me_pages ul {
+	list-style-type: disc;
 }
 
-#market-exporter table .name {
-	width: 30%;
+#me_pages ul li {
+	margin-left: 20px;
+}
+
+#me_pages select {
+	min-width: 185px;
+}
+
+#market-exporter table td > input[type="checkbox"] {
+	margin: 0 0 0 8px;
 }

@@ -19,6 +19,11 @@ class Market_Exporter_FS {
 	 */
 	function init_fs() {
 		$url = wp_nonce_url( 'tools.php?page=market-exporter', $this->plugin_name );
+
+		// Need to include file.php for cron.
+		if( ! function_exists('request_filesystem_credentials') ) {
+			require_once(ABSPATH . "wp-admin" . '/includes/file.php');}
+
 		if ( false === ( $creds = request_filesystem_credentials( $url, '', false, false, null ) ) ) {
 			// If we get here, then we don't have credentials yet,
 			// but have just produced a form for the user to fill in,
