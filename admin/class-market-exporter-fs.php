@@ -113,8 +113,8 @@ class Market_Exporter_FS {
 	 * Delete selected files.
 	 *
 	 * @since      0.0.8
-	 *
 	 * @param      array  $files                        Array of filenames to delete.
+     * @return     bool
 	 */
 	function delete_files( $files ) {
 		// If unable to initialize filesystem, quit.

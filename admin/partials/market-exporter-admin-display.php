@@ -46,7 +46,6 @@
 
 			// Select what version of plugin to use.
 			$plugin_option = get_option( 'market_exporter_shop_settings' );
-			//$ME = new Market_Exporter_YML( $this->plugin_name );
 			$ME = new ME_WC();
 
 			$return_code = $ME->generate_YML();

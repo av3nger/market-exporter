@@ -39,7 +39,6 @@ class ME_WC {
 	 * @return    int|string
 	 */
 	public function generate_YML() {
-
 		// Check currency.
 		if ( ! $currency = $this->check_currecny() )
 			return 100;

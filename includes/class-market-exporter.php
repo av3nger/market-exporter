@@ -60,7 +60,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		$this->version = '0.3.0';
+		$this->version = '0.3.1';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -110,7 +110,6 @@ class Market_Exporter {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-admin.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-fs.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-yml.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-wc.php';
 
 		$this->loader = new Market_Exporter_Loader();
@@ -145,7 +144,7 @@ class Market_Exporter {
 	private function define_admin_hooks() {
 		
 		$plugin_admin = new Market_Exporter_Admin( $this->get_plugin_name(), $this->get_version() );
-		$plugin_yml = new Market_Exporter_YML( $this->get_plugin_name() );
+		$plugin_yml = new ME_WC();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );

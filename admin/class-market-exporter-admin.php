@@ -256,8 +256,6 @@ class Market_Exporter_Admin {
 				'type'              => 'multiselect'
 			]
 		);
-
-        // a:8:{s:12:"website_name";s:15:"Market Exporter";s:12:"company_name";s:15:"Market Exporter";s:11:"image_count";i:10;s:6:"vendor";s:7:"not_set";s:15:"market_category";s:7:"not_set";s:11:"sales_notes";s:2:"no";s:10:"backorders";s:2:"no";s:9:"file_date";s:3:"yes";}
 	}
 
     /**
