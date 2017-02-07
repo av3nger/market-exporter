@@ -55,7 +55,8 @@ class Market_Exporter_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/market-exporter-admin.css', array(), $this->version, 'all' );
+        wp_enqueue_style( $this->plugin_name . '-select2', plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), null, 'all' );
+		wp_enqueue_style( $this->plugin_name . '-admin', plugin_dir_url( __FILE__ ) . 'css/market-exporter-admin.css', array(), null, 'all' );
 	}
 
 	/**
@@ -75,7 +76,8 @@ class Market_Exporter_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/market-exporter-admin.js', array( 'jquery' ), $this->version, false );
+        wp_enqueue_script( $this->plugin_name . '-select2', plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), null, false );
+		wp_enqueue_script( $this->plugin_name . '-admin', plugin_dir_url( __FILE__ ) . 'js/market-exporter-admin.js', array( 'jquery' ), null, false );
 	}
 
 	/**
@@ -125,13 +127,13 @@ class Market_Exporter_Admin {
 		// Add website name text field option.
         add_settings_field(
             'market_exporter_website_name',
-            __( 'Website Name', $this->plugin_name ),
+            __( 'Website name', $this->plugin_name ),
             array( &$this, 'input_fields_cb' ),
             $this->plugin_name,
             'market_exporter_section_general',
             [
                 'label_for'         => 'website_name',
-                'placeholder'       => __( 'Website Name', $this->plugin_name ),
+                'placeholder'       => __( 'Website name', $this->plugin_name ),
                 'description'       => __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', $this->plugin_name ),
                 'type'              => 'text'
             ]
@@ -140,19 +142,19 @@ class Market_Exporter_Admin {
 		// Add company name text field option.
         add_settings_field(
             'market_exporter_company_name',
-            __( 'Company Name', $this->plugin_name ),
+            __( 'Company name', $this->plugin_name ),
             array( &$this, 'input_fields_cb' ),
             $this->plugin_name,
             'market_exporter_section_general',
             [
                 'label_for'         => 'company_name',
-                'placeholder'       => __( 'Company Name', $this->plugin_name ),
+                'placeholder'       => __( 'Company name', $this->plugin_name ),
                 'description'       => __( 'Full company name. Not published in Yandex Market.', $this->plugin_name ),
                 'type'              => 'text'
             ]
         );
 
-		// Add backorders field option.
+		// Add file_date field option.
         add_settings_field(
             'market_exporter_file_date',
             __( 'Add date to YML file name', $this->plugin_name ),
@@ -215,20 +217,6 @@ class Market_Exporter_Admin {
 			]
 		);
 
-		// Add sales_notes field option.
-		add_settings_field(
-			'market_exporter_sales_notes',
-			__( 'Enable sales_notes', $this->plugin_name ),
-			array( &$this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			[
-				'label_for'         => 'sales_notes',
-				'description'       => __( 'If enabled will use product field "short description" as value for property "sales_notes". Not longer than 50 characters.', $this->plugin_name ),
-				'type'              => 'checkbox'
-			]
-		);
-
 		// Add backorders field option.
 		add_settings_field(
 			'market_exporter_backorders',
@@ -256,6 +244,51 @@ class Market_Exporter_Admin {
 				'type'              => 'multiselect'
 			]
 		);
+
+
+        // Add sales_notes field.
+        add_settings_field(
+            'market_exporter_sales_notes',
+            __( 'Sales notes', $this->plugin_name ),
+            array( &$this, 'input_fields_cb' ),
+            $this->plugin_name,
+            'market_exporter_section_general',
+            [
+                'label_for'         => 'sales_notes',
+                'placeholder'       => __( 'Sales notes', $this->plugin_name ),
+                'description'       => __( 'Not longer than 50 characters.', $this->plugin_name ),
+                'type'              => 'textarea'
+            ]
+        );
+
+
+        // Add weight and size option.
+        add_settings_field(
+            'market_exporter_size',
+            __( 'Export weight and size data', $this->plugin_name ),
+            array( &$this, 'input_fields_cb' ),
+            $this->plugin_name,
+            'market_exporter_section_general',
+            [
+                'label_for'         => 'size',
+                'description'       => __( 'If enabled weight and size data from WooCommerce will be exported to Width, Depth, Height and Weight params.', $this->plugin_name ),
+                'type'              => 'checkbox'
+            ]
+        );
+
+        // Add parameters multiselect option.
+        add_settings_field(
+            'market_exporter_params',
+            __( 'Use selected parameters', $this->plugin_name ),
+            array( &$this, 'input_fields_cb' ),
+            $this->plugin_name,
+            'market_exporter_section_general',
+            [
+                'label_for'         => 'params',
+                'description'       => __( 'Selected attributes will be exported as a parameters. Hold down the control (ctrl) button on Windows or command (cmd) on Mac to select multiple options.', $this->plugin_name ),
+                'type'              => 'multiselect'
+            ]
+        );
 	}
 
     /**
@@ -289,9 +322,14 @@ class Market_Exporter_Admin {
             <input id="<?= esc_attr( $args[ 'label_for' ] ); ?>"
 				   type="<?= esc_attr( $args[ 'type' ] ); ?>"
                    name="market_exporter_shop_settings[<?= esc_attr( $args[ 'label_for' ] ); ?>]"
-                   value="<?= $options[ $args[ 'label_for' ] ]; ?>"
+                   value="<?= esc_attr( $options[ $args[ 'label_for' ] ] ); ?>"
                    <?php if ( esc_attr( $args[ 'type' ] ) == 'text' ) :?>placeholder="<?= esc_attr( $args[ 'placeholder' ] ); endif; ?>"
 				   <?php if ( esc_attr( $args[ 'type' ] ) == 'checkbox' && $options[ $args[ 'label_for' ] ] == 'yes' ) echo "checked"; ?>>
+
+        <?php elseif ( esc_attr( $args[ 'type' ] ) == 'textarea' ) : ?>
+
+            <textarea cols="39" rows="3" maxlength="50" id="<?= esc_attr( $args[ 'label_for' ] ); ?>"
+                      name="market_exporter_shop_settings[<?= esc_attr( $args[ 'label_for' ] ); ?>]"><?= $options[ $args[ 'label_for' ] ]; ?></textarea>
 
         <?php elseif ( esc_attr( $args[ 'type' ] ) == 'select' ) : ?>
 
@@ -304,26 +342,76 @@ class Market_Exporter_Admin {
 				<?php endforeach; ?>
 			</select>
 
-		<?php elseif ( esc_attr( $args[ 'type' ] ) == 'multiselect' ) :
+		<?php
+        /*
+            NOTE: I'm not sure I want to keep this part. Because below is a much shorter version of the same code,
+            although it's harder to read then the code here. I'll leave it here for now, just in case I messed up.
 
-			$select_array = [];
-			if ( isset( $options[ $args[ 'label_for' ] ] ) )
-				$select_array = $options[ $args[ 'label_for' ] ];
-			?>
-			<select size="10" id="<?= esc_attr( $args[ 'label_for' ] ); ?>"
-					name="market_exporter_shop_settings[<?= esc_attr( $args[ 'label_for' ] ); ?>][]"
-					multiple>
-				<?php foreach ( get_categories( [ 'taxonomy' => 'product_cat', 'parent' => 0 ] ) as $category ) : ?>
-					<option value="<?= $category->cat_ID; ?>"
-							<?php if ( in_array( $category->cat_ID, $select_array ) ) echo "selected"; ?>><?= $category->name; ?></option>
-					<?php foreach ( get_categories( [ 'taxonomy' => 'product_cat', 'parent' => $category->cat_ID ] ) as $subcategory ) : ?>
-						<option value="<?= $subcategory->cat_ID; ?>"
-								<?php if ( in_array( $subcategory->cat_ID, $select_array ) ) echo "selected"; ?>><?= "&mdash;&nbsp;" . $subcategory->name; ?></option>
-					<?php endforeach; ?>
-				<?php endforeach; ?>
-			</select>
+            elseif ( esc_attr( $args[ 'type' ] ) == 'multiselect' ) :
 
-		<?php endif; ?>
+            if ( esc_attr( $args[ 'label_for' ] ) == 'include_cat' ) :
+                $select_array = [];
+                if ( isset( $options[ $args[ 'label_for' ] ] ) )
+                    $select_array = $options[ $args[ 'label_for' ] ];
+                ?>
+                <select size="10" id="<?= esc_attr( $args[ 'label_for' ] ); ?>"
+                        name="market_exporter_shop_settings[<?= esc_attr( $args[ 'label_for' ] ); ?>][]"
+                        multiple>
+                    <?php foreach ( get_categories( [ 'taxonomy' => 'product_cat', 'parent' => 0 ] ) as $category ) : ?>
+                        <option value="<?= $category->cat_ID; ?>"
+                            <?php if ( in_array( $category->cat_ID, $select_array ) ) echo "selected"; ?>><?= $category->name; ?></option>
+                        <?php foreach ( get_categories( [ 'taxonomy' => 'product_cat', 'parent' => $category->cat_ID ] ) as $subcategory ) : ?>
+                            <option value="<?= $subcategory->cat_ID; ?>"
+                                <?php if ( in_array( $subcategory->cat_ID, $select_array ) ) echo "selected"; ?>><?= "&mdash;&nbsp;" . $subcategory->name; ?></option>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </select>
+            <?php endif;
+
+            if ( esc_attr( $args[ 'label_for' ] ) == 'params' ) :
+                $select_array = [];
+                if ( isset( $options[ $args[ 'label_for' ] ] ) )
+                    $select_array = $options[ $args[ 'label_for' ] ];
+                ?>
+                <select size="10" id="<?= esc_attr( $args[ 'label_for' ] ); ?>"
+                        name="market_exporter_shop_settings[<?= esc_attr( $args[ 'label_for' ] ); ?>][]"
+                        multiple>
+                    <?php foreach ( wc_get_attribute_taxonomies() as $attribute ) : ?>
+                        <option value="<?= $attribute->attribute_id; ?>"
+                            <?php if ( in_array( $attribute->attribute_id, $select_array ) ) echo "selected"; ?>><?= $attribute->attribute_label; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            <?php endif;
+
+		    endif;
+        */
+
+        elseif ( esc_attr( $args[ 'type' ] ) == 'multiselect' ) :
+            $select_array = [];
+            if ( isset( $options[ $args[ 'label_for' ] ] ) )
+                $select_array = $options[ $args[ 'label_for' ] ];
+
+            echo '<select id="' . esc_attr( $args[ 'label_for' ] ) . '" name="market_exporter_shop_settings[' . esc_attr( $args[ 'label_for' ] ) . '][]" multiple>';
+                /*
+                 * So far multiselect can be for included categories and parameters.
+                 * The categories multiselect can include subcategories, that's why we have to go over all of the subcategories and parents.
+                 * The parameters multiselect only includes top-level items.
+                 */
+                if ( esc_attr( $args[ 'label_for' ] ) == 'include_cat' ) {
+                    foreach (get_categories(['taxonomy' => 'product_cat', 'parent' => 0]) as $category) {
+                        echo '<option value="' . $category->cat_ID . '" ' . (in_array($category->cat_ID, $select_array) ? "selected" : "") . '>' . $category->name . '</option>';
+                        foreach (get_categories(['taxonomy' => 'product_cat', 'parent' => $category->cat_ID]) as $subcategory)
+                            echo '<option value="' . $subcategory->cat_ID . '" ' . (in_array($subcategory->cat_ID, $select_array) ? "selected" : "") . '>&mdash;&nbsp;' . $subcategory->name . '</option>';
+                    }
+                }
+
+                if ( esc_attr( $args[ 'label_for' ] ) == 'params' ) {
+                    foreach ( wc_get_attribute_taxonomies() as $attribute )
+                        echo '<option value="' . $attribute->attribute_id . '" ' . ( in_array( $attribute->attribute_id, $select_array ) ? "selected" : "" ) . '>' . $attribute->attribute_label . '</option>';
+                }
+            echo '</select>';
+        endif; ?>
+
 
 		<p class="description">
 			<?= $args[ 'description' ]; ?>
@@ -355,15 +443,17 @@ class Market_Exporter_Admin {
 			$output['image_count'] = $images;
 		}
 
-		$output['vendor']          = sanitize_text_field( $input['vendor'] );
-		$output['market_category'] = sanitize_text_field( $input['market_category'] );
+		$output['vendor']           = sanitize_text_field( $input['vendor'] );
+		$output['market_category']  = sanitize_text_field( $input['market_category'] );
+		$output['sales_notes']      = sanitize_textarea_field( $input['sales_notes'] );
 
-		$output['sales_notes']	= ( isset( $input['sales_notes'] ) ) ? true : false;
 		$output['backorders']	= ( isset( $input['backorders'] ) ) ? true : false;
 		$output['file_date']	= ( isset( $input['file_date'] ) ) ? true : false;
+        $output['size']         = ( isset( $input['size'] ) ) ? true : false;
 
 		// Convert to int array.
 		$output['include_cat']	= array_map( 'intval', $input['include_cat'] );
+        $output['params']       = array_map( 'intval', $input['params'] );
 
 		return $output;
 	}

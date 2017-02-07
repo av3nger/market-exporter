@@ -9,6 +9,10 @@
 
 class ME_WC {
 
+    private $settings;
+    private $weight_units;
+    private $size_units;
+
 	/**
 	 * Constructor method.
 	 *
@@ -24,6 +28,14 @@ class ME_WC {
 
 		if ( ! isset( $this->settings['image_count'] ) )
 			$this->settings['image_count'] = 10;
+
+        if ( ! isset( $this->settings['size'] ) )
+            $this->settings["size"] = false;
+
+        // Available units for weight (mg, g, kg)
+        $this->weight_units = ['mg', 'g', 'kg'];
+        // Available units for size (mm, cm, m)
+        $this->size_units = ['mm', 'cm', 'm'];
 	}
 
 	/**
@@ -77,8 +89,10 @@ class ME_WC {
 		switch ( $currency ) {
 			case 'RUB':
 				return 'RUR';
+            case 'BYR':
+                return 'BYN';
 			case 'UAH':
-			case 'USD';
+            case 'USD':
 			case 'EUR':
 				return $currency;
 			default:
@@ -106,7 +120,12 @@ class ME_WC {
 					'compare' => '>',
 					'type'  => 'NUMERIC'
 				),
-				array(
+                // TODO: по умолчанию выгружать товары у которых “Статус остатка – В наличии.” и остаток при этом больше 0.
+                // Таким образом товары доступные в WooCommerce для предзаказа выгружаться по умолчанию не будут.
+                // А включением настройки "Экспорт товаров со статусом предзаказ" давать возможность отображать товары
+                // со “Статус остатка – В наличии.” и остатком 0 и меньше нуля. Тогда в ЯМ будут выгружаться и товары
+                // в предзаказе WooCommerce.
+                array(
 					'key'   => '_stock_status',
 					'value' => 'instock'
 				)
@@ -219,10 +238,10 @@ class ME_WC {
 			 * Variation products will have more than 1 count.
 			 */
 			$variation_count = 1;
-			if ( $product->is_type( 'variable' ) ):
-				$variation_count = count( $offer->get_children() );
-				$variations = $product->get_available_variations();
-			endif;
+            if ( $product->is_type( 'variable' ) ):
+                $variations = $product->get_available_variations();
+                $variation_count = count( $variations );
+            endif;
 
 			while ( $variation_count > 0 ):
 				$variation_count--;
@@ -242,7 +261,7 @@ class ME_WC {
 
 				// NOTE: Below this point we start using $offer instead of $product.
 				$yml .= '      <offer id="' . $offerID . '" available="'.( ( $offer->is_in_stock() ) ? "true" : "false" ).'">'.PHP_EOL;
-				$yml .= '        <url>' . get_permalink( $offer->id ) . $var_link . '</url>'.PHP_EOL;
+				$yml .= '        <url>' . esc_url( get_permalink( $offer->id ) . $var_link ) . '</url>'.PHP_EOL;
 
 				// Price.
 				if ( $offer->sale_price && ( $offer->sale_price < $offer->regular_price ) ):
@@ -279,7 +298,7 @@ class ME_WC {
 
 				// Vendor.
 				if ( isset( $this->settings['vendor'] ) && $this->settings['vendor'] != 'not_set' ) {
-					$vendor = wc_get_product_terms( $offer->ID, 'pa_' . $this->settings['vendor'], array( 'fields' => 'names' ) );
+					$vendor = wc_get_product_terms( $offerID, 'pa_' . $this->settings['vendor'], array( 'fields' => 'names' ) );
 					if ( $vendor )
 						$yml .= '        <vendor>' . wp_strip_all_tags( array_shift( $vendor ) ) . '</vendor>'.PHP_EOL;
 				}
@@ -292,9 +311,43 @@ class ME_WC {
 				if ( $offer->post->post_content )
 					$yml .= '        <description><![CDATA[' . html_entity_decode( $offer->post->post_content, ENT_COMPAT, "UTF-8" ) . ']]></description>'.PHP_EOL;
 				// Sales notes.
+				if ( strlen( $this->settings['sales_notes'] ) > 0 )
+					$yml .= '        <sales_notes>' . wp_strip_all_tags( $this->settings['sales_notes'] ) . '</sales_notes>'.PHP_EOL;
 
-				if ( ( $this->settings['sales_notes'] == 'yes' ) && ( $offer->post->post_excerpt ) )
-					$yml .= '        <sales_notes>' . wp_strip_all_tags( $offer->post->post_excerpt ) . '</sales_notes>'.PHP_EOL;
+				// Params: size and weight.
+                if ( $this->settings['size'] != false ):
+                    if ($product->has_weight())
+                    {
+                        $weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
+                        if ( in_array( $weight_unit, $this->weight_units ) )
+                            $yml .= '        <param name="' . __('Weight', 'woocommerce') . '" unit="' . __($weight_unit, 'woocommerce') . '">' . $product->get_weight() . '</param>' . PHP_EOL;
+                    }
+
+                    if ($product->has_dimensions())
+                    {
+                        $size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
+                        if ( in_array( $size_unit, $this->size_units ) )
+                        {
+                            $yml .= '        <param name="' . __('Length', 'woocommerce') . '" unit="' . __($size_unit, 'woocommerce') . '">' . $product->get_length() . '</param>' . PHP_EOL;
+                            $yml .= '        <param name="' . __('Width', 'woocommerce') . '" unit="' . __($size_unit, 'woocommerce') . '">' . $product->get_width() . '</param>' . PHP_EOL;
+                            $yml .= '        <param name="' . __('Height', 'woocommerce') . '" unit="' . __($size_unit, 'woocommerce') . '">' . $product->get_height() . '</param>' . PHP_EOL;
+                        }
+                    }
+                endif;
+
+                // Params: selected parameters.
+                $attributes = $product->get_attributes();
+                foreach ( $this->settings['params'] as $param_id ) :
+                    if ( array_key_exists( wc_attribute_taxonomy_name_by_id( $param_id ), $attributes ) )
+                        $yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '</param>' . PHP_EOL;
+                endforeach;
+                /* Backup for params
+                foreach ( $attributes as $attribute ) :
+                    foreach ( $this->settings['params'] as $param_id ) :
+                        if ( $attribute['name'] == wc_attribute_taxonomy_name_by_id( $param_id ) )
+                            $yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '</param>' . PHP_EOL;
+                    endforeach;
+                endforeach; */
 
 				$yml .= '      </offer>'.PHP_EOL;
 			endwhile;

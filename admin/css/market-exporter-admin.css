@@ -13,16 +13,25 @@
 	right: 20px;
 }
 
-#me_pages ul {
+#me_pages > ul {
 	list-style-type: disc;
 }
 
-#me_pages ul li {
+#me_pages > ul li {
 	margin-left: 20px;
 }
 
+#me_pages input[type="text"],
 #me_pages select {
-	min-width: 185px;
+	min-width: 300px;
+}
+
+#me_pages select[multiple] {
+	height: 200px;
+}
+
+#me_pages .select2 li {
+	margin-bottom: 0;
 }
 
 #market-exporter table td > input[type="checkbox"] {

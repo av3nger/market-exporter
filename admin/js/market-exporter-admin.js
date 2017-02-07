@@ -29,6 +29,21 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	$(document).ready(function() {
+        $("#vendor").select2({
+            minimumResultsForSearch: Infinity
+		});
+
+        $("#market_category").select2({
+            minimumResultsForSearch: Infinity
+        });
+
+        $("#params").select2({
+            minimumResultsForSearch: Infinity
+        });
+    });
+
+
 })( jQuery );
 
 function toggle(source) {
