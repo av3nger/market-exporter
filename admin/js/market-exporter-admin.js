@@ -34,6 +34,10 @@
             minimumResultsForSearch: Infinity
 		});
 
+        $("#model").select2({
+            minimumResultsForSearch: Infinity
+        });
+
         $("#market_category").select2({
             minimumResultsForSearch: Infinity
         });

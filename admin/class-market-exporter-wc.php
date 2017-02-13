@@ -52,7 +52,7 @@ class ME_WC {
 	 */
 	public function generate_YML() {
 		// Check currency.
-		if ( ! $currency = $this->check_currecny() )
+		if ( ! $currency = $this->check_currency() )
 			return 100;
 
 		// Get products.
@@ -82,7 +82,7 @@ class ME_WC {
 	 * @since     0.3.0
 	 * @return    string      Returns currency if it is supported, else false.
 	 */
-	private function check_currecny() {
+	private function check_currency() {
 
 		$currency = get_woocommerce_currency();
 
@@ -110,7 +110,6 @@ class ME_WC {
 
 		$args = array(
 			'posts_per_page' => -1,
-			//'post_type' => array('product', 'product_variation'),
 			'post_type'     => array('product'),
 			'post_status'   => 'publish',
 			'meta_query'    => array(
@@ -220,7 +219,7 @@ class ME_WC {
 	 *
 	 * @return    string
 	 */
-	private function yml_offers( $currency, $query ) {
+	private function yml_offers( $currency, WP_Query $query ) {
 
 		$yml = '';
 
@@ -229,7 +228,7 @@ class ME_WC {
 			$query->the_post();
 
 			$product = wc_get_product( $query->post->ID );
-			// We use a seperate variable for offer because we will be rewriting it for variable products.
+			// We use a separate variable for offer because we will be rewriting it for variable products.
 			$offer = $product;
 
 			/*
@@ -302,6 +301,13 @@ class ME_WC {
 					if ( $vendor )
 						$yml .= '        <vendor>' . wp_strip_all_tags( array_shift( $vendor ) ) . '</vendor>'.PHP_EOL;
 				}
+
+                // Model.
+                if ( isset( $this->settings['model'] ) && $this->settings['model'] != 'not_set' ) {
+                    $model = wc_get_product_terms( $offerID, 'pa_' . $this->settings['model'], array( 'fields' => 'names' ) );
+                    if ( $model )
+                        $yml .= '        <model>' . wp_strip_all_tags( array_shift( $model ) ) . '</model>'.PHP_EOL;
+                }
 
 				// Vendor code.
 				if ( $offer->sku )

@@ -202,6 +202,21 @@ class Market_Exporter_Admin {
 			]
 		);
 
+        // Add selection of 'model' property.
+        add_settings_field(
+            'market_exporter_model',
+            __( 'Model property', $this->plugin_name ),
+            array( &$this, 'input_fields_cb' ),
+            $this->plugin_name,
+            'market_exporter_section_general',
+            [
+                'label_for'         => 'model',
+                'description'       => __( 'Custom property used to specify model.', $this->plugin_name ),
+                'type'              => 'select',
+                'options'			=> $attributes_array
+            ]
+        );
+
 		// Add market_category text field option.
 		add_settings_field(
 			'market_exporter_market_category',
@@ -444,6 +459,7 @@ class Market_Exporter_Admin {
 		}
 
 		$output['vendor']           = sanitize_text_field( $input['vendor'] );
+        $output['model']            = sanitize_text_field( $input['model'] );
 		$output['market_category']  = sanitize_text_field( $input['market_category'] );
 		$output['sales_notes']      = sanitize_textarea_field( $input['sales_notes'] );
 
