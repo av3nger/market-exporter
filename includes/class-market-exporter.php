@@ -214,7 +214,7 @@ class Market_Exporter {
 			$plugins = get_option( 'active_plugins' );
 			$market_exporter = plugin_basename( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
 			if ( in_array( $market_exporter, $plugins ) ) {
-		    unset( $_GET['activate'] );
+			    unset( $_GET['activate'] );
 				deactivate_plugins( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
 			}
 		}

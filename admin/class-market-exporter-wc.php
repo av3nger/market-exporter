@@ -236,6 +236,7 @@ class ME_WC {
 			 * That means that there is at least one product available.
 			 * Variation products will have more than 1 count.
 			 */
+			$variations = [];
 			$variation_count = 1;
             if ( $product->is_type( 'variable' ) ):
                 $variations = $product->get_available_variations();
@@ -342,11 +343,14 @@ class ME_WC {
                 endif;
 
                 // Params: selected parameters.
-                $attributes = $product->get_attributes();
-                foreach ( $this->settings['params'] as $param_id ) :
-                    if ( array_key_exists( wc_attribute_taxonomy_name_by_id( $param_id ), $attributes ) )
-                        $yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '</param>' . PHP_EOL;
-                endforeach;
+                if ( isset( $this->settings['params'] ) ) {
+                    $attributes = $product->get_attributes();
+                    foreach ( $this->settings['params'] as $param_id ) :
+                        if ( array_key_exists( wc_attribute_taxonomy_name_by_id( $param_id ), $attributes ) )
+                            $yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '</param>' . PHP_EOL;
+                    endforeach;
+                }
+
                 /* Backup for params
                 foreach ( $attributes as $attribute ) :
                     foreach ( $this->settings['params'] as $param_id ) :

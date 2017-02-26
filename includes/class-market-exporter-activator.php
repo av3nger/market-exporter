@@ -43,12 +43,12 @@ class Market_Exporter_Activator {
 			$settings = array(
 				'website_name'		=> get_bloginfo( "name" ),
 				'company_name'		=> get_bloginfo( "name" ),
-				'image_count'			=> 10,
-				'vendor'					=> 'not_set',
-				'market_category'	=> 'not_set',
-				'sales_notes'			=> 'no',
-				'backorders'			=> 'no',
-				'file_date'				=> 'yes'
+				'image_count'		=> 10,
+				'vendor'			=> 'not_set',
+				'market_category'   => 'not_set',
+				'sales_notes'		=> 'no',
+				'backorders'		=> 'no',
+				'file_date'			=> 'yes'
 			);
 			update_option( 'market_exporter_shop_settings', $settings );
 		}
