@@ -87,13 +87,14 @@ class ME_WC {
 		$currency = get_woocommerce_currency();
 
 		switch ( $currency ) {
-			case 'RUB':
+            case 'RUB':
 				return 'RUR';
             case 'BYR':
                 return 'BYN';
-			case 'UAH':
+            case 'UAH':
+            case 'BYN':
             case 'USD':
-			case 'EUR':
+            case 'EUR':
 				return $currency;
 			default:
 				return false;
@@ -293,8 +294,7 @@ class ME_WC {
 						$yml .= '        <picture>' . esc_url( $image ) . '</picture>'.PHP_EOL;
 				//endforeach;
 
-				$yml .= '        <delivery>true</delivery>'.PHP_EOL;
-				$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>'.PHP_EOL;
+                $yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>'.PHP_EOL;
 
 				// Vendor.
 				if ( isset( $this->settings['vendor'] ) && $this->settings['vendor'] != 'not_set' ) {
