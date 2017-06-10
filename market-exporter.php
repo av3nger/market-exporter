@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin bootstrap file
  *
@@ -9,14 +8,14 @@
  * Plugin Name: Market Exporter
  * Plugin URI: https://github.com/av3nger/market-exporter/
  * Description: Market Exporter provides a way to export products from WooCommerce installations into a YML file for use in Yandex Market.
- * Version: 0.3.1
+ * Version: 0.4.0
  * Author: Anton Vanyukov
  * Author URI: http://www.vanyukov.su
  * License: GPLv2 or later
  * Text Domain: market-exporter
  * Domain Path: /languages
  * WC requires at least: 2.4
- * WC tested up to: 2.6.6
+ * WC tested up to: 2.8
  */
 
 // If this file is called directly, abort.
@@ -24,14 +23,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Glogal variables
+// Glogal variables.
 define( 'MARKET_EXPORTER__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-market-exporter-activator.php
  *
- * @since    0.0.1
+ * @since 0.0.1
  */
 function activate_market_exporter() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-market-exporter-activator.php';
@@ -42,7 +41,7 @@ function activate_market_exporter() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-market-exporter-deactivator.php
  *
- * @since    0.0.1
+ * @since 0.0.1
  */
 function deactivate_market_exporter() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-market-exporter-deactivator.php';
@@ -65,7 +64,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-market-exporter.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    0.0.1
+ * @since 0.0.1
  */
 function run_market_exporter() {
 
