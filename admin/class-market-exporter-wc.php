@@ -327,7 +327,7 @@ class ME_WC {
 				endif;
 
 				// TODO: get all the images.
-				$image = get_the_post_thumbnail_url( null, 'full' );
+				$image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
 				if ( strlen( utf8_decode( $image ) ) <= 512 ) {
 					$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 				}
@@ -360,8 +360,21 @@ class ME_WC {
 				}
 
 				// Description.
-				if ( $offer->get_description() ) {
-					$yml .= '        <description><![CDATA[' . html_entity_decode( $offer->get_description(), ENT_COMPAT, 'UTF-8' ) . ']]></description>' . PHP_EOL;
+				if ( self::woo_latest_versions() ) {
+					$description = $offer->get_description();
+					if ( empty( $description ) ) {
+						$description = $product->get_description();
+					}
+				} else {
+					if ( $product->is_type( 'variable' ) && ! empty( $offer->get_variation_description() ) ) {
+						$description = $offer->get_variation_description();
+					} else {
+						$description = $offer->post->post_content;
+					}
+				}
+
+				if ( $description ) {
+					$yml .= '        <description><![CDATA[' . html_entity_decode( $description, ENT_COMPAT, 'UTF-8' ) . ']]></description>' . PHP_EOL;
 				}
 				// Sales notes.
 				if ( strlen( $this->settings['sales_notes'] ) > 0 ) {
@@ -427,6 +440,31 @@ class ME_WC {
 		$yml .= '</yml_catalog>' . PHP_EOL;
 
 		return $yml;
+	}
+
+	/**
+	 * Check WooCommerce version.
+	 *
+	 * Used to check what code to use. Older version of WooCommerce (prior to 3.0.0) use some older functions
+	 * that are deprecated in newer versions.
+	 *
+	 * @since  0.4.1
+	 * @param  string $version WooCommerce version.
+	 * @return bool
+	 */
+	private static function woo_latest_versions( $version = '3.0.0' ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$woo_installed = get_plugins( '/woocommerce' );
+		$woo_version = $woo_installed['woocommerce.php']['Version'];
+
+		if ( version_compare( $woo_version, $version, '>=' ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

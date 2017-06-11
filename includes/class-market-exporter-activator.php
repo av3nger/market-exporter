@@ -40,7 +40,7 @@ class Market_Exporter_Activator {
 				'model'           => 'not_set',
 				'market_category' => 'not_set',
 				'backorders'      => 'no',
-				'sales_notes'     => 'no',
+				'sales_notes'     => '',
 				'size'            => 'no',
 			);
 			update_option( 'market_exporter_shop_settings', $settings );
