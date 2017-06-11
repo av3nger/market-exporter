@@ -13,7 +13,6 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 } else {
 	$tab = sanitize_text_field( wp_unslash( $_GET['tab'] ) ); // Input var ok.
 }
-
 ?>
 
 <div class="wrap" id="me_pages">
