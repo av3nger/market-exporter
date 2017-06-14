@@ -366,7 +366,7 @@ class ME_WC {
 						$description = $product->get_description();
 					}
 				} else {
-					if ( $product->is_type( 'variable' ) && ! empty( $offer->get_variation_description() ) ) {
+					if ( $product->is_type( 'variable' ) && ! $offer->get_variation_description() ) {
 						$description = $offer->get_variation_description();
 					} else {
 						$description = $offer->post->post_content;
