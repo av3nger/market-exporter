@@ -42,17 +42,8 @@ class ME_WC {
 		// Get plugin settings.
 		$this->settings = get_option( 'market_exporter_shop_settings' );
 
-		// Init default values if not set in config.
-		if ( ! isset( $this->settings['file_date'] ) ) {
-			$this->settings['file_date'] = 'yes';
-		}
-
 		if ( ! isset( $this->settings['image_count'] ) ) {
 			$this->settings['image_count'] = 10;
-		}
-
-		if ( ! isset( $this->settings['size'] ) ) {
-			$this->settings['size'] = false;
 		}
 
 		// Available units for weight (mg, g, kg).
@@ -336,7 +327,7 @@ class ME_WC {
 
 				// Vendor.
 				if ( isset( $this->settings['vendor'] ) && 'not_set' !== $this->settings['vendor'] ) {
-					$vendor = wc_get_product_terms( $offer_id, 'pa_' . $this->settings['vendor'], array(
+					$vendor = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['vendor'], array(
 						'fields' => 'names',
 					));
 					if ( $vendor ) {
@@ -346,7 +337,7 @@ class ME_WC {
 
 				// Model.
 				if ( isset( $this->settings['model'] ) && 'not_set' !== $this->settings['model'] ) {
-					$model = wc_get_product_terms( $offer_id, 'pa_' . $this->settings['model'], array(
+					$model = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['model'], array(
 						'fields' => 'names',
 					));
 					if ( $model ) {
@@ -382,19 +373,19 @@ class ME_WC {
 				}
 
 				// Params: size and weight.
-				if ( false !== $this->settings['size'] ) :
-					if ( $product->has_weight() ) {
+				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) :
+					if ( $offer->has_weight() ) {
 						$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
 						if ( in_array( $weight_unit, $this->weight_units ) )
-							$yml .= '        <param name="' . __( 'Weight', 'woocommerce' ) . '" unit="' . __( $weight_unit, 'woocommerce' ) . '">' . $product->get_weight() . '</param>' . PHP_EOL;
+							$yml .= '        <param name="' . __( 'Weight', 'woocommerce' ) . '" unit="' . __( $weight_unit, 'woocommerce' ) . '">' . $offer->get_weight() . '</param>' . PHP_EOL;
 					}
 
-					if ( $product->has_dimensions() ) {
+					if ( $offer->has_dimensions() ) {
 						$size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
 						if ( in_array( $size_unit, $this->size_units ) ) {
-							$yml .= '        <param name="' . __( 'Length', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $product->get_length() . '</param>' . PHP_EOL;
-							$yml .= '        <param name="' . __( 'Width', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $product->get_width() . '</param>' . PHP_EOL;
-							$yml .= '        <param name="' . __( 'Height', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $product->get_height() . '</param>' . PHP_EOL;
+							$yml .= '        <param name="' . __( 'Length', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_length() . '</param>' . PHP_EOL;
+							$yml .= '        <param name="' . __( 'Width', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_width() . '</param>' . PHP_EOL;
+							$yml .= '        <param name="' . __( 'Height', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_height() . '</param>' . PHP_EOL;
 						}
 					}
 				endif;

@@ -322,7 +322,7 @@ class Market_Exporter_Admin {
 				   name="market_exporter_shop_settings[<?php echo esc_attr( $args['label_for'] ); ?>]"
 				   value="<?php echo esc_attr( $options[ $args['label_for'] ] ); ?>"
 					<?php if ( 'text' === esc_attr( $args['type'] ) ) :?>placeholder="<?php esc_attr( $args['placeholder'] ); endif; ?>"
-					<?php if ( 'checkbox' === esc_attr( $args['type'] ) && 'yes' === $options[ $args['label_for'] ] ) echo 'checked'; ?>>
+					<?php if ( 'checkbox' === esc_attr( $args['type'] ) ) echo checked( $options[ $args['label_for'] ] ); ?>>
 
 		<?php elseif ( esc_attr( $args['type'] ) === 'textarea' ) : ?>
 
@@ -400,7 +400,11 @@ class Market_Exporter_Admin {
 		$output['vendor']          = sanitize_text_field( $input['vendor'] );
 		$output['model']           = sanitize_text_field( $input['model'] );
 		$output['market_category'] = sanitize_text_field( $input['market_category'] );
-		$output['sales_notes']     = sanitize_textarea_field( $input['sales_notes'] );
+		if ( ! function_exists( 'sanitize_textarea_field' ) ) {
+			$output['sales_notes']     = sanitize_text_field( $input['sales_notes'] );
+		} else {
+			$output['sales_notes']     = sanitize_textarea_field( $input['sales_notes'] );
+		}
 
 		$output['backorders']      = ( isset( $input['backorders'] ) ) ? true : false;
 		$output['file_date']       = ( isset( $input['file_date'] ) ) ? true : false;
