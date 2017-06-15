@@ -78,7 +78,7 @@ class Market_Exporter_FS {
 		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.
 		$upload_dir = wp_upload_dir();
 		$folder     = trailingslashit( $upload_dir['basedir'] ) . trailingslashit( $this->plugin_name );
-		if ( 'yes' === $date ) {
+		if ( $date ) {
 			$filename = 'ym-export-' . date( 'Y-m-d' ) . '.yml';
 		} else {
 			$filename = 'ym-export.yml';

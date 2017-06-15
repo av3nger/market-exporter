@@ -34,14 +34,14 @@ class Market_Exporter_Activator {
 			$settings = array(
 				'website_name'    => get_bloginfo( 'name' ),
 				'company_name'    => get_bloginfo( 'name' ),
-				'file_date'       => 'yes',
+				'file_date'       => true,
 				'image_count'     => 10,
 				'vendor'          => 'not_set',
 				'model'           => 'not_set',
 				'market_category' => 'not_set',
-				'backorders'      => 'no',
+				'backorders'      => false,
 				'sales_notes'     => '',
-				'size'            => 'no',
+				'size'            => false,
 			);
 			update_option( 'market_exporter_shop_settings', $settings );
 		}
