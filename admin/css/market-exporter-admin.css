@@ -8,9 +8,9 @@
 }
 
 #me_pages .version {
-	position: absolute;
+	position: relative;
 	top: 15px;
-	right: 20px;
+	float: right;
 }
 
 #me_pages > ul {

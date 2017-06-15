@@ -27,7 +27,7 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 		?>
 	</div>
 
-	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
+	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
 	<nav class="nav-tab-wrapper">
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->plugin_name . '&amp;tab=generate' ) ); ?>"
