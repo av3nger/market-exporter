@@ -206,7 +206,7 @@ class ME_WC {
 
 		$yml  = '<?xml version="1.0" encoding="' . get_bloginfo( 'charset' ) . '"?>' . PHP_EOL;
 		$yml .= '<!DOCTYPE yml_catalog SYSTEM "shops.dtd">' . PHP_EOL;
-		$yml .= '<yml_catalog date="' . date( 'Y-m-d H:i' ) . '">' . PHP_EOL;
+		$yml .= '<yml_catalog date="' . current_time( 'Y-m-d H:i' ) . '">' . PHP_EOL;
 		$yml .= '  <shop>' . PHP_EOL;
 		$yml .= '    <name>' . esc_html( $this->settings['website_name'] ) . '</name>' . PHP_EOL;
 		$yml .= '    <company>' . esc_html( $this->settings['company_name'] ) . '</company>' . PHP_EOL;
@@ -308,8 +308,10 @@ class ME_WC {
 				$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
 
 				// Market category.
+				var_dump( 'prod: ' . $product->get_id() );
+				var_dump( 'offer: ' . $offer->get_id() );
 				if ( isset( $this->settings['market_category'] ) && 'not_set' !== $this->settings['market_category'] ) :
-					$market_category = wc_get_product_terms( $offer_id, 'pa_' . $this->settings['market_category'], array(
+					$market_category = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['market_category'], array(
 						'fields' => 'names',
 					));
 					if ( $market_category ) {
