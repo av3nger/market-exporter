@@ -308,8 +308,6 @@ class ME_WC {
 				$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
 
 				// Market category.
-				var_dump( 'prod: ' . $product->get_id() );
-				var_dump( 'offer: ' . $offer->get_id() );
 				if ( isset( $this->settings['market_category'] ) && 'not_set' !== $this->settings['market_category'] ) :
 					$market_category = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['market_category'], array(
 						'fields' => 'names',
