@@ -203,7 +203,6 @@ class ME_WC {
 	 * @return string
 	 */
 	private function yml_header( $currency ) {
-
 		$yml  = '<?xml version="1.0" encoding="' . get_bloginfo( 'charset' ) . '"?>' . PHP_EOL;
 		$yml .= '<!DOCTYPE yml_catalog SYSTEM "shops.dtd">' . PHP_EOL;
 		$yml .= '<yml_catalog date="' . current_time( 'Y-m-d H:i' ) . '">' . PHP_EOL;
@@ -223,10 +222,16 @@ class ME_WC {
 		$yml .= '    </currencies>' . PHP_EOL;
 
 		$yml .= '    <categories>' . PHP_EOL;
-		foreach ( get_categories( array(
+
+		$args = array(
 			'taxonomy' => 'product_cat',
-			'orderby' => 'term_id',
-		)) as $category ) :
+			'orderby'  => 'term_id',
+		);
+		// Maybe we need to include only selected categories?
+		if ( isset( $this->settings['include_cat'] ) ) {
+			$args['include'] = $this->settings['include_cat'];
+		}
+		foreach ( get_categories( $args ) as $category ) :
 			if ( 0 === $category->parent ) {
 				$yml .= '      <category id="' . $category->cat_ID . '">' . wp_strip_all_tags( $category->name ) . '</category>' . PHP_EOL;
 			} else {
@@ -319,6 +324,10 @@ class ME_WC {
 
 				// TODO: get all the images.
 				$image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
+				// If no image found for product, it's probably a variation without an image, get the image from parent.
+				if ( ! $image ) {
+					$image = get_the_post_thumbnail_url( $product->get_id(), 'full' );
+				}
 				if ( strlen( utf8_decode( $image ) ) <= 512 ) {
 					$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 				}

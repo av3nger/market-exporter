@@ -20,32 +20,35 @@ class Market_Exporter_Admin {
 	private $plugin_name;
 
 	/**
-	 * The version of this plugin.
+	 * Plugin options.
 	 *
-	 * @since  0.0.1
+	 * @since  0.4.4
 	 * @access private
-	 * @var    string $version The current version of this plugin.
+	 * @var    array $options  Current plugin options.
 	 */
-	private $version;
+	private $options;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since 0.0.1
 	 * @param string $plugin_name The name of this plugin.
-	 * @param string $version     The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name ) {
 		$this->plugin_name = $plugin_name;
-		$this->version     = $version;
+		$this->options     = get_option( 'market_exporter_shop_settings' );
 	}
 
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
 	 * @since 0.0.1
+	 * @param string $hook  Page from where it is called.
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles( $hook ) {
+		if ( 'woocommerce_page_market-exporter' !== $hook ) {
+			return;
+		}
 		wp_enqueue_style( "{$this->plugin_name}-select2", plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), null, 'all' );
 		wp_enqueue_style( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'css/market-exporter-admin.css', array(), null, 'all' );
 	}
@@ -54,10 +57,19 @@ class Market_Exporter_Admin {
 	 * Register the JavaScript for the admin area.
 	 *
 	 * @since 0.0.1
+	 * @param string $hook  Page from where it is called.
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts( $hook ) {
+		if ( 'woocommerce_page_market-exporter' !== $hook ) {
+			return;
+		}
 		wp_enqueue_script( "{$this->plugin_name}-select2", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), null, false );
 		wp_enqueue_script( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'js/market-exporter-admin.js', array( 'jquery' ), null, false );
+
+		wp_localize_script( "{$this->plugin_name}-admin", 'ajax_strings', array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'nonce'    => wp_create_nonce( 'me_dismiss_notice' ),
+		) );
 	}
 
 	/**
@@ -287,6 +299,25 @@ class Market_Exporter_Admin {
 				'type'        => 'multiselect',
 			)
 		);
+
+		// Add cron options.
+		add_settings_field(
+			'market_exporter_cron',
+			__( 'Cron', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_general',
+			array(
+				'label_for'   => 'cron',
+				'type'        => 'select',
+				'options'     => array(
+					'disabled'   => __( 'Disabled', 'market-exporter' ),
+					'hourly'     => __( 'Every hour', 'market-exporter' ),
+					'twicedaily' => __( 'Twice a day', 'market-exporter' ),
+					'daily'      => __( 'Daily', 'market-exporter' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -300,7 +331,7 @@ class Market_Exporter_Admin {
 	public function section_general_cb( $args ) {
 		?>
 		<p id="<?php echo esc_attr( $args['id'] ); ?>">
-			<?php _e( 'Settings that are used in the export process.', 'market-exporter' ); ?>
+			<?php esc_html_e( 'Settings that are used in the export process.', 'market-exporter' ); ?>
 		</p>
 		<?php
 	}
@@ -313,38 +344,41 @@ class Market_Exporter_Admin {
 	 * @param array $args Arguments array.
 	 */
 	public function input_fields_cb( $args ) {
-		$options = get_option( 'market_exporter_shop_settings' );
-
-		if ( esc_attr( $args['type'] ) === 'text' || esc_attr( $args['type'] ) === 'checkbox' ) : ?>
+		if ( 'text' === esc_attr( $args['type'] ) || 'checkbox' === esc_attr( $args['type'] ) ) : ?>
 
 			<input id="<?php echo esc_attr( $args['label_for'] ); ?>"
 				   type="<?php echo esc_attr( $args['type'] ); ?>"
 				   name="market_exporter_shop_settings[<?php echo esc_attr( $args['label_for'] ); ?>]"
-				   value="<?php echo esc_attr( $options[ $args['label_for'] ] ); ?>"
-					<?php if ( 'text' === esc_attr( $args['type'] ) ) :?>placeholder="<?php esc_attr( $args['placeholder'] ); endif; ?>"
-					<?php if ( 'checkbox' === esc_attr( $args['type'] ) ) echo checked( $options[ $args['label_for'] ] ); ?>>
+				   value="<?php echo esc_attr( $this->options[ $args['label_for'] ] ); ?>"
+					<?php if ( 'text' === esc_attr( $args['type'] ) ) :?>
+						placeholder="<?php esc_attr( $args['placeholder'] ); ?>"
+					<?php endif; ?>
+					<?php echo ( 'checkbox' === esc_attr( $args['type'] ) ) ? checked( $this->options[ $args['label_for'] ] ) : ''; ?>
+			>
 
-		<?php elseif ( esc_attr( $args['type'] ) === 'textarea' ) : ?>
+		<?php elseif ( 'textarea' === esc_attr( $args['type'] ) ) : ?>
 
 			<textarea cols="39" rows="3" maxlength="50" id="<?php echo esc_attr( $args['label_for'] ); ?>"
 					  name="market_exporter_shop_settings[<?php echo esc_attr( $args['label_for'] ); ?>]"
-					  title="<?php echo esc_attr( $args['placeholder'] ); ?>"><?php esc_html_e( $options[ $args['label_for'] ] ); ?></textarea>
+					  title="<?php echo esc_attr( $args['placeholder'] ); ?>"><?php esc_html_e( $this->options[ $args['label_for'] ] ); ?></textarea>
 
-		<?php elseif ( esc_attr( $args['type'] ) === 'select' ) : ?>
+		<?php elseif ( 'select' === esc_attr( $args['type'] ) ) : ?>
 
 			<select id="<?php echo esc_attr( $args['label_for'] ); ?>"
 					name="market_exporter_shop_settings[<?php echo esc_attr( $args['label_for'] ); ?>]">
 				<?php foreach ( $args['options'] as $key => $value ) : ?>
-					<option value="<?php echo $key; ?>" <?php if ( $options[ $args['label_for'] ] === $key ) echo 'selected'; ?>>
-						<?php echo $value; ?>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $this->options[ $args['label_for'] ] === $key ); ?>>
+						<?php echo esc_html( $value ); ?>
 					</option>
 				<?php endforeach; ?>
 			</select>
 
-		<?php elseif ( esc_attr( $args['type'] ) === 'multiselect' ) :
+		<?php
+		elseif ( 'multiselect' === esc_attr( $args['type'] ) ) :
 			$select_array = array();
-			if ( isset( $options[ $args['label_for'] ] ) )
-				$select_array = $options[ $args['label_for'] ];
+			if ( isset( $this->options[ $args['label_for'] ] ) ) {
+				$select_array = $this->options[ $args['label_for'] ];
+			}
 
 			echo '<select id="' . esc_attr( $args['label_for'] ) . '" name="market_exporter_shop_settings[' . esc_attr( $args['label_for'] ) . '][]" multiple>';
 
@@ -354,26 +388,33 @@ class Market_Exporter_Admin {
 			 * The parameters multiselect only includes top-level items.
 			 */
 			if ( 'include_cat' === esc_attr( $args['label_for'] ) ) {
-				foreach ( get_categories( array('taxonomy' => 'product_cat', 'parent' => 0) ) as $category ) {
-					echo '<option value="' . $category->cat_ID . '" ' . ( in_array( $category->cat_ID, $select_array ) ? 'selected' : '' ) . '>' . $category->name . '</option>';
-					foreach ( get_categories( array('taxonomy' => 'product_cat', 'parent' => $category->cat_ID) ) as $subcategory )
-						echo '<option value="' . $subcategory->cat_ID . '" ' . ( in_array( $subcategory->cat_ID, $select_array ) ? 'selected' : '') . '>&mdash;&nbsp;' . $subcategory->name . '</option>';
+				foreach ( get_categories( array(
+					'taxonomy' => 'product_cat',
+					'parent'   => 0,
+				)) as $category ) {
+					echo '<option value="' . esc_attr( $category->cat_ID ) . '" ' . selected( in_array( $category->cat_ID, $select_array, true ) ) . '>' . esc_html( $category->name ) . '</option>';
+					foreach ( get_categories( array(
+						'taxonomy' => 'product_cat',
+						'parent'   => $category->cat_ID,
+					)) as $subcategory ) {
+						echo '<option value="' . esc_attr( $subcategory->cat_ID ) . '" ' . selected( in_array( $subcategory->cat_ID, $select_array, true ) ) . '>&mdash;&nbsp;' . esc_html( $subcategory->name ) . '</option>';
+					}
 				}
 			}
 
 			if ( 'params' === esc_attr( $args['label_for'] ) ) {
-				foreach ( wc_get_attribute_taxonomies() as $attribute )
-					echo '<option value="' . $attribute->attribute_id . '" ' . ( in_array( $attribute->attribute_id, $select_array ) ? 'selected' : '' ) . '>' . $attribute->attribute_label . '</option>';
+				foreach ( wc_get_attribute_taxonomies() as $attribute ) {
+					echo '<option value="' . esc_attr( $attribute->attribute_id ) . '" ' . selected( in_array( $attribute->attribute_id, $select_array, true ) ) . '>' . esc_html( $attribute->attribute_label ) . '</option>';
+				}
 			}
 			echo '</select>';
-		endif; ?>
+		endif;
 
-
-		<p class="description">
-			<?php echo $args['description']; ?>
-		</p>
-
-		<?php
+		if ( isset( $args['description'] ) ) : ?>
+			<p class="description">
+				<?php echo esc_html( $args['description'] ); ?>
+			</p>
+		<?php endif;
 	}
 
 	/**
@@ -401,9 +442,9 @@ class Market_Exporter_Admin {
 		$output['model']           = sanitize_text_field( $input['model'] );
 		$output['market_category'] = sanitize_text_field( $input['market_category'] );
 		if ( ! function_exists( 'sanitize_textarea_field' ) ) {
-			$output['sales_notes']     = sanitize_text_field( $input['sales_notes'] );
+			$output['sales_notes'] = sanitize_text_field( $input['sales_notes'] );
 		} else {
-			$output['sales_notes']     = sanitize_textarea_field( $input['sales_notes'] );
+			$output['sales_notes'] = sanitize_textarea_field( $input['sales_notes'] );
 		}
 
 		$output['backorders']      = ( isset( $input['backorders'] ) ) ? true : false;
@@ -411,8 +452,16 @@ class Market_Exporter_Admin {
 		$output['size']            = ( isset( $input['size'] ) ) ? true : false;
 
 		// Convert to int array.
-		$output['include_cat']     = array_map( 'intval', $input['include_cat'] );
-		$output['params']          = array_map( 'intval', $input['params'] );
+		if ( isset( $input['include_cat'] ) ) {
+			$output['include_cat'] = array_map( 'intval', $input['include_cat'] );
+		}
+		if ( isset( $input['params'] ) ) {
+			$output['params']      = array_map( 'intval', $input['params'] );
+		}
+
+		$output['cron']            = sanitize_text_field( $input['cron'] );
+		// Update cron schedule.
+		$this->update_cron_schedule( $output['cron'] );
 
 		return $output;
 	}
@@ -425,7 +474,7 @@ class Market_Exporter_Admin {
 	 * @return array $links New links array for the current plugin.
 	 */
 	public function plugin_add_settings_link( $links ) {
-		$settings_link = "<a href=" . admin_url( 'admin.php?page=' . $this->plugin_name . '&tab=settings' ) . ">" . __( 'Settings', 'market-exporter' ) . "</a>";
+		$settings_link = '<a href="' . admin_url( 'admin.php?page=' . $this->plugin_name . '&tab=settings' ) . '">' . __( 'Settings', 'market-exporter' ) . '</a>';
 		array_unshift( $links, $settings_link );
 
 		return $links;
@@ -451,11 +500,25 @@ class Market_Exporter_Admin {
 	 * Register crontab.
 	 *
 	 * @since 0.2.0
+	 * @deprecated 0.4.4
 	 */
 	public function crontab_activate() {
 		// Schedule task.
-		if ( ! wp_next_scheduled( 'market_exporter_daily' ) ) {
-			wp_schedule_event( time(), 'hourly', 'market_exporter_daily' );
+		if ( ! wp_next_scheduled( 'market_exporter_cron' ) ) {
+			wp_schedule_event( time(), 'hourly', 'market_exporter_cron' );
+		}
+	}
+
+	/**
+	 * Update cron schedule.
+	 *
+	 * @since 0.4.4
+	 * @param string $interval  Cron interval. Accepts: hourly, twicedaily, daily.
+	 */
+	public function update_cron_schedule( $interval ) {
+		wp_clear_scheduled_hook( 'market_exporter_cron' );
+		if ( 'disabled' !== $interval ) {
+			wp_schedule_event( time(), $interval, 'market_exporter_cron' );
 		}
 	}
 

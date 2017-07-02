@@ -18,19 +18,13 @@ class Market_Exporter_Activator {
 	 * @since 0.0.4
 	 */
 	public static function activate() {
-		global $wpdb;
-
 		// Leave this for now, so it deletes for everyone.
 		delete_option( 'market_exporter_website_name' );
 		delete_option( 'market_exporter_company_name' );
 		delete_option( 'market-exporter-settings' );
 
-		$market_exporter_options = $wpdb->get_var(
-			"SELECT option_id
-				    FROM $wpdb->options
-				    WHERE option_name = 'market_exporter_shop_settings'" );
-
-		if ( ! isset( $market_exporter_options ) ) {
+		$options = get_option( 'market_exporter_shop_settings' );
+		if ( ! $options ) {
 			$settings = array(
 				'website_name'    => get_bloginfo( 'name' ),
 				'company_name'    => get_bloginfo( 'name' ),
@@ -42,9 +36,36 @@ class Market_Exporter_Activator {
 				'backorders'      => false,
 				'sales_notes'     => '',
 				'size'            => false,
+				'cron'            => false,
 			);
 			update_option( 'market_exporter_shop_settings', $settings );
 		}
+
+		$version = get_option( 'market_exporter_version' );
+
+		if ( version_compare( $version, '0.4.4', '<=' ) ) {
+			self::update_0_4_4();
+		}
+
+		// Update version.
+		update_option( 'market_exporter_version', Market_Exporter::$version );
 	}
 
+	/**
+	 * Update to version 0.4.4.
+	 *
+	 * @since 0.4.4
+	 */
+	public static function update_0_4_4() {
+		$options = get_option( 'market_exporter_shop_settings' );
+
+		// Update cron settings in options.
+		if ( ! isset( $options['cron'] ) ) {
+			$options['cron'] = false;
+			update_option( 'market_exporter_shop_settings', $options );
+		}
+
+		// Removed unused cron schedules.
+		wp_clear_scheduled_hook( 'market_exporter_daily' );
+	}
 }

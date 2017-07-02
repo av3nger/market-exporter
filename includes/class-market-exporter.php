@@ -34,10 +34,11 @@ class Market_Exporter {
 	 * The current version of the plugin.
 	 *
 	 * @since  0.0.1
+	 * @since  0.4.4            Changed from protected to public static.
 	 * @access protected
-	 * @var    string $version The current version of the plugin.
+	 * @var    string $version  The current version of the plugin.
 	 */
-	protected $version;
+	public static $version;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -51,7 +52,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		$this->version = '0.4.3';
+		self::$version = '0.4.4';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -61,6 +62,12 @@ class Market_Exporter {
 		if ( ! self::check_prerequisites() ) {
 			$this->loader->add_action( 'admin_notices', $this, 'plugin_activation_message' );
 			return;
+		}
+
+		$notice = get_option( 'market_exporter_notice_hide' );
+
+		if ( 'true' !== $notice ) {
+			$this->loader->add_action( 'admin_notices', $this, 'plugin_rate_message' );
 		}
 
 		$this->define_admin_hooks();
@@ -133,7 +140,7 @@ class Market_Exporter {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Market_Exporter_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Market_Exporter_Admin( $this->get_plugin_name() );
 		$plugin_yml = new ME_WC();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -146,8 +153,9 @@ class Market_Exporter {
 		$basename = plugin_basename( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
 		$this->loader->add_filter( "plugin_action_links_{$basename}", $plugin_admin, 'plugin_add_settings_link' );
 		// Add cron support.
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'crontab_activate' );
-		$this->loader->add_action( 'market_exporter_daily', $plugin_yml, 'generate_YML' );
+		$this->loader->add_action( 'market_exporter_cron', $plugin_yml, 'generate_YML' );
+		// Add ajax support to dismiss notice.
+		$this->loader->add_action( 'wp_ajax_dismiss_rate_notice', $this, 'dismiss_notice' );
 	}
 
 	/**
@@ -183,8 +191,9 @@ class Market_Exporter {
 	/**
 	 * Retrieve the version number of the plugin.
 	 *
-	 * @since  0.0.1
-	 * @return string The version number of the plugin.
+	 * @since      0.0.1
+	 * @return     string  The version number of the plugin.
+	 * @deprecated 0.4.4   Exchanged for public static variable.
 	 */
 	public function get_version() {
 		return $this->version;
@@ -238,7 +247,7 @@ class Market_Exporter {
 	}
 
 	/**
-	 * Message to display if we didn't find WooCommerce.
+	 * Message to display if we did not find WooCommerce.
 	 *
 	 * @since 0.0.1
 	 */
@@ -248,6 +257,34 @@ class Market_Exporter {
 			<p><?php _e( 'The Market Exporter plugin requires <a href="https://wordpress.org/plugins/woocommerce/">WooCommerce</a> to be installed and activated. Please check your configuration.', 'market-exporter' ); ?></p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Rate the plugin message.
+	 *
+	 * @since 0.4.4
+	 */
+	public function plugin_rate_message() {
+		if ( 'woocommerce_page_market-exporter' !== get_current_screen()->id ) {
+			return;
+		}
+		?>
+		<div class="notice notice-success is-dismissible" id="rate-notice">
+			<p><?php _e( 'Do you like the plugin? Please support the development by <a href="https://wordpress.org/plugins/market-exporter/">writing a review</a>!', 'market-exporter' ); ?></p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Dismiss notice to rate the plugin.
+	 *
+	 * @since 0.4.4
+	 */
+	public function dismiss_notice() {
+		check_ajax_referer( 'me_dismiss_notice' );
+		// If user clicks to ignore the notice, add that to their user meta.
+		update_option( 'market_exporter_notice_hide', 'true' );
+		wp_die(); // All ajax handlers die when finished.
 	}
 
 }

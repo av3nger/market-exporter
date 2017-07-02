@@ -30,29 +30,42 @@
 	 */
 
 	$(document).ready(function() {
-        $("#vendor").select2({
+        $('#vendor').select2({
             minimumResultsForSearch: Infinity
 		});
 
-        $("#model").select2({
+        $('#model').select2({
             minimumResultsForSearch: Infinity
         });
 
-        $("#market_category").select2({
+        $('#market_category').select2({
             minimumResultsForSearch: Infinity
         });
 
-        $("#params").select2({
+        $('#params').select2({
             minimumResultsForSearch: Infinity
         });
+
+		$('#cron').select2({
+			minimumResultsForSearch: Infinity
+		});
+
+
+		$('#rate-notice').on('click', function() {
+			$.post( ajax_strings.ajax_url, {
+				_ajax_nonce: ajax_strings.nonce,
+				action: 'dismiss_rate_notice'
+			});
+		});
+
     });
 
 
 })( jQuery );
 
 function toggle(source) {
-  checkboxes = document.getElementsByName('files[]');
-  for(var i=0, n=checkboxes.length;i<n;i++) {
+  var checkboxes = document.getElementsByName('files[]');
+  for ( var i=0, n=checkboxes.length; i<n; i++ ) {
     checkboxes[i].checked = source.checked;
   }
 }

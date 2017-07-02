@@ -22,7 +22,7 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 		printf( // WPCS: XSS OK.
 			/* translators: version number */
 			__( 'Version: %s', 'market-exporter' ),
-			$this->version
+			Market_Exporter::$version
 		);
 		?>
 	</div>

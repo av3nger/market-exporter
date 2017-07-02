@@ -30,3 +30,5 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 delete_option( 'market_exporter_website_name' );
 delete_option( 'market_exporter_company_name' );
 delete_option( 'market_exporter_shop_settings' );
+delete_option( 'market_exporter_version' );
+delete_option( 'market_exporter_notice_hide' );
