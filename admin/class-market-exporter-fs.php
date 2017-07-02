@@ -40,7 +40,8 @@ class Market_Exporter_FS {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 		}
 
-		if ( false === ( $creds = request_filesystem_credentials( $url, '', false, false, null ) ) ) {
+		$credentials = request_filesystem_credentials( $url, '', false, false, null );
+		if ( false === ( $credentials ) ) {
 			// If we get here, then we don't have credentials yet,
 			// but have just produced a form for the user to fill in,
 			// so stop processing for now.
@@ -48,7 +49,7 @@ class Market_Exporter_FS {
 		}
 
 		// Mow we have some credentials, try to get the wp_filesystem running.
-		if ( ! WP_Filesystem( $creds ) ) {
+		if ( ! WP_Filesystem( $credentials ) ) {
 			// Our credentials were no good, ask the user for them again.
 			request_filesystem_credentials( $url, '', true, false, null );
 
@@ -73,6 +74,7 @@ class Market_Exporter_FS {
 		}
 
 		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
+		/* @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
 		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.
@@ -89,12 +91,12 @@ class Market_Exporter_FS {
 		// Check if 'uploads/market-exporter' folder exists. If not - create it.
 		if ( ! $wp_filesystem->exists( $folder ) ) {
 			if ( ! $wp_filesystem->mkdir( $folder, FS_CHMOD_DIR ) ) {
-				_e( 'Error creating directory.', 'market-exporter' );
+				esc_html_e( 'Error creating directory.', 'market-exporter' );
 			}
 		}
 		// Create the file.
 		if ( ! $wp_filesystem->put_contents( $filepath, $yml, FS_CHMOD_FILE ) ) {
-			_e( 'Error uploading file.', 'market-exporter' );
+			esc_html_e( 'Error uploading file.', 'market-exporter' );
 		}
 
 		return $upload_dir['baseurl'] . '/' . $this->plugin_name . '/' . $filename;
@@ -104,7 +106,7 @@ class Market_Exporter_FS {
 	 * Get a list of generated YML files.
 	 *
 	 * @since  0.0.8
-	 * @return array Returns an array of generated files.
+	 * @return array|bool Returns an array of generated files.
 	 */
 	function get_files() {
 		// If unable to initialize filesystem, quit.
@@ -113,6 +115,7 @@ class Market_Exporter_FS {
 		}
 
 		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
+		/* @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
 		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.
@@ -136,6 +139,7 @@ class Market_Exporter_FS {
 		}
 
 		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
+		/* @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 
 		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.

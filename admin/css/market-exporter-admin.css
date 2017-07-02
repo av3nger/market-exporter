@@ -7,6 +7,10 @@
 	margin: 10px 0 25px;
 }
 
+#me_pages .button {
+	margin-top: 20px;
+}
+
 #me_pages .version {
 	position: relative;
 	top: 15px;
@@ -21,8 +25,17 @@
 	margin-left: 20px;
 }
 
+#me_pages .select2-selection,
+#me_pages .select2-selection > span:focus {
+	outline: none !important;
+	outline-style: none;
+	outline-width: 0;
+}
+
 #me_pages input[type="text"],
 #me_pages select {
+	padding: 6px;
+	height: auto;
 	min-width: 300px;
 }
 
