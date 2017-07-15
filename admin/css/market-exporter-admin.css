@@ -18,14 +18,24 @@
 }
 
 #me_pages .form-table {
+	background-color: #ffffff;
 	border: 1px solid #9d9d9d;
 	margin-bottom: 50px;
 }
 #me_pages .form-table:last-of-type {
 	margin-bottom: 0;
 }
-#me_pages .form-table th {
+#me_pages .form-table th,
+#me_pages .form-table td {
 	padding: 20px 30px;
+}
+#me_pages .form-table tr:first-child > th,
+#me_pages .form-table tr:first-child > td {
+	padding-top: 40px;
+}
+#me_pages .form-table tr:last-child > th,
+#me_pages .form-table tr:last-child > td {
+	padding-bottom: 40px;
 }
 
 #me_pages p.description {

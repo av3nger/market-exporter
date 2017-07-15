@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
 "POT-Creation-Date: 2017-07-15 08:56+0300\n"
-"PO-Revision-Date: 2017-07-15 08:56+0300\n"
+"PO-Revision-Date: 2017-07-15 09:10+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -70,7 +70,7 @@ msgstr "Элементы, входящие в shop"
 
 #: admin/class-market-exporter-admin.php:172
 msgid "name"
-msgstr "name"
+msgstr "Название магазина"
 
 #: admin/class-market-exporter-admin.php:178
 msgid "Website name"
@@ -92,7 +92,7 @@ msgstr ""
 
 #: admin/class-market-exporter-admin.php:187
 msgid "company"
-msgstr "company"
+msgstr "Наименование компании"
 
 #: admin/class-market-exporter-admin.php:193
 msgid "Company name"
