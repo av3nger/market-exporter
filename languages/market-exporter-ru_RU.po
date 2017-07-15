@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
 "POT-Creation-Date: 2017-07-02 19:29+0300\n"
-"PO-Revision-Date: 2017-07-15 07:46+0300\n"
+"PO-Revision-Date: 2017-07-15 07:59+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -92,12 +92,11 @@ msgstr ""
 
 #: admin/class-market-exporter-admin.php:200
 msgid "Model property"
-msgstr "Элемент vendor"
+msgstr "Элемент model"
 
 #: admin/class-market-exporter-admin.php:206
 msgid "Custom property used to specify model."
-msgstr ""
-"Атрибут, который отвечает за значение элемента vendor на Яндекс Маркет."
+msgstr "Атрибут, который отвечает за значение элемента model на Яндекс Маркет."
 
 #: admin/class-market-exporter-admin.php:215
 msgid "Market category property"
@@ -105,13 +104,11 @@ msgstr "Элемент market_catergory"
 
 #: admin/class-market-exporter-admin.php:222
 msgid "Category of product on Yandex Market. Can be set to a value from"
-msgstr ""
-"Категория товаров на Яндекс Маркет. Может принимать значение из <a href=\"%s"
-"\" target=\"_blank\">этого списка</a>."
+msgstr "Категория товаров на Яндекс Маркет. Может принимать значение из"
 
 #: admin/class-market-exporter-admin.php:224
 msgid "this list"
-msgstr "из этого списка"
+msgstr "этого списка"
 
 #: admin/class-market-exporter-admin.php:225
 msgid "only."
@@ -339,7 +336,7 @@ msgstr "Настройки сохранены"
 
 #: admin/partials/market-exporter-admin-display.php:178
 msgid "Save Settings"
-msgstr "Настройки"
+msgstr "Сохранить"
 
 #: includes/class-market-exporter.php:257
 msgid ""
