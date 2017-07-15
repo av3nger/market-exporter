@@ -309,8 +309,11 @@ class ME_WC {
 				// Category.
 				// Not using $offer_id, because variable products inherit category from parent.
 				$categories = get_the_terms( $product->get_id(), 'product_cat' );
-				$category = array_shift( $categories );
-				$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+				// TODO: display error message if category is not set for product.
+				if ( $categories ) {
+					$category = array_shift( $categories );
+					$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+				}
 
 				// Market category.
 				if ( isset( $this->settings['market_category'] ) && 'not_set' !== $this->settings['market_category'] ) :
