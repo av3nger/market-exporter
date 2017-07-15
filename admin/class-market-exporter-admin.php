@@ -394,12 +394,12 @@ class Market_Exporter_Admin {
 			<p class="description">
 				<?php
 				$tags = array(
-					'a' => array(
-						'href' => array(),
+					'a'      => array(
+						'href'  => array(),
 						'title' => array(),
 					),
-					'br' => array(),
-					'em' => array(),
+					'br'     => array(),
+					'em'     => array(),
 					'strong' => array(),
 				);
 				echo wp_kses( $args['description'], $tags ); ?>
