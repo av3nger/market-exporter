@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2017-07-15 08:39+0300\n"
-"PO-Revision-Date: 2017-07-15 08:47+0300\n"
+"POT-Creation-Date: 2017-07-15 08:56+0300\n"
+"PO-Revision-Date: 2017-07-15 08:56+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -48,7 +48,7 @@ msgid "Cron"
 msgstr "Выгрузка по расписанию"
 
 #: admin/class-market-exporter-admin.php:149
-#: admin/class-market-exporter-admin.php:227
+#: admin/class-market-exporter-admin.php:212
 msgid "Disabled"
 msgstr "Отключено"
 
@@ -108,66 +108,54 @@ msgstr ""
 msgid "Settings for offers"
 msgstr "Настройки товарных предложений"
 
-#: admin/class-market-exporter-admin.php:214
 #: admin/class-market-exporter-admin.php:220
-msgid "Images per product"
-msgstr "Изображений на товарное предложение"
+msgid "model"
+msgstr "Модель"
 
-#: admin/class-market-exporter-admin.php:221
-msgid "Max number of images to export for product. Max 10 images."
-msgstr ""
-"Максимальное количество изображений для товарного предложения. Макс 10 "
-"изображений."
+#: admin/class-market-exporter-admin.php:226
+msgid "Model property."
+msgstr "Элемент model."
 
-#: admin/class-market-exporter-admin.php:233
-msgid "Vendor property"
-msgstr "Элемент vendor"
+#: admin/class-market-exporter-admin.php:234
+msgid "vendor"
+msgstr "Производитель"
 
-#: admin/class-market-exporter-admin.php:239
-msgid "Custom property used to specify vendor."
-msgstr ""
-"Атрибут, который отвечает за значение элемента vendor на Яндекс Маркет."
+#: admin/class-market-exporter-admin.php:240
+msgid "Vendor property."
+msgstr "Элемент vendor."
 
-#: admin/class-market-exporter-admin.php:248
-msgid "Model property"
-msgstr "Элемент model"
-
-#: admin/class-market-exporter-admin.php:254
-msgid "Custom property used to specify model."
-msgstr "Атрибут, который отвечает за значение элемента model на Яндекс Маркет."
-
-#: admin/class-market-exporter-admin.php:263
+#: admin/class-market-exporter-admin.php:249
 msgid "Market category property"
 msgstr "Элемент market_catergory"
 
-#: admin/class-market-exporter-admin.php:270
+#: admin/class-market-exporter-admin.php:256
 msgid "Category of product on Yandex Market. Can be set to a value from"
 msgstr "Категория товаров на Яндекс Маркет. Может принимать значение из"
 
-#: admin/class-market-exporter-admin.php:272
+#: admin/class-market-exporter-admin.php:258
 msgid "this list"
 msgstr "этого списка"
 
-#: admin/class-market-exporter-admin.php:273
+#: admin/class-market-exporter-admin.php:259
 msgid "only."
 msgstr "."
 
-#: admin/class-market-exporter-admin.php:283
+#: admin/class-market-exporter-admin.php:269
 msgid "Export products with backorders"
 msgstr "Экспорт товаров со статусом предзаказ"
 
-#: admin/class-market-exporter-admin.php:289
+#: admin/class-market-exporter-admin.php:275
 msgid ""
 "If enabled products that are available for backorder will be exported to YML."
 msgstr ""
 "Если активна, то товары, доступные для предзаказа, будут экспортированы в "
 "YML."
 
-#: admin/class-market-exporter-admin.php:297
+#: admin/class-market-exporter-admin.php:283
 msgid "Include selected categories"
 msgstr "Включать следующие категории"
 
-#: admin/class-market-exporter-admin.php:303
+#: admin/class-market-exporter-admin.php:289
 msgid ""
 "Only selected categories will be included in the export file. Hold down the "
 "control (ctrl) button on Windows or command (cmd) on Mac to select multiple "
@@ -177,20 +165,20 @@ msgstr ""
 "выбрать несколько категорий, зажмите клавишу ctrl (на Windows) или cmd (на "
 "Mac). Если не выбрана ни одна категория, то экспортируются все товары."
 
-#: admin/class-market-exporter-admin.php:311
-#: admin/class-market-exporter-admin.php:317
+#: admin/class-market-exporter-admin.php:297
+#: admin/class-market-exporter-admin.php:303
 msgid "Sales notes"
 msgstr "Использовать элемент sales_notes"
 
-#: admin/class-market-exporter-admin.php:318
+#: admin/class-market-exporter-admin.php:304
 msgid "Not longer than 50 characters."
 msgstr "Не более 50 символов."
 
-#: admin/class-market-exporter-admin.php:326
+#: admin/class-market-exporter-admin.php:312
 msgid "Export weight and size data"
 msgstr "Экспортировать габариты и вес"
 
-#: admin/class-market-exporter-admin.php:332
+#: admin/class-market-exporter-admin.php:318
 msgid ""
 "If enabled weight and size data from WooCommerce will be exported to Width, "
 "Depth, Height and Weight params."
@@ -198,11 +186,11 @@ msgstr ""
 "Если активна, то данные о весе и размерах товара будут экспортированы в "
 "параметры Width, Depth, Height и Weight."
 
-#: admin/class-market-exporter-admin.php:340
+#: admin/class-market-exporter-admin.php:326
 msgid "Use selected parameters"
 msgstr "Использовать следующие параметры"
 
-#: admin/class-market-exporter-admin.php:346
+#: admin/class-market-exporter-admin.php:332
 msgid ""
 "Selected attributes will be exported as a parameters. Hold down the control "
 "(ctrl) button on Windows or command (cmd) on Mac to select multiple options."
@@ -211,7 +199,7 @@ msgstr ""
 "Чтобы выбрать несколько категорий, зажмите клавишу ctrl (на Windows) или cmd "
 "(на Mac). Если не выбрана ни одна категория, то экспортируются все товары."
 
-#: admin/class-market-exporter-admin.php:501
+#: admin/class-market-exporter-admin.php:487
 #: admin/partials/market-exporter-admin-display.php:43
 msgid "Settings"
 msgstr "Настройки"
@@ -393,6 +381,22 @@ msgstr "Антон Ванюков"
 #. Author URI of the plugin/theme
 msgid "http://www.vanyukov.su"
 msgstr "http://www.vanyukov.su"
+
+#~ msgid "Images per product"
+#~ msgstr "Изображений на товарное предложение"
+
+#~ msgid "Max number of images to export for product. Max 10 images."
+#~ msgstr ""
+#~ "Максимальное количество изображений для товарного предложения. Макс 10 "
+#~ "изображений."
+
+#~ msgid "Custom property used to specify vendor."
+#~ msgstr ""
+#~ "Атрибут, который отвечает за значение элемента vendor на Яндекс Маркет."
+
+#~ msgid "Custom property used to specify model."
+#~ msgstr ""
+#~ "Атрибут, который отвечает за значение элемента model на Яндекс Маркет."
 
 #~ msgid "Settings that are used in the export process."
 #~ msgstr "Настройки экспорта."

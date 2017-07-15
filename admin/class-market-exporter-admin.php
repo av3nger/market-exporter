@@ -213,50 +213,31 @@ class Market_Exporter_Admin {
 		foreach ( $this->get_attributes() as $attribute ) {
 			$attributes_array[ $attribute[0] ] = $attribute[1];
 		}
-		add_settings_field(
-			'market_exporter_vendor',
-			__( 'Vendor property', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_offers',
-			array(
-				'label_for'   => 'vendor',
-				'description' => __( 'Custom property used to specify vendor.', 'market-exporter' ),
-				'type'        => 'select',
-				'options'     => $attributes_array,
-			)
-		);
 
 		// Add selection of 'model' property.
 		add_settings_field(
 			'market_exporter_model',
-			__( 'Model property', 'market-exporter' ),
+			__( 'model', 'market-exporter' ),
 			array( $this, 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
 				'label_for'   => 'model',
-				'description' => __( 'Custom property used to specify model.', 'market-exporter' ),
+				'description' => __( 'Model property.', 'market-exporter' ),
 				'type'        => 'select',
 				'options'     => $attributes_array,
 			)
 		);
 
-		// Add market_category text field option.
 		add_settings_field(
-			'market_exporter_market_category',
-			__( 'Market category property', 'market-exporter' ),
+			'market_exporter_vendor',
+			__( 'vendor', 'market-exporter' ),
 			array( $this, 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
-				'label_for'   => 'market_category',
-				'description' => sprintf( '%1$s <a href="%2$s" target="_blank">%3$s</a> %4$s',
-					__( 'Category of product on Yandex Market. Can be set to a value from', 'market-exporter' ),
-					esc_url( 'http://download.cdn.yandex.net/market/market_categories.xls' ),
-					__( 'this list', 'market-exporter' ),
-					__( 'only.', 'market-exporter' )
-				),
+				'label_for'   => 'vendor',
+				'description' => __( 'Vendor property.', 'market-exporter' ),
 				'type'        => 'select',
 				'options'     => $attributes_array,
 			)

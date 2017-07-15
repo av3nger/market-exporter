@@ -315,16 +315,6 @@ class ME_WC {
 					$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
 				}
 
-				// Market category.
-				if ( isset( $this->settings['market_category'] ) && 'not_set' !== $this->settings['market_category'] ) :
-					$market_category = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['market_category'], array(
-						'fields' => 'names',
-					));
-					if ( $market_category ) {
-						$yml .= '        <market_category>' . wp_strip_all_tags( array_shift( $market_category ) ) . '</market_category>' . PHP_EOL;
-					}
-				endif;
-
 				// TODO: get all the images.
 				$image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
 				// If no image found for product, it's probably a variation without an image, get the image from parent.

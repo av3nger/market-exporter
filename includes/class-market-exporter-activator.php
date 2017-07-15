@@ -47,6 +47,10 @@ class Market_Exporter_Activator {
 			self::update_0_4_4();
 		}
 
+		if ( version_compare( $version, '0.4.5', '<' ) ) {
+			self::update_0_4_5();
+		}
+
 		// Update version.
 		update_option( 'market_exporter_version', Market_Exporter::$version );
 	}
@@ -67,5 +71,18 @@ class Market_Exporter_Activator {
 
 		// Removed unused cron schedules.
 		wp_clear_scheduled_hook( 'market_exporter_daily' );
+	}
+
+	/**
+	 * Update to version 0.4.5.
+	 *
+	 * @since 0.4.5
+	 */
+	public static function update_0_4_5() {
+		$options = get_option( 'market_exporter_shop_settings' );
+
+		// Remove market_category setting.
+		unset( $options['market_category'] );
+		update_option( 'market_exporter_shop_settings', $options );
 	}
 }
