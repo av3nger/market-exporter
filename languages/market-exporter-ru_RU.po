@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
 "POT-Creation-Date: 2017-07-02 19:29+0300\n"
-"PO-Revision-Date: 2017-07-02 19:31+0300\n"
+"PO-Revision-Date: 2017-07-15 07:46+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -165,20 +165,20 @@ msgstr ""
 
 #: admin/class-market-exporter-admin.php:292
 msgid "Use selected parameters"
-msgstr "Включать следующие категории"
+msgstr "Использовать следующие параметры"
 
 #: admin/class-market-exporter-admin.php:298
 msgid ""
 "Selected attributes will be exported as a parameters. Hold down the control "
 "(ctrl) button on Windows or command (cmd) on Mac to select multiple options."
 msgstr ""
-"Только выбранные категории товаров будут экспортированы в файл. Чтобы "
-"выбрать несколько категорий, зажмите клавишу ctrl (на Windows) или cmd (на "
-"Mac). Если не выбрана ни одна категория, то экспортируются все товары."
+"Выбранные атрибуты будут экспортированы в качестве параметров (тег <param>). "
+"Чтобы выбрать несколько категорий, зажмите клавишу ctrl (на Windows) или cmd "
+"(на Mac). Если не выбрана ни одна категория, то экспортируются все товары."
 
 #: admin/class-market-exporter-admin.php:306
 msgid "Cron"
-msgstr "Крон"
+msgstr "Расписание крон"
 
 #: admin/class-market-exporter-admin.php:315
 msgid "Every hour"
