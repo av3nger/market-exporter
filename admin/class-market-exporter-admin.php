@@ -109,41 +109,16 @@ class Market_Exporter_Admin {
 			array( $this, 'validate_shop_settings_array' )
 		);
 
+		/**
+		 **************************
+		 * Global settings
+		 **************************
+		 */
 		add_settings_section(
 			'market_exporter_section_general',
 			__( 'Global settings', 'market-exporter' ),
-			array( $this, 'section_general_cb' ),
+			null,
 			$this->plugin_name
-		);
-
-		// Add website name text field option.
-		add_settings_field(
-			'market_exporter_website_name',
-			__( 'Website name', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'website_name',
-				'placeholder' => __( 'Website name', 'market-exporter' ),
-				'description' => __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
-				'type'        => 'text',
-			)
-		);
-
-		// Add company name text field option.
-		add_settings_field(
-			'market_exporter_company_name',
-			__( 'Company name', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'company_name',
-				'placeholder' => __( 'Company name', 'market-exporter' ),
-				'description' => __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
-				'type'        => 'text',
-			)
 		);
 
 		// Add file_date field option.
@@ -157,146 +132,6 @@ class Market_Exporter_Admin {
 				'label_for'   => 'file_date',
 				'description' => __( 'If enabled YML file will have current date at the end: ym-export-yyyy-mm-dd.yml.', 'market-exporter' ),
 				'type'        => 'checkbox',
-			)
-		);
-
-		// Add image count text field option.
-		add_settings_field(
-			'market_exporter_image_count',
-			__( 'Images per product', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'image_count',
-				'placeholder' => __( 'Images per product', 'market-exporter' ),
-				'description' => __( 'Max number of images to export for product. Max 10 images.', 'market-exporter' ),
-				'type'        => 'text',
-			)
-		);
-
-		// Add selection of 'vendor' property.
-		$attributes_array['not_set'] = __( 'Disabled', 'market-exporter' );
-		foreach ( $this->get_attributes() as $attribute ) {
-			$attributes_array[ $attribute[0] ] = $attribute[1];
-		}
-		add_settings_field(
-			'market_exporter_vendor',
-			__( 'Vendor property', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'vendor',
-				'description' => __( 'Custom property used to specify vendor.', 'market-exporter' ),
-				'type'        => 'select',
-				'options'     => $attributes_array,
-			)
-		);
-
-		// Add selection of 'model' property.
-		add_settings_field(
-			'market_exporter_model',
-			__( 'Model property', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'model',
-				'description' => __( 'Custom property used to specify model.', 'market-exporter' ),
-				'type'        => 'select',
-				'options'     => $attributes_array,
-			)
-		);
-
-		// Add market_category text field option.
-		add_settings_field(
-			'market_exporter_market_category',
-			__( 'Market category property', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'market_category',
-				'description' => sprintf( '%1$s <a href="%2$s" target="_blank">%3$s</a> %4$s',
-					__( 'Category of product on Yandex Market. Can be set to a value from', 'market-exporter' ),
-					esc_url( 'http://download.cdn.yandex.net/market/market_categories.xls' ),
-					__( 'this list', 'market-exporter' ),
-					__( 'only.', 'market-exporter' )
-				),
-				'type'        => 'select',
-				'options'     => $attributes_array,
-			)
-		);
-
-		// Add backorders field option.
-		add_settings_field(
-			'market_exporter_backorders',
-			__( 'Export products with backorders', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'backorders',
-				'description' => __( 'If enabled products that are available for backorder will be exported to YML.', 'market-exporter' ),
-				'type'        => 'checkbox',
-			)
-		);
-
-		// Add categories multiselect option.
-		add_settings_field(
-			'market_exporter_include_cat',
-			__( 'Include selected categories', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'include_cat',
-				'description' => __( 'Only selected categories will be included in the export file. Hold down the control (ctrl) button on Windows or command (cmd) on Mac to select multiple options. If nothing is selected - all the categories will be exported.', 'market-exporter' ),
-				'type'        => 'multiselect',
-			)
-		);
-
-		// Add sales_notes field.
-		add_settings_field(
-			'market_exporter_sales_notes',
-			__( 'Sales notes', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'sales_notes',
-				'placeholder' => __( 'Sales notes', 'market-exporter' ),
-				'description' => __( 'Not longer than 50 characters.', 'market-exporter' ),
-				'type'        => 'textarea',
-			)
-		);
-
-		// Add weight and size option.
-		add_settings_field(
-			'market_exporter_size',
-			__( 'Export weight and size data', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'size',
-				'description' => __( 'If enabled weight and size data from WooCommerce will be exported to Width, Depth, Height and Weight params.', 'market-exporter' ),
-				'type'        => 'checkbox',
-			)
-		);
-
-		// Add parameters multiselect option.
-		add_settings_field(
-			'market_exporter_params',
-			__( 'Use selected parameters', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_general',
-			array(
-				'label_for'   => 'params',
-				'description' => __( 'Selected attributes will be exported as a parameters. Hold down the control (ctrl) button on Windows or command (cmd) on Mac to select multiple options.', 'market-exporter' ),
-				'type'        => 'multiselect',
 			)
 		);
 
@@ -318,22 +153,186 @@ class Market_Exporter_Admin {
 				),
 			)
 		);
-	}
 
-	/**
-	 * Callback function for add_settings_section().
-	 * $args have the following keys defined: title, id, callback.
-	 * The values are defined at the add_settings_section() function.
-	 *
-	 * @since 0.3.0
-	 * @param array $args Arguments array.
-	 */
-	public function section_general_cb( $args ) {
-		?>
-		<p id="<?php echo esc_attr( $args['id'] ); ?>">
-			<?php esc_html_e( 'Settings that are used in the export process.', 'market-exporter' ); ?>
-		</p>
-		<?php
+		/**
+		 **************************
+		 * Shop tag settings
+		 **************************
+		 */
+		add_settings_section(
+			'market_exporter_section_shop',
+			__( 'Settings in the shop tag', 'market-exporter' ),
+			null,
+			$this->plugin_name
+		);
+
+		// Add website name text field option.
+		add_settings_field(
+			'market_exporter_website_name',
+			__( 'name', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_shop',
+			array(
+				'label_for'   => 'website_name',
+				'placeholder' => __( 'Website name', 'market-exporter' ),
+				'description' => __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
+				'type'        => 'text',
+			)
+		);
+
+		// Add company name text field option.
+		add_settings_field(
+			'market_exporter_company_name',
+			__( 'company', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_shop',
+			array(
+				'label_for'   => 'company_name',
+				'placeholder' => __( 'Company name', 'market-exporter' ),
+				'description' => __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
+				'type'        => 'text',
+			)
+		);
+
+		/**
+		 **************************
+		 * Offers settings
+		 **************************
+		 */
+		add_settings_section(
+			'market_exporter_section_offers',
+			__( 'Settings for offers', 'market-exporter' ),
+			null,
+			$this->plugin_name
+		);
+
+		// Add selection of 'vendor' property.
+		$attributes_array['not_set'] = __( 'Disabled', 'market-exporter' );
+		foreach ( $this->get_attributes() as $attribute ) {
+			$attributes_array[ $attribute[0] ] = $attribute[1];
+		}
+		add_settings_field(
+			'market_exporter_vendor',
+			__( 'Vendor property', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'vendor',
+				'description' => __( 'Custom property used to specify vendor.', 'market-exporter' ),
+				'type'        => 'select',
+				'options'     => $attributes_array,
+			)
+		);
+
+		// Add selection of 'model' property.
+		add_settings_field(
+			'market_exporter_model',
+			__( 'Model property', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'model',
+				'description' => __( 'Custom property used to specify model.', 'market-exporter' ),
+				'type'        => 'select',
+				'options'     => $attributes_array,
+			)
+		);
+
+		// Add market_category text field option.
+		add_settings_field(
+			'market_exporter_market_category',
+			__( 'Market category property', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'market_category',
+				'description' => sprintf( '%1$s <a href="%2$s" target="_blank">%3$s</a> %4$s',
+					__( 'Category of product on Yandex Market. Can be set to a value from', 'market-exporter' ),
+					esc_url( 'http://download.cdn.yandex.net/market/market_categories.xls' ),
+					__( 'this list', 'market-exporter' ),
+					__( 'only.', 'market-exporter' )
+				),
+				'type'        => 'select',
+				'options'     => $attributes_array,
+			)
+		);
+
+		// Add backorders field option.
+		add_settings_field(
+			'market_exporter_backorders',
+			__( 'Export products with backorders', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'backorders',
+				'description' => __( 'If enabled products that are available for backorder will be exported to YML.', 'market-exporter' ),
+				'type'        => 'checkbox',
+			)
+		);
+
+		// Add categories multiselect option.
+		add_settings_field(
+			'market_exporter_include_cat',
+			__( 'Include selected categories', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'include_cat',
+				'description' => __( 'Only selected categories will be included in the export file. Hold down the control (ctrl) button on Windows or command (cmd) on Mac to select multiple options. If nothing is selected - all the categories will be exported.', 'market-exporter' ),
+				'type'        => 'multiselect',
+			)
+		);
+
+		// Add sales_notes field.
+		add_settings_field(
+			'market_exporter_sales_notes',
+			__( 'Sales notes', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'sales_notes',
+				'placeholder' => __( 'Sales notes', 'market-exporter' ),
+				'description' => __( 'Not longer than 50 characters.', 'market-exporter' ),
+				'type'        => 'textarea',
+			)
+		);
+
+		// Add weight and size option.
+		add_settings_field(
+			'market_exporter_size',
+			__( 'Export weight and size data', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'size',
+				'description' => __( 'If enabled weight and size data from WooCommerce will be exported to Width, Depth, Height and Weight params.', 'market-exporter' ),
+				'type'        => 'checkbox',
+			)
+		);
+
+		// Add parameters multiselect option.
+		add_settings_field(
+			'market_exporter_params',
+			__( 'Use selected parameters', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'params',
+				'description' => __( 'Selected attributes will be exported as a parameters. Hold down the control (ctrl) button on Windows or command (cmd) on Mac to select multiple options.', 'market-exporter' ),
+				'type'        => 'multiselect',
+			)
+		);
+
 	}
 
 	/**
@@ -412,7 +411,17 @@ class Market_Exporter_Admin {
 
 		if ( isset( $args['description'] ) ) : ?>
 			<p class="description">
-				<?php echo _e( $args['description'] ); ?>
+				<?php
+				$tags = array(
+					'a' => array(
+						'href' => array(),
+						'title' => array(),
+					),
+					'br' => array(),
+					'em' => array(),
+					'strong' => array(),
+				);
+				echo wp_kses( $args['description'], $tags ); ?>
 			</p>
 		<?php endif;
 	}
