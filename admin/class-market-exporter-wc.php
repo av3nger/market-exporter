@@ -329,21 +329,17 @@ class ME_WC {
 
 				// Vendor.
 				if ( isset( $this->settings['vendor'] ) && 'not_set' !== $this->settings['vendor'] ) {
-					$vendor = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['vendor'], array(
-						'fields' => 'names',
-					));
+					$vendor = $offer->get_attribute( 'pa_' . $this->settings['vendor'] );
 					if ( $vendor ) {
-						$yml .= '        <vendor>' . wp_strip_all_tags( array_shift( $vendor ) ) . '</vendor>' . PHP_EOL;
+						$yml .= '        <vendor>' . wp_strip_all_tags( $vendor ) . '</vendor>' . PHP_EOL;
 					}
 				}
 
 				// Model.
 				if ( isset( $this->settings['model'] ) && 'not_set' !== $this->settings['model'] ) {
-					$model = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['model'], array(
-						'fields' => 'names',
-					));
+					$model = $offer->get_attribute( 'pa_' . $this->settings['model'] );
 					if ( $model ) {
-						$yml .= '        <model>' . wp_strip_all_tags( array_shift( $model ) ) . '</model>' . PHP_EOL;
+						$yml .= '        <model>' . wp_strip_all_tags( $model ) . '</model>' . PHP_EOL;
 					}
 				}
 
@@ -378,8 +374,9 @@ class ME_WC {
 				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) :
 					if ( $offer->has_weight() ) {
 						$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
-						if ( in_array( $weight_unit, $this->weight_units ) )
+						if ( in_array( $weight_unit, $this->weight_units, true ) ) {
 							$yml .= '        <param name="' . __( 'Weight', 'woocommerce' ) . '" unit="' . __( $weight_unit, 'woocommerce' ) . '">' . $offer->get_weight() . '</param>' . PHP_EOL;
+						}
 					}
 
 					if ( $offer->has_dimensions() ) {
@@ -401,17 +398,6 @@ class ME_WC {
 						}
 					endforeach;
 				}
-
-				/*
-				Backup for params.
-                foreach ( $attributes as $attribute ) :
-                    foreach ( $this->settings['params'] as $param_id ) :
-                        if ( $attribute['name'] == wc_attribute_taxonomy_name_by_id( $param_id ) )
-                            $yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '</param>' . PHP_EOL;
-                    endforeach;
-                endforeach;
-				*/
-
 				$yml .= '      </offer>' . PHP_EOL;
 			endwhile;
 
