@@ -63,7 +63,7 @@
 #me_pages select {
 	padding: 6px;
 	height: auto;
-	min-width: 300px;
+	min-width: 369px;
 }
 
 #me_pages select[multiple] {

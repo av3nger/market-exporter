@@ -169,7 +169,7 @@ class Market_Exporter_Admin {
 		// Add website name text field option.
 		add_settings_field(
 			'market_exporter_website_name',
-			__( 'name', 'market-exporter' ),
+			__( 'Website name', 'market-exporter' ),
 			array( $this, 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_shop',
@@ -184,7 +184,7 @@ class Market_Exporter_Admin {
 		// Add company name text field option.
 		add_settings_field(
 			'market_exporter_company_name',
-			__( 'company', 'market-exporter' ),
+			__( 'Company name', 'market-exporter' ),
 			array( $this, 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_shop',
@@ -217,7 +217,7 @@ class Market_Exporter_Admin {
 		// Add selection of 'model' property.
 		add_settings_field(
 			'market_exporter_model',
-			__( 'model', 'market-exporter' ),
+			__( 'Model', 'market-exporter' ),
 			array( $this, 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
@@ -231,7 +231,7 @@ class Market_Exporter_Admin {
 
 		add_settings_field(
 			'market_exporter_vendor',
-			__( 'vendor', 'market-exporter' ),
+			__( 'Vendor', 'market-exporter' ),
 			array( $this, 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
@@ -274,13 +274,12 @@ class Market_Exporter_Admin {
 		// Add sales_notes field.
 		add_settings_field(
 			'market_exporter_sales_notes',
-			__( 'Sales notes', 'market-exporter' ),
+			__( 'sales_notes', 'market-exporter' ),
 			array( $this, 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
 				'label_for'   => 'sales_notes',
-				'placeholder' => __( 'Sales notes', 'market-exporter' ),
 				'description' => __( 'Not longer than 50 characters.', 'market-exporter' ),
 				'type'        => 'textarea',
 			)
@@ -289,7 +288,7 @@ class Market_Exporter_Admin {
 		// Add weight and size option.
 		add_settings_field(
 			'market_exporter_size',
-			__( 'Export weight and size data', 'market-exporter' ),
+			__( 'Weight and size data', 'market-exporter' ),
 			array( $this, 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
@@ -331,7 +330,7 @@ class Market_Exporter_Admin {
 				   name="market_exporter_shop_settings[<?php echo esc_attr( $args['label_for'] ); ?>]"
 				   value="<?php echo esc_attr( $this->options[ $args['label_for'] ] ); ?>"
 					<?php if ( 'text' === esc_attr( $args['type'] ) ) :?>
-						placeholder="<?php esc_attr( $args['placeholder'] ); ?>"
+						placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>"
 					<?php endif; ?>
 					<?php echo ( 'checkbox' === esc_attr( $args['type'] ) ) ? checked( $this->options[ $args['label_for'] ] ) : ''; ?>
 			>
@@ -340,7 +339,7 @@ class Market_Exporter_Admin {
 
 			<textarea cols="39" rows="3" maxlength="50" id="<?php echo esc_attr( $args['label_for'] ); ?>"
 					  name="market_exporter_shop_settings[<?php echo esc_attr( $args['label_for'] ); ?>]"
-					  title="<?php echo esc_attr( $args['placeholder'] ); ?>"><?php esc_html_e( $this->options[ $args['label_for'] ] ); ?></textarea>
+					  title="<?php echo esc_attr( $args['label_for'] ); ?>"><?php echo esc_html( $this->options[ $args['label_for'] ] ); ?></textarea>
 
 		<?php elseif ( 'select' === esc_attr( $args['type'] ) ) : ?>
 

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2017-07-15 08:56+0300\n"
-"PO-Revision-Date: 2017-07-15 09:19+0300\n"
+"POT-Creation-Date: 2017-07-15 09:25+0300\n"
+"PO-Revision-Date: 2017-07-15 09:25+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -69,12 +69,9 @@ msgid "Settings in the shop tag"
 msgstr "Элементы, входящие в shop"
 
 #: admin/class-market-exporter-admin.php:172
-msgid "name"
-msgstr "Название магазина"
-
 #: admin/class-market-exporter-admin.php:178
 msgid "Website name"
-msgstr "Название сайта"
+msgstr "Название магазина"
 
 #: admin/class-market-exporter-admin.php:179
 msgid ""
@@ -91,12 +88,9 @@ msgstr ""
 "быть изменено Яндекс.Маркетом самостоятельно без уведомления магазина."
 
 #: admin/class-market-exporter-admin.php:187
-msgid "company"
-msgstr "Наименование компании"
-
 #: admin/class-market-exporter-admin.php:193
 msgid "Company name"
-msgstr "Название организации"
+msgstr "Наименование компании"
 
 #: admin/class-market-exporter-admin.php:194
 msgid "Full company name. Not published in Yandex Market."
@@ -109,7 +103,7 @@ msgid "Settings for offers"
 msgstr "Настройки товарных предложений"
 
 #: admin/class-market-exporter-admin.php:220
-msgid "model"
+msgid "Model"
 msgstr "Модель"
 
 #: admin/class-market-exporter-admin.php:226
@@ -117,7 +111,7 @@ msgid "Model property."
 msgstr "Элемент model."
 
 #: admin/class-market-exporter-admin.php:234
-msgid "vendor"
+msgid "Vendor"
 msgstr "Производитель"
 
 #: admin/class-market-exporter-admin.php:240
@@ -125,37 +119,21 @@ msgid "Vendor property."
 msgstr "Элемент vendor."
 
 #: admin/class-market-exporter-admin.php:249
-msgid "Market category property"
-msgstr "Элемент market_catergory"
-
-#: admin/class-market-exporter-admin.php:256
-msgid "Category of product on Yandex Market. Can be set to a value from"
-msgstr "Категория товаров на Яндекс Маркет. Может принимать значение из"
-
-#: admin/class-market-exporter-admin.php:258
-msgid "this list"
-msgstr "этого списка"
-
-#: admin/class-market-exporter-admin.php:259
-msgid "only."
-msgstr "."
-
-#: admin/class-market-exporter-admin.php:269
 msgid "Export products with backorders"
 msgstr "Экспорт товаров со статусом предзаказ"
 
-#: admin/class-market-exporter-admin.php:275
+#: admin/class-market-exporter-admin.php:255
 msgid ""
 "If enabled products that are available for backorder will be exported to YML."
 msgstr ""
 "Если активна, то товары, доступные для предзаказа, будут экспортированы в "
 "YML."
 
-#: admin/class-market-exporter-admin.php:283
+#: admin/class-market-exporter-admin.php:263
 msgid "Include selected categories"
 msgstr "Включать следующие категории"
 
-#: admin/class-market-exporter-admin.php:289
+#: admin/class-market-exporter-admin.php:269
 msgid ""
 "Only selected categories will be included in the export file. Hold down the "
 "control (ctrl) button on Windows or command (cmd) on Mac to select multiple "
@@ -165,20 +143,20 @@ msgstr ""
 "выбрать несколько категорий, зажмите клавишу ctrl (на Windows) или cmd (на "
 "Mac). Если не выбрана ни одна категория, то экспортируются все товары."
 
-#: admin/class-market-exporter-admin.php:297
-#: admin/class-market-exporter-admin.php:303
-msgid "Sales notes"
-msgstr "Использовать элемент sales_notes"
+#: admin/class-market-exporter-admin.php:277
+#: admin/class-market-exporter-admin.php:283
+msgid "sales_notes"
+msgstr "sales_notes"
 
-#: admin/class-market-exporter-admin.php:304
+#: admin/class-market-exporter-admin.php:284
 msgid "Not longer than 50 characters."
 msgstr "Не более 50 символов."
 
-#: admin/class-market-exporter-admin.php:312
-msgid "Export weight and size data"
-msgstr "Экспортировать габариты и вес"
+#: admin/class-market-exporter-admin.php:292
+msgid "Weight and size data"
+msgstr "Габариты и вес"
 
-#: admin/class-market-exporter-admin.php:318
+#: admin/class-market-exporter-admin.php:298
 msgid ""
 "If enabled weight and size data from WooCommerce will be exported to Width, "
 "Depth, Height and Weight params."
@@ -186,11 +164,11 @@ msgstr ""
 "Если активна, то данные о весе и размерах товара будут экспортированы в "
 "параметры Width, Depth, Height и Weight."
 
-#: admin/class-market-exporter-admin.php:326
+#: admin/class-market-exporter-admin.php:306
 msgid "Use selected parameters"
 msgstr "Использовать следующие параметры"
 
-#: admin/class-market-exporter-admin.php:332
+#: admin/class-market-exporter-admin.php:312
 msgid ""
 "Selected attributes will be exported as a parameters. Hold down the control "
 "(ctrl) button on Windows or command (cmd) on Mac to select multiple options."
@@ -200,7 +178,7 @@ msgstr ""
 "или cmd (на Mac). Если не выбрана ни одна категория, то экспортируются все "
 "товары."
 
-#: admin/class-market-exporter-admin.php:487
+#: admin/class-market-exporter-admin.php:467
 #: admin/partials/market-exporter-admin-display.php:43
 msgid "Settings"
 msgstr "Настройки"
@@ -213,19 +191,19 @@ msgstr "Ошибка при создании директории."
 msgid "Error uploading file."
 msgstr "Ошибка при сохранении файла."
 
-#: admin/class-market-exporter-wc.php:392
+#: admin/class-market-exporter-wc.php:382
 msgid "Weight"
 msgstr "Вес"
 
-#: admin/class-market-exporter-wc.php:398
+#: admin/class-market-exporter-wc.php:388
 msgid "Length"
 msgstr "Длина"
 
-#: admin/class-market-exporter-wc.php:399
+#: admin/class-market-exporter-wc.php:389
 msgid "Width"
 msgstr "Ширина"
 
-#: admin/class-market-exporter-wc.php:400
+#: admin/class-market-exporter-wc.php:390
 msgid "Height"
 msgstr "Высота"
 
@@ -382,6 +360,27 @@ msgstr "Антон Ванюков"
 #. Author URI of the plugin/theme
 msgid "http://www.vanyukov.su"
 msgstr "http://www.vanyukov.su"
+
+#~ msgid "Sales notes"
+#~ msgstr "sales_notes"
+
+#~ msgid "name"
+#~ msgstr "Название магазина"
+
+#~ msgid "company"
+#~ msgstr "Наименование компании"
+
+#~ msgid "Market category property"
+#~ msgstr "Элемент market_catergory"
+
+#~ msgid "Category of product on Yandex Market. Can be set to a value from"
+#~ msgstr "Категория товаров на Яндекс Маркет. Может принимать значение из"
+
+#~ msgid "this list"
+#~ msgstr "этого списка"
+
+#~ msgid "only."
+#~ msgstr "."
 
 #~ msgid "Images per product"
 #~ msgstr "Изображений на товарное предложение"
