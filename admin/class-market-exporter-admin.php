@@ -251,10 +251,7 @@ class Market_Exporter_Admin {
 			'market_exporter_section_offers',
 			array(
 				'label_for'   => 'type_prefix',
-				'description' => sprintf(
-					/* translators: %s: link to naming rules */
-					__( 'typePrefix property. Type or product category. See <a href="%s" target="_blank">this link</a> for naming rules.', 'market-exporter' ),
-				'https://yandex.ru/support/partnermarket/elements/vendor-name-model.html#mistakes__wrong-type' ),
+				'description' => __( 'Property typePrefix. Type or product category.', 'market-exporter' ),
 				'type'        => 'select',
 				'options'     => $attributes_array,
 			)

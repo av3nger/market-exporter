@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2017-07-15 09:25+0300\n"
-"PO-Revision-Date: 2017-07-17 07:21+0300\n"
+"POT-Creation-Date: 2017-07-29 09:17+0300\n"
+"PO-Revision-Date: 2017-07-29 09:19+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: market-exporter.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -102,38 +102,48 @@ msgstr ""
 msgid "Settings for offers"
 msgstr "Настройки товарных предложений"
 
-#: admin/class-market-exporter-admin.php:220
-msgid "Model"
-msgstr "Модель"
-
-#: admin/class-market-exporter-admin.php:226
-msgid "Model property."
-msgstr "Элемент model."
-
-#: admin/class-market-exporter-admin.php:234
+#: admin/class-market-exporter-admin.php:219
 msgid "Vendor"
 msgstr "Производитель"
 
-#: admin/class-market-exporter-admin.php:240
+#: admin/class-market-exporter-admin.php:225
 msgid "Vendor property."
 msgstr "Элемент vendor."
 
-#: admin/class-market-exporter-admin.php:249
+#: admin/class-market-exporter-admin.php:234
+msgid "Model"
+msgstr "Модель"
+
+#: admin/class-market-exporter-admin.php:240
+msgid "Model property."
+msgstr "Элемент model."
+
+#: admin/class-market-exporter-admin.php:248
+msgid "typePrefix"
+msgstr "Тип/категория товара"
+
+#: admin/class-market-exporter-admin.php:254
+msgid "Property typePrefix. Type or product category."
+msgstr ""
+"Элемент typePrefix (например, «мобильный телефон», «стиральная машина», "
+"«угловой диван»)."
+
+#: admin/class-market-exporter-admin.php:263
 msgid "Export products with backorders"
 msgstr "Экспорт товаров со статусом предзаказ"
 
-#: admin/class-market-exporter-admin.php:255
+#: admin/class-market-exporter-admin.php:269
 msgid ""
 "If enabled products that are available for backorder will be exported to YML."
 msgstr ""
 "Если активна, то товары, доступные для предзаказа, будут экспортированы в "
 "YML."
 
-#: admin/class-market-exporter-admin.php:263
+#: admin/class-market-exporter-admin.php:277
 msgid "Include selected categories"
 msgstr "Включать следующие категории"
 
-#: admin/class-market-exporter-admin.php:269
+#: admin/class-market-exporter-admin.php:283
 msgid ""
 "Only selected categories will be included in the export file. Hold down the "
 "control (ctrl) button on Windows or command (cmd) on Mac to select multiple "
@@ -143,20 +153,45 @@ msgstr ""
 "выбрать несколько категорий, зажмите клавишу ctrl (на Windows) или cmd (на "
 "Mac). Если не выбрана ни одна категория, то экспортируются все товары."
 
-#: admin/class-market-exporter-admin.php:277
-#: admin/class-market-exporter-admin.php:283
+#: admin/class-market-exporter-admin.php:291
 msgid "sales_notes"
 msgstr "sales_notes"
 
-#: admin/class-market-exporter-admin.php:284
+#: admin/class-market-exporter-admin.php:297
 msgid "Not longer than 50 characters."
 msgstr "Не более 50 символов."
 
-#: admin/class-market-exporter-admin.php:292
+#: admin/class-market-exporter-admin.php:305
+msgid "Manufacturer warranty"
+msgstr "Гарантия производителя"
+
+#: admin/class-market-exporter-admin.php:311
+msgid ""
+"Define if manufacturer warranty is available for selected product. Available "
+"values: true of false."
+msgstr ""
+"Элемент предназначен для отметки товаров, имеющих официальную гарантию "
+"производителя. Возможные  значения: true, false."
+
+#: admin/class-market-exporter-admin.php:320
+msgid "Country of origin"
+msgstr "Страна производитель"
+
+#: admin/class-market-exporter-admin.php:328
+#, php-format
+msgid ""
+"Define country of origin for a product. See <a href=\"%s\" target=\"_blank"
+"\">this link</a> for a list of available values."
+msgstr ""
+"Элемент предназначен для указания страны производства товара. Список стран, "
+"которые могут быть указаны в этом элементе, доступен <a href=\"%s\" target="
+"\"_blank\">здесь</a>."
+
+#: admin/class-market-exporter-admin.php:338
 msgid "Weight and size data"
 msgstr "Габариты и вес"
 
-#: admin/class-market-exporter-admin.php:298
+#: admin/class-market-exporter-admin.php:344
 msgid ""
 "If enabled weight and size data from WooCommerce will be exported to Width, "
 "Depth, Height and Weight params."
@@ -164,11 +199,11 @@ msgstr ""
 "Если активна, то данные о весе и размерах товара будут экспортированы в "
 "параметры Width, Depth, Height и Weight."
 
-#: admin/class-market-exporter-admin.php:306
+#: admin/class-market-exporter-admin.php:352
 msgid "Use selected parameters"
 msgstr "Использовать следующие параметры"
 
-#: admin/class-market-exporter-admin.php:312
+#: admin/class-market-exporter-admin.php:358
 msgid ""
 "Selected attributes will be exported as a parameters. Hold down the control "
 "(ctrl) button on Windows or command (cmd) on Mac to select multiple options."
@@ -178,7 +213,7 @@ msgstr ""
 "или cmd (на Mac). Если не выбрана ни одна категория, то экспортируются все "
 "товары."
 
-#: admin/class-market-exporter-admin.php:467
+#: admin/class-market-exporter-admin.php:515
 #: admin/partials/market-exporter-admin-display.php:43
 msgid "Settings"
 msgstr "Настройки"
@@ -191,19 +226,19 @@ msgstr "Ошибка при создании директории."
 msgid "Error uploading file."
 msgstr "Ошибка при сохранении файла."
 
-#: admin/class-market-exporter-wc.php:382
+#: admin/class-market-exporter-wc.php:402
 msgid "Weight"
 msgstr "Вес"
 
-#: admin/class-market-exporter-wc.php:388
+#: admin/class-market-exporter-wc.php:409
 msgid "Length"
 msgstr "Длина"
 
-#: admin/class-market-exporter-wc.php:389
+#: admin/class-market-exporter-wc.php:410
 msgid "Width"
 msgstr "Ширина"
 
-#: admin/class-market-exporter-wc.php:390
+#: admin/class-market-exporter-wc.php:411
 msgid "Height"
 msgstr "Высота"
 
@@ -360,6 +395,13 @@ msgstr "Антон Ванюков"
 #. Author URI of the plugin/theme
 msgid "http://www.vanyukov.su"
 msgstr "http://www.vanyukov.su"
+
+#~ msgid ""
+#~ "typePrefix property. Type or product category. See <a href=\"%s\" target="
+#~ "\"_blank\">this link</a> for naming rules."
+#~ msgstr ""
+#~ "Элемент Тип / категория товара (например, «мобильный телефон», "
+#~ "«стиральная машина», «угловой диван»)."
 
 #~ msgid "Sales notes"
 #~ msgstr "sales_notes"
