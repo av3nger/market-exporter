@@ -47,8 +47,8 @@ class Market_Exporter_Activator {
 			self::update_0_4_4();
 		}
 
-		if ( version_compare( $version, '1.0.0', '<' ) ) {
-			self::update_1_0_0();
+		if ( version_compare( $version, '1.0.0-beta.1', '<' ) ) {
+			self::update_1_0_0_beta_1();
 		}
 
 		// Update version.
@@ -78,7 +78,7 @@ class Market_Exporter_Activator {
 	 *
 	 * @since 0.4.5
 	 */
-	public static function update_1_0_0() {
+	public static function update_1_0_0_beta_1() {
 		$options = get_option( 'market_exporter_shop_settings' );
 
 		// Remove market_category setting.
