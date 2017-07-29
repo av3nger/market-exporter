@@ -327,6 +327,14 @@ class ME_WC {
 
 				$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>' . PHP_EOL;
 
+				// type_prefix.
+				if ( isset( $this->settings['type_prefix'] ) && 'not_set' !== $this->settings['type_prefix'] ) {
+					$type_prefix = $offer->get_attribute( 'pa_' . $this->settings['type_prefix'] );
+					if ( $type_prefix ) {
+						$yml .= '        <typePrefix>' . wp_strip_all_tags( $type_prefix ) . '</typePrefix>' . PHP_EOL;
+					}
+				}
+
 				// Vendor.
 				if ( isset( $this->settings['vendor'] ) && 'not_set' !== $this->settings['vendor'] ) {
 					$vendor = $offer->get_attribute( 'pa_' . $this->settings['vendor'] );
@@ -368,6 +376,22 @@ class ME_WC {
 				// Sales notes.
 				if ( strlen( $this->settings['sales_notes'] ) > 0 ) {
 					$yml .= '        <sales_notes>' . wp_strip_all_tags( $this->settings['sales_notes'] ) . '</sales_notes>' . PHP_EOL;
+				}
+
+				// Manufacturer warranty.
+				if ( isset( $this->settings['warranty'] ) && 'not_set' !== $this->settings['warranty'] ) {
+					$warranty = $offer->get_attribute( 'pa_' . $this->settings['warranty'] );
+					if ( $warranty ) {
+						$yml .= '        <manufacturer_warranty>' . wp_strip_all_tags( $warranty ) . '</manufacturer_warranty>' . PHP_EOL;
+					}
+				}
+
+				// Coutry of origin.
+				if ( isset( $this->settings['origin'] ) && 'not_set' !== $this->settings['origin'] ) {
+					$origin = $offer->get_attribute( 'pa_' . $this->settings['origin'] );
+					if ( $origin ) {
+						$yml .= '        <country_of_origin>' . wp_strip_all_tags( $origin ) . '</country_of_origin>' . PHP_EOL;
+					}
 				}
 
 				// Params: size and weight.

@@ -214,6 +214,20 @@ class Market_Exporter_Admin {
 			$attributes_array[ $attribute[0] ] = $attribute[1];
 		}
 
+		add_settings_field(
+			'market_exporter_vendor',
+			__( 'Vendor', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'vendor',
+				'description' => __( 'Vendor property.', 'market-exporter' ),
+				'type'        => 'select',
+				'options'     => $attributes_array,
+			)
+		);
+
 		// Add selection of 'model' property.
 		add_settings_field(
 			'market_exporter_model',
@@ -230,14 +244,17 @@ class Market_Exporter_Admin {
 		);
 
 		add_settings_field(
-			'market_exporter_vendor',
-			__( 'Vendor', 'market-exporter' ),
+			'market_exporter_type_prefix',
+			__( 'typePrefix', 'market-exporter' ),
 			array( $this, 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
-				'label_for'   => 'vendor',
-				'description' => __( 'Vendor property.', 'market-exporter' ),
+				'label_for'   => 'type_prefix',
+				'description' => sprintf(
+					/* translators: %s: link to naming rules */
+					__( 'typePrefix property. Type or product category. See <a href="%s" target="_blank">this link</a> for naming rules.', 'market-exporter' ),
+				'https://yandex.ru/support/partnermarket/elements/vendor-name-model.html#mistakes__wrong-type' ),
 				'type'        => 'select',
 				'options'     => $attributes_array,
 			)
@@ -282,6 +299,39 @@ class Market_Exporter_Admin {
 				'label_for'   => 'sales_notes',
 				'description' => __( 'Not longer than 50 characters.', 'market-exporter' ),
 				'type'        => 'textarea',
+			)
+		);
+
+		// Add manufacturer_warranty field.
+		add_settings_field(
+			'market_exporter_warranty',
+			__( 'Manufacturer warranty', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'warranty',
+				'description' => __( 'Define if manufacturer warranty is available for selected product. Available values: true of false.', 'market-exporter' ),
+				'type'        => 'select',
+				'options'     => $attributes_array,
+			)
+		);
+
+		// Add country_of_origin field.
+		add_settings_field(
+			'market_exporter_origin',
+			__( 'Country of origin', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'origin',
+				'description' => sprintf(
+					/* translators: %s: link to naming rules */
+					__( 'Define country of origin for a product. See <a href="%s" target="_blank">this link</a> for a list of available values.', 'market-exporter' ),
+				'http://partner.market.yandex.ru/pages/help/Countries.pdf' ),
+				'type'        => 'select',
+				'options'     => $attributes_array,
 			)
 		);
 
@@ -429,7 +479,9 @@ class Market_Exporter_Admin {
 
 		$output['vendor']          = sanitize_text_field( $input['vendor'] );
 		$output['model']           = sanitize_text_field( $input['model'] );
-		$output['market_category'] = sanitize_text_field( $input['market_category'] );
+		$output['type_prefix']     = sanitize_text_field( $input['type_prefix'] );
+		$output['warranty']        = sanitize_text_field( $input['warranty'] );
+		$output['origin']          = sanitize_text_field( $input['origin'] );
 		if ( ! function_exists( 'sanitize_textarea_field' ) ) {
 			$output['sales_notes'] = sanitize_text_field( $input['sales_notes'] );
 		} else {

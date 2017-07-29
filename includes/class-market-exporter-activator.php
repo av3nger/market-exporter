@@ -47,8 +47,8 @@ class Market_Exporter_Activator {
 			self::update_0_4_4();
 		}
 
-		if ( version_compare( $version, '0.4.5', '<' ) ) {
-			self::update_0_4_5();
+		if ( version_compare( $version, '1.0.0', '<' ) ) {
+			self::update_1_0_0();
 		}
 
 		// Update version.
@@ -78,11 +78,27 @@ class Market_Exporter_Activator {
 	 *
 	 * @since 0.4.5
 	 */
-	public static function update_0_4_5() {
+	public static function update_1_0_0() {
 		$options = get_option( 'market_exporter_shop_settings' );
 
 		// Remove market_category setting.
 		unset( $options['market_category'] );
+
+		// Init typePrefix option.
+		if ( ! isset( $options['type_prefix'] ) ) {
+			$options['type_prefix'] = 'not_set';
+		}
+
+		// Init manufacturer_warranty option.
+		if ( ! isset( $options['warranty'] ) ) {
+			$options['warranty'] = 'not_set';
+		}
+
+		// Init country_of_origin option.
+		if ( ! isset( $options['origin'] ) ) {
+			$options['origin'] = 'not_set';
+		}
+
 		update_option( 'market_exporter_shop_settings', $options );
 	}
 }
