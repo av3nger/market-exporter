@@ -282,19 +282,14 @@ class ME_WC {
 				// If variable product, get product id from $variations array.
 				$offer_id = ( ( $product->is_type( 'variable' ) ) ? $variations[ $variation_count ]['variation_id'] : $product->get_id() );
 
-				// Prepare variation link.
-				$var_link = '';
 				if ( $product->is_type( 'variable' ) ) :
-					$variable_attribute = wc_get_product_variation_attributes( $offer_id );
-					$var_link = '?' . key( $variable_attribute ) . '=' . current( $variable_attribute );
-
 					// This has to work but we need to think of a way to save the initial offer variable.
 					$offer = new WC_Product_Variation( $offer_id );
 				endif;
 
 				// NOTE: Below this point we start using $offer instead of $product.
 				$yml .= '      <offer id="' . $offer_id . '" available="' . ( ( $offer->is_in_stock() ) ? 'true' : 'false' ) . '">' . PHP_EOL;
-				$yml .= '        <url>' . esc_url( get_permalink( $offer->get_id() ) . $var_link ) . '</url>' . PHP_EOL;
+				$yml .= '        <url>' . get_permalink( $offer->get_id() ) . '</url>' . PHP_EOL;
 
 				// Price.
 				if ( $offer->get_sale_price() && ( $offer->get_sale_price() < $offer->get_regular_price() ) ) {
