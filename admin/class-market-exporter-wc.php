@@ -371,6 +371,7 @@ class ME_WC {
 				}
 
 				if ( $description ) {
+					$description = strip_tags( strip_shortcodes( $description ), '<h3><ul><li><p>' );
 					$yml .= '        <description><![CDATA[' . html_entity_decode( $description, ENT_COMPAT, 'UTF-8' ) . ']]></description>' . PHP_EOL;
 				}
 				// Sales notes.
