@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2017-09-08 09:43+0300\n"
-"PO-Revision-Date: 2017-09-08 09:44+0300\n"
+"POT-Creation-Date: 2017-09-08 10:56+0300\n"
+"PO-Revision-Date: 2017-09-08 10:56+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -49,6 +49,7 @@ msgstr "Выгрузка по расписанию"
 
 #: admin/class-market-exporter-admin.php:149
 #: admin/class-market-exporter-admin.php:212
+#: admin/class-market-exporter-admin.php:376
 msgid "Disabled"
 msgstr "Отключено"
 
@@ -217,11 +218,19 @@ msgstr ""
 msgid "Delivery options"
 msgstr "Настройка доставки"
 
+#: admin/class-market-exporter-admin.php:377
+msgid "true"
+msgstr "true"
+
 #: admin/class-market-exporter-admin.php:378
+msgid "false"
+msgstr "false"
+
+#: admin/class-market-exporter-admin.php:384
 msgid "Delivery"
 msgstr "Доставка"
 
-#: admin/class-market-exporter-admin.php:384
+#: admin/class-market-exporter-admin.php:390
 msgid ""
 "Use the delivery element to indicate the possibility of delivery to the "
 "buyer's address in the home region of the store."
@@ -229,11 +238,11 @@ msgstr ""
 "Используйте элемент delivery, чтобы указать возможность доставки по адресу "
 "покупателя в домашнем регионе магазина."
 
-#: admin/class-market-exporter-admin.php:392
+#: admin/class-market-exporter-admin.php:399
 msgid "Pickup"
 msgstr "Самовывоз"
 
-#: admin/class-market-exporter-admin.php:398
+#: admin/class-market-exporter-admin.php:405
 msgid ""
 "Use the pickup element to indicate the possibility of receiving goods at the "
 "issuance point."
@@ -241,11 +250,11 @@ msgstr ""
 "Используйте элемент pickup, чтобы указать возможность получения товара в "
 "пункте выдачи."
 
-#: admin/class-market-exporter-admin.php:406
+#: admin/class-market-exporter-admin.php:414
 msgid "Store"
 msgstr "Покупка в торговом зале"
 
-#: admin/class-market-exporter-admin.php:412
+#: admin/class-market-exporter-admin.php:420
 msgid ""
 "Use the store element to indicate the possibility of buying without a "
 "preliminary order at the point of sale."
@@ -253,7 +262,7 @@ msgstr ""
 "Используйте элемент store, чтобы указать возможность покупки без "
 "предварительного заказа в точке продажи."
 
-#: admin/class-market-exporter-admin.php:573
+#: admin/class-market-exporter-admin.php:582
 #: admin/partials/market-exporter-admin-display.php:43
 msgid "Settings"
 msgstr "Настройки"
@@ -266,19 +275,19 @@ msgstr "Ошибка при создании директории."
 msgid "Error uploading file."
 msgstr "Ошибка при сохранении файла."
 
-#: admin/class-market-exporter-wc.php:403
+#: admin/class-market-exporter-wc.php:416
 msgid "Weight"
 msgstr "Вес"
 
-#: admin/class-market-exporter-wc.php:410
+#: admin/class-market-exporter-wc.php:423
 msgid "Length"
 msgstr "Длина"
 
-#: admin/class-market-exporter-wc.php:411
+#: admin/class-market-exporter-wc.php:424
 msgid "Width"
 msgstr "Ширина"
 
-#: admin/class-market-exporter-wc.php:412
+#: admin/class-market-exporter-wc.php:425
 msgid "Height"
 msgstr "Высота"
 
