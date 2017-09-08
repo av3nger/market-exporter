@@ -360,6 +360,68 @@ class Market_Exporter_Admin {
 			)
 		);
 
+		/**
+		 **************************
+		 * Shop tag settings
+		 **************************
+		 */
+		add_settings_section(
+			'market_exporter_section_delivery',
+			__( 'Delivery options', 'market-exporter' ),
+			null,
+			$this->plugin_name
+		);
+
+		$select_options = array(
+			'disabled' => __( 'Disabled', 'market-exporter' ),
+			'true'     => __( 'true', 'market-exporter' ),
+			'false'    => __( 'false', 'market-exporter' ),
+		);
+
+		// Delivery element.
+		add_settings_field(
+			'market_exporter_delivery',
+			__( 'Delivery', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_delivery',
+			array(
+				'label_for'   => 'delivery',
+				'description' => __( "Use the delivery element to indicate the possibility of delivery to the buyer's address in the home region of the store.", 'market-exporter' ),
+				'type'        => 'select',
+				'options'     => $select_options,
+			)
+		);
+
+		// Pickup element.
+		add_settings_field(
+			'market_exporter_pickup',
+			__( 'Pickup', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_delivery',
+			array(
+				'label_for'   => 'pickup',
+				'description' => __( 'Use the pickup element to indicate the possibility of receiving goods at the issuance point.', 'market-exporter' ),
+				'type'        => 'select',
+				'options'     => $select_options,
+			)
+		);
+
+		// Store element.
+		add_settings_field(
+			'market_exporter_store',
+			__( 'Store', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_delivery',
+			array(
+				'label_for'   => 'store',
+				'description' => __( 'Use the store element to indicate the possibility of buying without a preliminary order at the point of sale.', 'market-exporter' ),
+				'type'        => 'select',
+				'options'     => $select_options,
+			)
+		);
 	}
 
 	/**
@@ -500,6 +562,11 @@ class Market_Exporter_Admin {
 		$output['cron']            = sanitize_text_field( $input['cron'] );
 		// Update cron schedule.
 		$this->update_cron_schedule( $output['cron'] );
+
+		// Delivery section.
+		$output['delivery'] = sanitize_text_field( $input['delivery'] );
+		$output['pickup']   = sanitize_text_field( $input['pickup'] );
+		$output['store']    = sanitize_text_field( $input['store'] );
 
 		return $output;
 	}

@@ -37,6 +37,9 @@ class Market_Exporter_Activator {
 				'sales_notes'     => '',
 				'size'            => false,
 				'cron'            => false,
+				'delivery'        => false,
+				'pickup'          => false,
+				'store'           => false,
 			);
 			update_option( 'market_exporter_shop_settings', $settings );
 		}
@@ -74,7 +77,7 @@ class Market_Exporter_Activator {
 	}
 
 	/**
-	 * Update to version 0.4.5.
+	 * Update to version 1.0.0.
 	 *
 	 * @since 0.4.5
 	 */
@@ -97,6 +100,21 @@ class Market_Exporter_Activator {
 		// Init country_of_origin option.
 		if ( ! isset( $options['origin'] ) ) {
 			$options['origin'] = 'not_set';
+		}
+
+		// Init delivery option.
+		if ( ! isset( $options['delivery'] ) ) {
+			$options['delivery'] = 'disabled';
+		}
+
+		// Init pickup option.
+		if ( ! isset( $options['pickup'] ) ) {
+			$options['pickup'] = 'disabled';
+		}
+
+		// Init store option.
+		if ( ! isset( $options['store'] ) ) {
+			$options['store'] = 'disabled';
 		}
 
 		update_option( 'market_exporter_shop_settings', $options );

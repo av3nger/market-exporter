@@ -325,6 +325,19 @@ class ME_WC {
 					$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 				}
 
+				// Store.
+				if ( isset( $this->settings['store'] ) && 'disabled' !== $this->settings['store'] ) {
+					$yml .= '        <store>' . $this->settings['store'] . '</store>' . PHP_EOL;
+				}
+				// Pickup.
+				if ( isset( $this->settings['pickup'] ) && 'disabled' !== $this->settings['pickup'] ) {
+					$yml .= '        <pickup>' . $this->settings['pickup'] . '</pickup>' . PHP_EOL;
+				}
+				// Delivery.
+				if ( isset( $this->settings['delivery'] ) && 'disabled' !== $this->settings['delivery'] ) {
+					$yml .= '        <delivery>' . $this->settings['delivery'] . '</delivery>' . PHP_EOL;
+				}
+
 				$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>' . PHP_EOL;
 
 				// type_prefix.

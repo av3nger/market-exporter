@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2017-07-29 09:17+0300\n"
-"PO-Revision-Date: 2017-07-29 09:19+0300\n"
+"POT-Creation-Date: 2017-09-08 09:43+0300\n"
+"PO-Revision-Date: 2017-09-08 09:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -213,7 +213,47 @@ msgstr ""
 "или cmd (на Mac). Если не выбрана ни одна категория, то экспортируются все "
 "товары."
 
-#: admin/class-market-exporter-admin.php:515
+#: admin/class-market-exporter-admin.php:370
+msgid "Delivery options"
+msgstr "Настройка доставки"
+
+#: admin/class-market-exporter-admin.php:378
+msgid "Delivery"
+msgstr "Доставка"
+
+#: admin/class-market-exporter-admin.php:384
+msgid ""
+"Use the delivery element to indicate the possibility of delivery to the "
+"buyer's address in the home region of the store."
+msgstr ""
+"Используйте элемент delivery, чтобы указать возможность доставки по адресу "
+"покупателя в домашнем регионе магазина."
+
+#: admin/class-market-exporter-admin.php:392
+msgid "Pickup"
+msgstr "Самовывоз"
+
+#: admin/class-market-exporter-admin.php:398
+msgid ""
+"Use the pickup element to indicate the possibility of receiving goods at the "
+"issuance point."
+msgstr ""
+"Используйте элемент pickup, чтобы указать возможность получения товара в "
+"пункте выдачи."
+
+#: admin/class-market-exporter-admin.php:406
+msgid "Store"
+msgstr "Покупка в торговом зале"
+
+#: admin/class-market-exporter-admin.php:412
+msgid ""
+"Use the store element to indicate the possibility of buying without a "
+"preliminary order at the point of sale."
+msgstr ""
+"Используйте элемент store, чтобы указать возможность покупки без "
+"предварительного заказа в точке продажи."
+
+#: admin/class-market-exporter-admin.php:573
 #: admin/partials/market-exporter-admin-display.php:43
 msgid "Settings"
 msgstr "Настройки"
@@ -226,19 +266,19 @@ msgstr "Ошибка при создании директории."
 msgid "Error uploading file."
 msgstr "Ошибка при сохранении файла."
 
-#: admin/class-market-exporter-wc.php:402
+#: admin/class-market-exporter-wc.php:403
 msgid "Weight"
 msgstr "Вес"
 
-#: admin/class-market-exporter-wc.php:409
+#: admin/class-market-exporter-wc.php:410
 msgid "Length"
 msgstr "Длина"
 
-#: admin/class-market-exporter-wc.php:410
+#: admin/class-market-exporter-wc.php:411
 msgid "Width"
 msgstr "Ширина"
 
-#: admin/class-market-exporter-wc.php:411
+#: admin/class-market-exporter-wc.php:412
 msgid "Height"
 msgstr "Высота"
 
