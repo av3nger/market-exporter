@@ -119,6 +119,7 @@ class ME_WC {
 			case 'BYN':
 			case 'USD':
 			case 'EUR':
+			case 'KZT':
 				return $currency;
 			default:
 				return false;

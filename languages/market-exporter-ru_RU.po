@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2017-09-08 14:56+0300\n"
-"PO-Revision-Date: 2017-09-08 14:58+0300\n"
+"POT-Creation-Date: 2017-09-24 11:58+0300\n"
+"PO-Revision-Date: 2017-09-24 11:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -286,7 +286,7 @@ msgstr "Только описание"
 msgid "Only short description"
 msgstr "Только краткое описание"
 
-#: admin/class-market-exporter-admin.php:601
+#: admin/class-market-exporter-admin.php:613
 #: admin/partials/market-exporter-admin-display.php:43
 msgid "Settings"
 msgstr "Настройки"
@@ -299,19 +299,19 @@ msgstr "Ошибка при создании директории."
 msgid "Error uploading file."
 msgstr "Ошибка при сохранении файла."
 
-#: admin/class-market-exporter-wc.php:411
+#: admin/class-market-exporter-wc.php:401
 msgid "Weight"
 msgstr "Вес"
 
-#: admin/class-market-exporter-wc.php:418
+#: admin/class-market-exporter-wc.php:408
 msgid "Length"
 msgstr "Длина"
 
-#: admin/class-market-exporter-wc.php:419
+#: admin/class-market-exporter-wc.php:409
 msgid "Width"
 msgstr "Ширина"
 
-#: admin/class-market-exporter-wc.php:420
+#: admin/class-market-exporter-wc.php:410
 msgid "Height"
 msgstr "Высота"
 
@@ -341,12 +341,12 @@ msgstr "У Вас недостаточно прав."
 #, php-format
 msgid ""
 "Currently only the following currency is supported: Russian Ruble (RUB), "
-"Ukrainian Hryvnia (UAH), US Dollar (USD) and Euro (EUR). Please <a href=\"%s"
-"\">update currency</a>."
+"Ukrainian Hryvnia (UAH), Tenge (KZT), US Dollar (USD) and Euro (EUR). Please "
+"<a href=\"%s\">update currency</a>."
 msgstr ""
 "Поддерживаются следующие валюты: Российский рубль (RUB), Украинская гривна "
-"(UAH), Доллар США (USD) и Евро (EUR). Пожалуйста, <a href=\"%s\">обновите "
-"валюту</a>."
+"(UAH), Тенге (KZT), Доллар США (USD) и Евро (EUR). Пожалуйста, <a href=\"%s"
+"\">обновите валюту</a>."
 
 #: admin/partials/market-exporter-admin-display.php:73
 #, php-format

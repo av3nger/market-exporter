@@ -67,7 +67,7 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 
 			switch ( $return_code ) {
 				case 100:
-					echo ' <p>' . sprintf( __( 'Currently only the following currency is supported: Russian Ruble (RUB), Ukrainian Hryvnia (UAH), US Dollar (USD) and Euro (EUR). Please <a href="%s">update currency</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings' ) ) . '</p>';
+					echo ' <p>' . sprintf( __( 'Currently only the following currency is supported: Russian Ruble (RUB), Ukrainian Hryvnia (UAH), Tenge (KZT), US Dollar (USD) and Euro (EUR). Please <a href="%s">update currency</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings' ) ) . '</p>';
 					break;
 				case 200:
 					echo ' <p>' . sprintf( __( 'No shipping methods are available. Please <a href="%s">update or add at least one</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings&tab=shipping' ) ) . '</p>';
