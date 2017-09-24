@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2017-09-08 10:56+0300\n"
-"PO-Revision-Date: 2017-09-08 10:56+0300\n"
+"POT-Creation-Date: 2017-09-08 14:56+0300\n"
+"PO-Revision-Date: 2017-09-08 14:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -32,49 +32,11 @@ msgid "Global settings"
 msgstr "Основные настройки"
 
 #: admin/class-market-exporter-admin.php:127
-msgid "Add date to YML file name"
-msgstr "Добавить дату в имя файла"
-
 #: admin/class-market-exporter-admin.php:133
-msgid ""
-"If enabled YML file will have current date at the end: ym-export-yyyy-mm-dd."
-"yml."
-msgstr ""
-"Если активна, то к имена файла YML будет добавляться текущая дата: yml-"
-"export-yyyy-mm-dd.yml."
-
-#: admin/class-market-exporter-admin.php:141
-msgid "Cron"
-msgstr "Выгрузка по расписанию"
-
-#: admin/class-market-exporter-admin.php:149
-#: admin/class-market-exporter-admin.php:212
-#: admin/class-market-exporter-admin.php:376
-msgid "Disabled"
-msgstr "Отключено"
-
-#: admin/class-market-exporter-admin.php:150
-msgid "Every hour"
-msgstr "Каждый час"
-
-#: admin/class-market-exporter-admin.php:151
-msgid "Twice a day"
-msgstr "Два раза в сутки"
-
-#: admin/class-market-exporter-admin.php:152
-msgid "Daily"
-msgstr "Каждый день"
-
-#: admin/class-market-exporter-admin.php:164
-msgid "Settings in the shop tag"
-msgstr "Элементы, входящие в shop"
-
-#: admin/class-market-exporter-admin.php:172
-#: admin/class-market-exporter-admin.php:178
 msgid "Website name"
 msgstr "Название магазина"
 
-#: admin/class-market-exporter-admin.php:179
+#: admin/class-market-exporter-admin.php:134
 msgid ""
 "Not longer than 20 characters. Has to be the name of the shop, that is "
 "configured in Yandex Market."
@@ -88,63 +50,97 @@ msgstr ""
 "публикуется на сайте. При несоблюдении данного требования наименование может "
 "быть изменено Яндекс.Маркетом самостоятельно без уведомления магазина."
 
-#: admin/class-market-exporter-admin.php:187
-#: admin/class-market-exporter-admin.php:193
+#: admin/class-market-exporter-admin.php:142
+#: admin/class-market-exporter-admin.php:148
 msgid "Company name"
 msgstr "Наименование компании"
 
-#: admin/class-market-exporter-admin.php:194
+#: admin/class-market-exporter-admin.php:149
 msgid "Full company name. Not published in Yandex Market."
 msgstr ""
 "Полное наименование компании, владеющей магазином. Не публикуется, "
 "используется для внутренней идентификации."
 
-#: admin/class-market-exporter-admin.php:206
+#: admin/class-market-exporter-admin.php:157
+msgid "Add date to YML file name"
+msgstr "Добавить дату в имя файла"
+
+#: admin/class-market-exporter-admin.php:163
+msgid ""
+"If enabled YML file will have current date at the end: ym-export-yyyy-mm-dd."
+"yml."
+msgstr ""
+"Если активна, то к имена файла YML будет добавляться текущая дата: yml-"
+"export-yyyy-mm-dd.yml."
+
+#: admin/class-market-exporter-admin.php:171
+msgid "Cron"
+msgstr "Выгрузка по расписанию"
+
+#: admin/class-market-exporter-admin.php:179
+#: admin/class-market-exporter-admin.php:200
+#: admin/class-market-exporter-admin.php:364
+msgid "Disabled"
+msgstr "Отключено"
+
+#: admin/class-market-exporter-admin.php:180
+msgid "Every hour"
+msgstr "Каждый час"
+
+#: admin/class-market-exporter-admin.php:181
+msgid "Twice a day"
+msgstr "Два раза в сутки"
+
+#: admin/class-market-exporter-admin.php:182
+msgid "Daily"
+msgstr "Каждый день"
+
+#: admin/class-market-exporter-admin.php:194
 msgid "Settings for offers"
 msgstr "Настройки товарных предложений"
 
-#: admin/class-market-exporter-admin.php:219
+#: admin/class-market-exporter-admin.php:207
 msgid "Vendor"
 msgstr "Производитель"
 
-#: admin/class-market-exporter-admin.php:225
+#: admin/class-market-exporter-admin.php:213
 msgid "Vendor property."
 msgstr "Элемент vendor."
 
-#: admin/class-market-exporter-admin.php:234
+#: admin/class-market-exporter-admin.php:222
 msgid "Model"
 msgstr "Модель"
 
-#: admin/class-market-exporter-admin.php:240
+#: admin/class-market-exporter-admin.php:228
 msgid "Model property."
 msgstr "Элемент model."
 
-#: admin/class-market-exporter-admin.php:248
+#: admin/class-market-exporter-admin.php:236
 msgid "typePrefix"
 msgstr "Тип/категория товара"
 
-#: admin/class-market-exporter-admin.php:254
+#: admin/class-market-exporter-admin.php:242
 msgid "Property typePrefix. Type or product category."
 msgstr ""
 "Элемент typePrefix (например, «мобильный телефон», «стиральная машина», "
 "«угловой диван»)."
 
-#: admin/class-market-exporter-admin.php:263
+#: admin/class-market-exporter-admin.php:251
 msgid "Export products with backorders"
 msgstr "Экспорт товаров со статусом предзаказ"
 
-#: admin/class-market-exporter-admin.php:269
+#: admin/class-market-exporter-admin.php:257
 msgid ""
 "If enabled products that are available for backorder will be exported to YML."
 msgstr ""
 "Если активна, то товары, доступные для предзаказа, будут экспортированы в "
 "YML."
 
-#: admin/class-market-exporter-admin.php:277
+#: admin/class-market-exporter-admin.php:265
 msgid "Include selected categories"
 msgstr "Включать следующие категории"
 
-#: admin/class-market-exporter-admin.php:283
+#: admin/class-market-exporter-admin.php:271
 msgid ""
 "Only selected categories will be included in the export file. Hold down the "
 "control (ctrl) button on Windows or command (cmd) on Mac to select multiple "
@@ -154,19 +150,19 @@ msgstr ""
 "выбрать несколько категорий, зажмите клавишу ctrl (на Windows) или cmd (на "
 "Mac). Если не выбрана ни одна категория, то экспортируются все товары."
 
-#: admin/class-market-exporter-admin.php:291
+#: admin/class-market-exporter-admin.php:279
 msgid "sales_notes"
 msgstr "sales_notes"
 
-#: admin/class-market-exporter-admin.php:297
+#: admin/class-market-exporter-admin.php:285
 msgid "Not longer than 50 characters."
 msgstr "Не более 50 символов."
 
-#: admin/class-market-exporter-admin.php:305
+#: admin/class-market-exporter-admin.php:293
 msgid "Manufacturer warranty"
 msgstr "Гарантия производителя"
 
-#: admin/class-market-exporter-admin.php:311
+#: admin/class-market-exporter-admin.php:299
 msgid ""
 "Define if manufacturer warranty is available for selected product. Available "
 "values: true of false."
@@ -174,11 +170,11 @@ msgstr ""
 "Элемент предназначен для отметки товаров, имеющих официальную гарантию "
 "производителя. Возможные  значения: true, false."
 
-#: admin/class-market-exporter-admin.php:320
+#: admin/class-market-exporter-admin.php:308
 msgid "Country of origin"
 msgstr "Страна производитель"
 
-#: admin/class-market-exporter-admin.php:328
+#: admin/class-market-exporter-admin.php:316
 #, php-format
 msgid ""
 "Define country of origin for a product. See <a href=\"%s\" target=\"_blank"
@@ -188,11 +184,11 @@ msgstr ""
 "которые могут быть указаны в этом элементе, доступен <a href=\"%s\" target="
 "\"_blank\">здесь</a>."
 
-#: admin/class-market-exporter-admin.php:338
+#: admin/class-market-exporter-admin.php:326
 msgid "Weight and size data"
 msgstr "Габариты и вес"
 
-#: admin/class-market-exporter-admin.php:344
+#: admin/class-market-exporter-admin.php:332
 msgid ""
 "If enabled weight and size data from WooCommerce will be exported to Width, "
 "Depth, Height and Weight params."
@@ -200,11 +196,11 @@ msgstr ""
 "Если активна, то данные о весе и размерах товара будут экспортированы в "
 "параметры Width, Depth, Height и Weight."
 
-#: admin/class-market-exporter-admin.php:352
+#: admin/class-market-exporter-admin.php:340
 msgid "Use selected parameters"
 msgstr "Использовать следующие параметры"
 
-#: admin/class-market-exporter-admin.php:358
+#: admin/class-market-exporter-admin.php:346
 msgid ""
 "Selected attributes will be exported as a parameters. Hold down the control "
 "(ctrl) button on Windows or command (cmd) on Mac to select multiple options."
@@ -214,23 +210,23 @@ msgstr ""
 "или cmd (на Mac). Если не выбрана ни одна категория, то экспортируются все "
 "товары."
 
-#: admin/class-market-exporter-admin.php:370
+#: admin/class-market-exporter-admin.php:358
 msgid "Delivery options"
 msgstr "Настройка доставки"
 
-#: admin/class-market-exporter-admin.php:377
+#: admin/class-market-exporter-admin.php:365
 msgid "true"
 msgstr "true"
 
-#: admin/class-market-exporter-admin.php:378
+#: admin/class-market-exporter-admin.php:366
 msgid "false"
 msgstr "false"
 
-#: admin/class-market-exporter-admin.php:384
+#: admin/class-market-exporter-admin.php:372
 msgid "Delivery"
 msgstr "Доставка"
 
-#: admin/class-market-exporter-admin.php:390
+#: admin/class-market-exporter-admin.php:378
 msgid ""
 "Use the delivery element to indicate the possibility of delivery to the "
 "buyer's address in the home region of the store."
@@ -238,11 +234,11 @@ msgstr ""
 "Используйте элемент delivery, чтобы указать возможность доставки по адресу "
 "покупателя в домашнем регионе магазина."
 
-#: admin/class-market-exporter-admin.php:399
+#: admin/class-market-exporter-admin.php:387
 msgid "Pickup"
 msgstr "Самовывоз"
 
-#: admin/class-market-exporter-admin.php:405
+#: admin/class-market-exporter-admin.php:393
 msgid ""
 "Use the pickup element to indicate the possibility of receiving goods at the "
 "issuance point."
@@ -250,11 +246,11 @@ msgstr ""
 "Используйте элемент pickup, чтобы указать возможность получения товара в "
 "пункте выдачи."
 
-#: admin/class-market-exporter-admin.php:414
+#: admin/class-market-exporter-admin.php:402
 msgid "Store"
 msgstr "Покупка в торговом зале"
 
-#: admin/class-market-exporter-admin.php:420
+#: admin/class-market-exporter-admin.php:408
 msgid ""
 "Use the store element to indicate the possibility of buying without a "
 "preliminary order at the point of sale."
@@ -262,7 +258,35 @@ msgstr ""
 "Используйте элемент store, чтобы указать возможность покупки без "
 "предварительного заказа в точке продажи."
 
-#: admin/class-market-exporter-admin.php:582
+#: admin/class-market-exporter-admin.php:421
+msgid "Extra settings"
+msgstr "Дополнительные настройки"
+
+#: admin/class-market-exporter-admin.php:429
+msgid "Product description"
+msgstr "Описание товара"
+
+#: admin/class-market-exporter-admin.php:435
+msgid ""
+"Specify the way the description is exported. Default is to try and get the "
+"product description, if empty - get short description."
+msgstr ""
+"Опция для выгрузки элемента description. По умолчанию, будет выгружаться "
+"описание товара, если оно пустое, то будет использовано краткое описание."
+
+#: admin/class-market-exporter-admin.php:438
+msgid "Default"
+msgstr "По умолчанию"
+
+#: admin/class-market-exporter-admin.php:439
+msgid "Only description"
+msgstr "Только описание"
+
+#: admin/class-market-exporter-admin.php:440
+msgid "Only short description"
+msgstr "Только краткое описание"
+
+#: admin/class-market-exporter-admin.php:601
 #: admin/partials/market-exporter-admin-display.php:43
 msgid "Settings"
 msgstr "Настройки"
@@ -275,19 +299,19 @@ msgstr "Ошибка при создании директории."
 msgid "Error uploading file."
 msgstr "Ошибка при сохранении файла."
 
-#: admin/class-market-exporter-wc.php:416
+#: admin/class-market-exporter-wc.php:411
 msgid "Weight"
 msgstr "Вес"
 
-#: admin/class-market-exporter-wc.php:423
+#: admin/class-market-exporter-wc.php:418
 msgid "Length"
 msgstr "Длина"
 
-#: admin/class-market-exporter-wc.php:424
+#: admin/class-market-exporter-wc.php:419
 msgid "Width"
 msgstr "Ширина"
 
-#: admin/class-market-exporter-wc.php:425
+#: admin/class-market-exporter-wc.php:420
 msgid "Height"
 msgstr "Высота"
 
@@ -444,6 +468,12 @@ msgstr "Антон Ванюков"
 #. Author URI of the plugin/theme
 msgid "http://www.vanyukov.su"
 msgstr "http://www.vanyukov.su"
+
+#~ msgid "Description"
+#~ msgstr "Описание"
+
+#~ msgid "Settings in the shop tag"
+#~ msgstr "Элементы, входящие в shop"
 
 #~ msgid ""
 #~ "typePrefix property. Type or product category. See <a href=\"%s\" target="

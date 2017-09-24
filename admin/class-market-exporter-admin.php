@@ -121,6 +121,36 @@ class Market_Exporter_Admin {
 			$this->plugin_name
 		);
 
+		// Add website name text field option.
+		add_settings_field(
+			'market_exporter_website_name',
+			__( 'Website name', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_general',
+			array(
+				'label_for'   => 'website_name',
+				'placeholder' => __( 'Website name', 'market-exporter' ),
+				'description' => __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
+				'type'        => 'text',
+			)
+		);
+
+		// Add company name text field option.
+		add_settings_field(
+			'market_exporter_company_name',
+			__( 'Company name', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_general',
+			array(
+				'label_for'   => 'company_name',
+				'placeholder' => __( 'Company name', 'market-exporter' ),
+				'description' => __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
+				'type'        => 'text',
+			)
+		);
+
 		// Add file_date field option.
 		add_settings_field(
 			'market_exporter_file_date',
@@ -151,48 +181,6 @@ class Market_Exporter_Admin {
 					'twicedaily' => __( 'Twice a day', 'market-exporter' ),
 					'daily'      => __( 'Daily', 'market-exporter' ),
 				),
-			)
-		);
-
-		/**
-		 **************************
-		 * Shop tag settings
-		 **************************
-		 */
-		add_settings_section(
-			'market_exporter_section_shop',
-			__( 'Settings in the shop tag', 'market-exporter' ),
-			null,
-			$this->plugin_name
-		);
-
-		// Add website name text field option.
-		add_settings_field(
-			'market_exporter_website_name',
-			__( 'Website name', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_shop',
-			array(
-				'label_for'   => 'website_name',
-				'placeholder' => __( 'Website name', 'market-exporter' ),
-				'description' => __( 'Not longer than 20 characters. Has to be the name of the shop, that is configured in Yandex Market.', 'market-exporter' ),
-				'type'        => 'text',
-			)
-		);
-
-		// Add company name text field option.
-		add_settings_field(
-			'market_exporter_company_name',
-			__( 'Company name', 'market-exporter' ),
-			array( $this, 'input_fields_cb' ),
-			$this->plugin_name,
-			'market_exporter_section_shop',
-			array(
-				'label_for'   => 'company_name',
-				'placeholder' => __( 'Company name', 'market-exporter' ),
-				'description' => __( 'Full company name. Not published in Yandex Market.', 'market-exporter' ),
-				'type'        => 'text',
 			)
 		);
 
@@ -422,6 +410,37 @@ class Market_Exporter_Admin {
 				'options'     => $select_options,
 			)
 		);
+
+		/**
+		 **************************
+		 * Extra settings
+		 **************************
+		 */
+		add_settings_section(
+			'market_exporter_section_extra',
+			__( 'Extra settings', 'market-exporter' ),
+			null,
+			$this->plugin_name
+		);
+
+		// Delivery element.
+		add_settings_field(
+			'market_exporter_description',
+			__( 'Product description', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_extra',
+			array(
+				'label_for'   => 'description',
+				'description' => __( 'Specify the way the description is exported. Default is to try and get the product description, if empty - get short description.', 'market-exporter' ),
+				'type'        => 'select',
+				'options'     => array(
+					'default' => __( 'Default', 'market-exporter' ),
+					'long'    => __( 'Only description', 'market-exporter' ),
+					'short'   => __( 'Only short description', 'market-exporter' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -525,9 +544,19 @@ class Market_Exporter_Admin {
 	public function validate_shop_settings_array( $input ) {
 		$output = get_option( 'market_exporter_shop_settings' );
 
+		/**
+		 * General options.
+		 */
 		$output['website_name'] = sanitize_text_field( $input['website_name'] );
 		$output['company_name'] = sanitize_text_field( $input['company_name'] );
+		$output['file_date']       = ( isset( $input['file_date'] ) ) ? true : false;
+		$output['cron']            = sanitize_text_field( $input['cron'] );
+		// Update cron schedule.
+		$this->update_cron_schedule( $output['cron'] );
 
+		/**
+		 * Product options.
+		 */
 		// According to Yandex up to 10 images per product.
 		$images = intval( $input['image_count'] );
 		if ( $images > 10 ) {
@@ -548,7 +577,6 @@ class Market_Exporter_Admin {
 		}
 
 		$output['backorders']      = ( isset( $input['backorders'] ) ) ? true : false;
-		$output['file_date']       = ( isset( $input['file_date'] ) ) ? true : false;
 		$output['size']            = ( isset( $input['size'] ) ) ? true : false;
 
 		// Convert to int array.
@@ -559,14 +587,17 @@ class Market_Exporter_Admin {
 			$output['params']      = array_map( 'intval', $input['params'] );
 		}
 
-		$output['cron']            = sanitize_text_field( $input['cron'] );
-		// Update cron schedule.
-		$this->update_cron_schedule( $output['cron'] );
-
-		// Delivery section.
+		/**
+		 * Delivery options.
+		 */
 		$output['delivery'] = sanitize_text_field( $input['delivery'] );
 		$output['pickup']   = sanitize_text_field( $input['pickup'] );
 		$output['store']    = sanitize_text_field( $input['store'] );
+
+		/**
+		 * Extra options.
+		 */
+		$output['description'] = sanitize_text_field( $input['description'] );
 
 		return $output;
 	}

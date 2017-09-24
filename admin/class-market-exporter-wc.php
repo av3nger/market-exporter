@@ -253,6 +253,7 @@ class ME_WC {
 	 * @return string
 	 */
 	private function yml_offers( $currency, WP_Query $query ) {
+		global $product, $offer;
 
 		$yml = '';
 
@@ -365,23 +366,11 @@ class ME_WC {
 				}
 
 				// Description.
-				if ( self::woo_latest_versions() ) {
-					$description = $offer->get_description();
-					if ( empty( $description ) ) {
-						$description = $product->get_description();
-					}
-				} else {
-					if ( $product->is_type( 'variable' ) && ! $offer->get_variation_description() ) {
-						$description = $offer->get_variation_description();
-					} else {
-						$description = $offer->post->post_content;
-					}
+				$description = $this->get_description( $this->settings['description'] );
+				if ( $description ) {
+					$yml .= '        <description><![CDATA[' . $description . ']]></description>' . PHP_EOL;
 				}
 
-				if ( $description ) {
-					$description = strip_tags( strip_shortcodes( $description ), '<h3><ul><li><p>' );
-					$yml .= '        <description><![CDATA[' . html_entity_decode( $description, ENT_COMPAT, 'UTF-8' ) . ']]></description>' . PHP_EOL;
-				}
 				// Sales notes.
 				if ( strlen( $this->settings['sales_notes'] ) > 0 ) {
 					$yml .= '        <sales_notes>' . wp_strip_all_tags( $this->settings['sales_notes'] ) . '</sales_notes>' . PHP_EOL;
@@ -414,7 +403,7 @@ class ME_WC {
 
 					if ( $offer->has_dimensions() ) {
 						$size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
-						if ( in_array( $size_unit, $this->size_units ) ) {
+						if ( in_array( $size_unit, $this->size_units, true ) ) {
 							$yml .= '        <param name="' . __( 'Length', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_length() . '</param>' . PHP_EOL;
 							$yml .= '        <param name="' . __( 'Width', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_width() . '</param>' . PHP_EOL;
 							$yml .= '        <param name="' . __( 'Height', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_height() . '</param>' . PHP_EOL;
@@ -452,6 +441,62 @@ class ME_WC {
 		$yml .= '</yml_catalog>' . PHP_EOL;
 
 		return $yml;
+	}
+
+	/**
+	 * Get product description.
+	 *
+	 * @since   1.0.0
+	 * @used-by ME_WC::yml_offers()
+	 * @param   string $type  Description type. Accepts: default, long, short.
+	 * @return  string
+	 */
+	private function get_description( $type = 'default' ) {
+		/* @var WC_Product $product */
+		global $product, $offer;
+
+		switch ( $type ) {
+			case 'default':
+				if ( self::woo_latest_versions() ) {
+					// Try to get variation description.
+					$description = $offer->get_description();
+					// If not there - get product description.
+					if ( empty( $description ) ) {
+						$description = $product->get_description();
+					}
+				} else {
+					if ( $product->is_type( 'variable' ) && ! $offer->get_variation_description() ) {
+						$description = $offer->get_variation_description();
+					} else {
+						$description = $offer->post->post_content;
+					}
+				}
+				break;
+			case 'long':
+				// Get product description.
+				if ( self::woo_latest_versions() ) {
+					$description = $product->get_description();
+				} else {
+					$description = $offer->post->post_content;
+				}
+				break;
+			case 'short':
+				// Get product short description.
+				if ( self::woo_latest_versions() ) {
+					$description = $product->get_description();
+				} else {
+					$description = $offer->post->post_excerpt;
+				}
+				break;
+		}
+
+		// Leave in only allowed html tags.
+		$description = strip_tags( strip_shortcodes( $description ), '<h3><ul><li><p>' );
+		$description = html_entity_decode( $description, ENT_COMPAT, 'UTF-8' );
+		// Cannot be longer then 3000 characters.
+		$description = substr( $description, 0, 2999 );
+
+		return $description;
 	}
 
 	/**

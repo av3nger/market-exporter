@@ -117,6 +117,11 @@ class Market_Exporter_Activator {
 			$options['store'] = 'disabled';
 		}
 
+		// Init description option.
+		if ( ! isset( $options['description'] ) ) {
+			$options['description'] = 'default';
+		}
+
 		update_option( 'market_exporter_shop_settings', $options );
 	}
 }
