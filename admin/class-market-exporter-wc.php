@@ -312,7 +312,7 @@ class ME_WC {
 					$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
 				}
 
-				// TODO: get all the images.
+				// Get images.
 				$image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
 				// If no image found for product, it's probably a variation without an image, get the image from parent.
 				if ( ! $image ) {
@@ -320,6 +320,23 @@ class ME_WC {
 				}
 				if ( strlen( utf8_decode( $image ) ) <= 512 ) {
 					$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+				}
+
+				if ( self::woo_latest_versions() ) {
+					$attachment_ids = $product->get_gallery_image_ids();
+				} else {
+					$attachment_ids = $product->get_gallery_attachment_ids();
+				}
+
+				// Each product can have max 10 images, one was added on top.
+				if ( count( $attachment_ids ) > 9 ) {
+					$attachment_ids = array_slice( $attachment_ids, 0, 9 );
+				}
+				foreach ( $attachment_ids as $id ) {
+					$image = wp_get_attachment_url( $id );
+					if ( strlen( utf8_decode( $image ) ) <= 512 ) {
+						$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+					}
 				}
 
 				// Store.

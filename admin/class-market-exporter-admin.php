@@ -348,6 +348,21 @@ class Market_Exporter_Admin {
 			)
 		);
 
+		// Add image count option.
+		add_settings_field(
+			'market_exporter_image_count',
+			__( 'Images per product', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'image_count',
+				'placeholder' => __( 'Images per product', 'market-exporter' ),
+				'description' => __( 'Not more than 10 images', 'market-exporter' ),
+				'type'        => 'text',
+			)
+		);
+
 		/**
 		 **************************
 		 * Shop tag settings
@@ -561,6 +576,8 @@ class Market_Exporter_Admin {
 		$images = intval( $input['image_count'] );
 		if ( $images > 10 ) {
 			$output['image_count'] = 10;
+		} elseif ( $images <= 0 ) {
+			$output['image_count'] = 1;
 		} else {
 			$output['image_count'] = $images;
 		}

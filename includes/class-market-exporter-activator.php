@@ -122,6 +122,11 @@ class Market_Exporter_Activator {
 			$options['description'] = 'default';
 		}
 
+		// Init image count option.
+		if ( ! isset( $options['image_count'] ) || 0 === $options['image_count'] ) {
+			$options['image_count'] = 1;
+		}
+
 		update_option( 'market_exporter_shop_settings', $options );
 	}
 }
