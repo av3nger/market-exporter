@@ -153,7 +153,7 @@ class Market_Exporter {
 		$basename = plugin_basename( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
 		$this->loader->add_filter( "plugin_action_links_{$basename}", $plugin_admin, 'plugin_add_settings_link' );
 		// Add cron support.
-		$this->loader->add_action( 'market_exporter_cron', $plugin_yml, 'generate_YML' );
+		$this->loader->add_action( 'market_exporter_cron', $plugin_yml, 'generate_yml' );
 		// Add ajax support to dismiss notice.
 		$this->loader->add_action( 'wp_ajax_dismiss_rate_notice', $this, 'dismiss_notice' );
 	}

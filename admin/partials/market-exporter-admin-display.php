@@ -63,7 +63,7 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 			$plugin_option = get_option( 'market_exporter_shop_settings' );
 			$market_exporter = new ME_WC();
 
-			$return_code = $market_exporter->generate_YML();
+			$return_code = $market_exporter->generate_yml();
 
 			switch ( $return_code ) {
 				case 100:

@@ -72,7 +72,7 @@ class ME_WC {
 	 * @since  0.3.0
 	 * @return int|string
 	 */
-	public function generate_YML() {
+	public function generate_yml() {
 		// Check currency.
 		if ( ! $currency = $this->check_currency() ) {
 			return 100;
