@@ -271,7 +271,7 @@ class ME_WC {
 			 * That means that there is at least one product available.
 			 * Variation products will have more than 1 count.
 			 */
-			$variations = [];
+			$variations = array();
 			$variation_count = 1;
 			if ( $product->is_type( 'variable' ) ) :
 				$variations = $product->get_available_variations();
@@ -436,7 +436,6 @@ class ME_WC {
 	 * @return string
 	 */
 	private function yml_footer() {
-
 		$yml  = '    </offers>' . PHP_EOL;
 		$yml .= '  </shop>' . PHP_EOL;
 		$yml .= '</yml_catalog>' . PHP_EOL;
