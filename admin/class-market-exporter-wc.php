@@ -18,14 +18,6 @@ class ME_WC {
 	private $settings;
 
 	/**
-	 * Weight units
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private $weight_units;
-
-	/**
 	 * Size units
 	 *
 	 * @access private
@@ -46,12 +38,6 @@ class ME_WC {
 			$this->settings['image_count'] = 10;
 		}
 
-		// Available units for weight (mg, g, kg).
-		$this->weight_units = array(
-			'mg',
-			'g',
-			'kg',
-		);
 		// Available units for size (mm, cm, m).
 		$this->size_units = array(
 			'mm',
@@ -412,11 +398,9 @@ class ME_WC {
 
 				// Params: size and weight.
 				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) :
-					if ( $offer->has_weight() ) {
-						$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
-						if ( in_array( $weight_unit, $this->weight_units, true ) ) {
-							$yml .= '        <param name="' . __( 'Weight', 'woocommerce' ) . '" unit="' . __( $weight_unit, 'woocommerce' ) . '">' . $offer->get_weight() . '</param>' . PHP_EOL;
-						}
+					$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
+					if ( $offer->has_weight() && 'kg' === $weight_unit ) {
+						$yml .= '        <weight>' . $offer->get_weight() . '</weight>' . PHP_EOL;
 					}
 
 					if ( $offer->has_dimensions() ) {
