@@ -516,7 +516,7 @@ class Market_Exporter_Admin {
 				$select_array = $this->options[ $args['label_for'] ];
 			}
 
-			echo '<select id="' . esc_attr( $args['label_for'] ) . '" name="market_exporter_shop_settings[' . esc_attr( $args['label_for'] ) . '][]" multiple>';
+			echo '<select id="' . esc_attr( $args['label_for'] ) . '" name="market_exporter_shop_settings[' . esc_attr( $args['label_for'] ) . '][]" multiple="multiple">';
 
 			/*
 			 * So far multiselect can be for included categories and parameters.
@@ -524,23 +524,19 @@ class Market_Exporter_Admin {
 			 * The parameters multiselect only includes top-level items.
 			 */
 			if ( 'include_cat' === esc_attr( $args['label_for'] ) ) {
-				foreach ( get_categories( array(
-					'taxonomy' => 'product_cat',
-					'parent'   => 0,
+				foreach ( get_terms( array(
+					'hide_empty'   => 0,
+					'parent'       => 0,
+					'taxonomy'     => 'product_cat',
 				)) as $category ) {
-					echo '<option value="' . esc_attr( $category->cat_ID ) . '" ' . selected( in_array( $category->cat_ID, $select_array, true ) ) . '>' . esc_html( $category->name ) . '</option>';
-					foreach ( get_categories( array(
-						'taxonomy' => 'product_cat',
-						'parent'   => $category->cat_ID,
-					)) as $subcategory ) {
-						echo '<option value="' . esc_attr( $subcategory->cat_ID ) . '" ' . selected( in_array( $subcategory->cat_ID, $select_array, true ) ) . '>&mdash;&nbsp;' . esc_html( $subcategory->name ) . '</option>';
-					}
+					echo '<option value="' . esc_attr( $category->term_id ) . '" ' . selected( in_array( $category->term_id, $select_array, true ), true, false ) . '>' . esc_html( $category->name ) . '</option>';
+					self::get_cats_from_array( $category->term_id, $select_array );
 				}
 			}
 
 			if ( 'params' === esc_attr( $args['label_for'] ) ) {
 				foreach ( wc_get_attribute_taxonomies() as $attribute ) {
-					echo '<option value="' . esc_attr( $attribute->attribute_id ) . '" ' . selected( in_array( $attribute->attribute_id, $select_array, true ) ) . '>' . esc_html( $attribute->attribute_label ) . '</option>';
+					echo '<option value="' . esc_attr( $attribute->attribute_id ) . '" ' . selected( in_array( $attribute->attribute_id, $select_array, true ), true, false ) . '>' . esc_html( $attribute->attribute_label ) . '</option>';
 				}
 			}
 			echo '</select>';
@@ -561,6 +557,34 @@ class Market_Exporter_Admin {
 				echo wp_kses( $args['description'], $tags ); ?>
 			</p>
 		<?php endif;
+	}
+
+	/**
+	 * Recursive function to populate a list with sub categories.
+	 *
+	 * @since   1.0.0
+	 * @access  private
+	 * @param   int   $cat_id        Category ID.
+	 * @param   array $select_array  Array of selected category IDs.
+	 * @used-by Market_Exporter_Admin::input_fields_cb()
+	 */
+	private static function get_cats_from_array( $cat_id, $select_array ) {
+		static $tabs = 0;
+		$tabs++;
+
+		$subcategories = get_terms( array(
+			'hide_empty'   => 0,
+			'parent'       => $cat_id,
+			'taxonomy'     => 'product_cat',
+		) );
+
+		if ( ! empty( $subcategories ) ) {
+			foreach ( $subcategories as $subcategory ) {
+				echo '<option value="' . esc_attr( $subcategory->term_id ) . '" ' . selected( in_array( $subcategory->term_id, $select_array, true ), true, false ) . '>' . esc_html( str_repeat( '&mdash;&nbsp;', $tabs ) ) . esc_html( $subcategory->name ) . '</option>';
+				self::get_cats_from_array( $subcategory->term_id, $select_array );
+				$tabs--;
+			}
+		}
 	}
 
 	/**

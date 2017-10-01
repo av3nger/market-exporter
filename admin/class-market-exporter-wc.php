@@ -394,7 +394,7 @@ class ME_WC {
 
 					$size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
 					if ( $offer->has_dimensions() && 'cm' === $size_unit ) {
-						
+
 						if ( self::woo_latest_versions() ) {
 							// WooCommerce version 3.0 and higher.
 							$dimensions = implode( '/', $offer->get_dimensions( false ) );
