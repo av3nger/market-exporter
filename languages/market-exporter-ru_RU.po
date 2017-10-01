@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2017-09-24 12:34+0300\n"
-"PO-Revision-Date: 2017-09-24 12:36+0300\n"
+"POT-Creation-Date: 2017-10-01 10:29+0300\n"
+"PO-Revision-Date: 2017-10-01 10:30+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -190,11 +190,11 @@ msgstr "Габариты и вес"
 
 #: admin/class-market-exporter-admin.php:332
 msgid ""
-"If enabled weight and size data from WooCommerce will be exported to Width, "
-"Depth, Height and Weight params."
+"If enabled weight and size data from WooCommerce will be exported to Weight "
+"and Dimensions elements."
 msgstr ""
 "Если активна, то данные о весе и размерах товара будут экспортированы в "
-"параметры Width, Depth, Height и Weight."
+"элементы weight и dimensions (вес должен быть указан в кг., размеры в см.)"
 
 #: admin/class-market-exporter-admin.php:340
 msgid "Use selected parameters"
@@ -307,22 +307,6 @@ msgstr "Ошибка при создании директории."
 #: admin/class-market-exporter-fs.php:99
 msgid "Error uploading file."
 msgstr "Ошибка при сохранении файла."
-
-#: admin/class-market-exporter-wc.php:418
-msgid "Weight"
-msgstr "Вес"
-
-#: admin/class-market-exporter-wc.php:425
-msgid "Length"
-msgstr "Длина"
-
-#: admin/class-market-exporter-wc.php:426
-msgid "Width"
-msgstr "Ширина"
-
-#: admin/class-market-exporter-wc.php:427
-msgid "Height"
-msgstr "Высота"
 
 #: admin/partials/market-exporter-admin-display.php:24
 #, php-format
@@ -477,6 +461,18 @@ msgstr "Антон Ванюков"
 #. Author URI of the plugin/theme
 msgid "http://www.vanyukov.su"
 msgstr "http://www.vanyukov.su"
+
+#~ msgid "Weight"
+#~ msgstr "Вес"
+
+#~ msgid "Length"
+#~ msgstr "Длина"
+
+#~ msgid "Width"
+#~ msgstr "Ширина"
+
+#~ msgid "Height"
+#~ msgstr "Высота"
 
 #~ msgid "Description"
 #~ msgstr "Описание"

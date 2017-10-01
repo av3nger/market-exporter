@@ -329,7 +329,7 @@ class Market_Exporter_Admin {
 			'market_exporter_section_offers',
 			array(
 				'label_for'   => 'size',
-				'description' => __( 'If enabled weight and size data from WooCommerce will be exported to Width, Depth, Height and Weight params.', 'market-exporter' ),
+				'description' => __( 'If enabled weight and size data from WooCommerce will be exported to Weight and Dimensions elements.', 'market-exporter' ),
 				'type'        => 'checkbox',
 			)
 		);
