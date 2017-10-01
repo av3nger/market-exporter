@@ -456,6 +456,20 @@ class Market_Exporter_Admin {
 				),
 			)
 		);
+
+		// Add on product update hook.
+		add_settings_field(
+			'market_exporter_update_on_change',
+			__( 'Update file on product change', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_extra',
+			array(
+				'label_for'   => 'update_on_change',
+				'description' => __( 'Regenerate file on product create/update.', 'market-exporter' ),
+				'type'        => 'checkbox',
+			)
+		);
 	}
 
 	/**
@@ -564,8 +578,8 @@ class Market_Exporter_Admin {
 		 */
 		$output['website_name'] = sanitize_text_field( $input['website_name'] );
 		$output['company_name'] = sanitize_text_field( $input['company_name'] );
-		$output['file_date']       = ( isset( $input['file_date'] ) ) ? true : false;
-		$output['cron']            = sanitize_text_field( $input['cron'] );
+		$output['file_date']    = ( isset( $input['file_date'] ) ) ? true : false;
+		$output['cron']         = sanitize_text_field( $input['cron'] );
 		// Update cron schedule.
 		$this->update_cron_schedule( $output['cron'] );
 
@@ -614,7 +628,8 @@ class Market_Exporter_Admin {
 		/**
 		 * Extra options.
 		 */
-		$output['description'] = sanitize_text_field( $input['description'] );
+		$output['description']      = sanitize_text_field( $input['description'] );
+		$output['update_on_change'] = ( isset( $input['update_on_change'] ) ) ? true : false;
 
 		return $output;
 	}
@@ -672,6 +687,25 @@ class Market_Exporter_Admin {
 		wp_clear_scheduled_hook( 'market_exporter_cron' );
 		if ( 'disabled' !== $interval ) {
 			wp_schedule_event( time(), $interval, 'market_exporter_cron' );
+		}
+	}
+
+	/**
+	 * Generate file on update.
+	 *
+	 * @since 1.0.0
+	 * @used-by Market_Exporter::define_admin_hooks()
+	 */
+	public function generate_file_on_update() {
+		if ( isset( $this->options['update_on_change'] ) && $this->options['update_on_change'] ) {
+			$doing_cron = get_option( 'market_exporter_doing_cron' );
+			// Already doing cron, exit.
+			if ( isset( $doing_cron ) && $doing_cron ) {
+				return;
+			}
+
+			update_option( 'market_exporter_doing_cron', true );
+			wp_schedule_single_event( time(), 'market_exporter_cron' );
 		}
 	}
 

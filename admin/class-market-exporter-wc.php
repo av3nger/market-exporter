@@ -63,6 +63,10 @@ class ME_WC {
 		// Create file.
 		$market_exporter_fs = new Market_Exporter_FS( 'market-exporter' );
 		$file_path = $market_exporter_fs->write_file( $yml, $this->settings['file_date'] );
+
+		// Remove cron lock.
+		delete_option( 'market_exporter_doing_cron' );
+
 		return $file_path;
 	}
 

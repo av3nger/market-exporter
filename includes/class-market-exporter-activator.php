@@ -26,20 +26,26 @@ class Market_Exporter_Activator {
 		$options = get_option( 'market_exporter_shop_settings' );
 		if ( ! $options ) {
 			$settings = array(
-				'website_name'    => get_bloginfo( 'name' ),
-				'company_name'    => get_bloginfo( 'name' ),
-				'file_date'       => true,
-				'image_count'     => 10,
-				'vendor'          => 'not_set',
-				'model'           => 'not_set',
-				'market_category' => 'not_set',
-				'backorders'      => false,
-				'sales_notes'     => '',
-				'size'            => false,
-				'cron'            => false,
-				'delivery'        => false,
-				'pickup'          => false,
-				'store'           => false,
+				'website_name'     => get_bloginfo( 'name' ),
+				'company_name'     => get_bloginfo( 'name' ),
+				'file_date'        => true,
+				'cron'             => false,
+				'image_count'      => 1,
+				'vendor'           => 'not_set',
+				'model'            => 'not_set',
+				'type_prefix'      => 'not_set',
+				'warranty'         => 'not_set',
+				'origin'           => 'not_set',
+				'sales_notes'      => '',
+				'backorders'       => false,
+				'size'             => false,
+				'include_cat'      => array(),
+				'params'           => array(),
+				'delivery'         => 'disabled',
+				'pickup'           => 'disabled',
+				'store'            => 'disabled',
+				'description'      => 'default',
+				'update_on_change' => false,
 			);
 			update_option( 'market_exporter_shop_settings', $settings );
 		}
@@ -125,6 +131,11 @@ class Market_Exporter_Activator {
 		// Init image count option.
 		if ( ! isset( $options['image_count'] ) || 0 === $options['image_count'] ) {
 			$options['image_count'] = 1;
+		}
+
+		// Init update file on product change option.
+		if ( ! isset( $options['update_on_change'] ) ) {
+			$options['update_on_change'] = false;
 		}
 
 		update_option( 'market_exporter_shop_settings', $options );

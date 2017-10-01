@@ -156,6 +156,8 @@ class Market_Exporter {
 		$this->loader->add_action( 'market_exporter_cron', $plugin_yml, 'generate_yml' );
 		// Add ajax support to dismiss notice.
 		$this->loader->add_action( 'wp_ajax_dismiss_rate_notice', $this, 'dismiss_notice' );
+		// Add support to update file on product update.
+		$this->loader->add_action( 'woocommerce_update_product', $plugin_admin, 'generate_file_on_update' );
 	}
 
 	/**
