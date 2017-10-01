@@ -18,14 +18,6 @@ class ME_WC {
 	private $settings;
 
 	/**
-	 * Size units
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private $size_units;
-
-	/**
 	 * Constructor method.
 	 *
 	 * @since 0.3.0
@@ -37,13 +29,6 @@ class ME_WC {
 		if ( ! isset( $this->settings['image_count'] ) ) {
 			$this->settings['image_count'] = 10;
 		}
-
-		// Available units for size (mm, cm, m).
-		$this->size_units = array(
-			'mm',
-			'cm',
-			'm',
-		);
 	}
 
 	/**
@@ -403,13 +388,10 @@ class ME_WC {
 						$yml .= '        <weight>' . $offer->get_weight() . '</weight>' . PHP_EOL;
 					}
 
-					if ( $offer->has_dimensions() ) {
-						$size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
-						if ( in_array( $size_unit, $this->size_units, true ) ) {
-							$yml .= '        <param name="' . __( 'Length', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_length() . '</param>' . PHP_EOL;
-							$yml .= '        <param name="' . __( 'Width', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_width() . '</param>' . PHP_EOL;
-							$yml .= '        <param name="' . __( 'Height', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_height() . '</param>' . PHP_EOL;
-						}
+					$size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
+					if ( $offer->has_dimensions() && 'cm' === $size_unit ) {
+						$dimensions = implode( '/', $offer->get_dimensions( false ) );
+						$yml .= '        <dimensions>' . $dimensions . '</dimensions>' . PHP_EOL;
 					}
 				endif;
 
