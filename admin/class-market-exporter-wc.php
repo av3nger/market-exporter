@@ -18,22 +18,6 @@ class ME_WC {
 	private $settings;
 
 	/**
-	 * Weight units
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private $weight_units;
-
-	/**
-	 * Size units
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private $size_units;
-
-	/**
 	 * Constructor method.
 	 *
 	 * @since 0.3.0
@@ -45,19 +29,6 @@ class ME_WC {
 		if ( ! isset( $this->settings['image_count'] ) ) {
 			$this->settings['image_count'] = 10;
 		}
-
-		// Available units for weight (mg, g, kg).
-		$this->weight_units = array(
-			'mg',
-			'g',
-			'kg',
-		);
-		// Available units for size (mm, cm, m).
-		$this->size_units = array(
-			'mm',
-			'cm',
-			'm',
-		);
 	}
 
 	/**
@@ -72,7 +43,7 @@ class ME_WC {
 	 * @since  0.3.0
 	 * @return int|string
 	 */
-	public function generate_YML() {
+	public function generate_yml() {
 		// Check currency.
 		if ( ! $currency = $this->check_currency() ) {
 			return 100;
@@ -92,6 +63,10 @@ class ME_WC {
 		// Create file.
 		$market_exporter_fs = new Market_Exporter_FS( 'market-exporter' );
 		$file_path = $market_exporter_fs->write_file( $yml, $this->settings['file_date'] );
+
+		// Remove cron lock.
+		delete_option( 'market_exporter_doing_cron' );
+
 		return $file_path;
 	}
 
@@ -119,6 +94,7 @@ class ME_WC {
 			case 'BYN':
 			case 'USD':
 			case 'EUR':
+			case 'KZT':
 				return $currency;
 			default:
 				return false;
@@ -253,6 +229,7 @@ class ME_WC {
 	 * @return string
 	 */
 	private function yml_offers( $currency, WP_Query $query ) {
+		global $product, $offer;
 
 		$yml = '';
 
@@ -269,7 +246,7 @@ class ME_WC {
 			 * That means that there is at least one product available.
 			 * Variation products will have more than 1 count.
 			 */
-			$variations = [];
+			$variations = array();
 			$variation_count = 1;
 			if ( $product->is_type( 'variable' ) ) :
 				$variations = $product->get_available_variations();
@@ -282,19 +259,14 @@ class ME_WC {
 				// If variable product, get product id from $variations array.
 				$offer_id = ( ( $product->is_type( 'variable' ) ) ? $variations[ $variation_count ]['variation_id'] : $product->get_id() );
 
-				// Prepare variation link.
-				$var_link = '';
 				if ( $product->is_type( 'variable' ) ) :
-					$variable_attribute = wc_get_product_variation_attributes( $offer_id );
-					$var_link = '?' . key( $variable_attribute ) . '=' . current( $variable_attribute );
-
 					// This has to work but we need to think of a way to save the initial offer variable.
 					$offer = new WC_Product_Variation( $offer_id );
 				endif;
 
 				// NOTE: Below this point we start using $offer instead of $product.
 				$yml .= '      <offer id="' . $offer_id . '" available="' . ( ( $offer->is_in_stock() ) ? 'true' : 'false' ) . '">' . PHP_EOL;
-				$yml .= '        <url>' . esc_url( get_permalink( $offer->get_id() ) . $var_link ) . '</url>' . PHP_EOL;
+				$yml .= '        <url>' . get_permalink( $offer->get_id() ) . '</url>' . PHP_EOL;
 
 				// Price.
 				if ( $offer->get_sale_price() && ( $offer->get_sale_price() < $offer->get_regular_price() ) ) {
@@ -309,20 +281,13 @@ class ME_WC {
 				// Category.
 				// Not using $offer_id, because variable products inherit category from parent.
 				$categories = get_the_terms( $product->get_id(), 'product_cat' );
-				$category = array_shift( $categories );
-				$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+				// TODO: display error message if category is not set for product.
+				if ( $categories ) {
+					$category = array_shift( $categories );
+					$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+				}
 
-				// Market category.
-				if ( isset( $this->settings['market_category'] ) && 'not_set' !== $this->settings['market_category'] ) :
-					$market_category = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['market_category'], array(
-						'fields' => 'names',
-					));
-					if ( $market_category ) {
-						$yml .= '        <market_category>' . wp_strip_all_tags( array_shift( $market_category ) ) . '</market_category>' . PHP_EOL;
-					}
-				endif;
-
-				// TODO: get all the images.
+				// Get images.
 				$image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
 				// If no image found for product, it's probably a variation without an image, get the image from parent.
 				if ( ! $image ) {
@@ -332,25 +297,59 @@ class ME_WC {
 					$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 				}
 
+				if ( self::woo_latest_versions() ) {
+					$attachment_ids = $product->get_gallery_image_ids();
+				} else {
+					$attachment_ids = $product->get_gallery_attachment_ids();
+				}
+
+				// Each product can have max 10 images, one was added on top.
+				if ( count( $attachment_ids ) > 9 ) {
+					$attachment_ids = array_slice( $attachment_ids, 0, 9 );
+				}
+				foreach ( $attachment_ids as $id ) {
+					$image = wp_get_attachment_url( $id );
+					if ( strlen( utf8_decode( $image ) ) <= 512 ) {
+						$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+					}
+				}
+
+				// Store.
+				if ( isset( $this->settings['store'] ) && 'disabled' !== $this->settings['store'] ) {
+					$yml .= '        <store>' . $this->settings['store'] . '</store>' . PHP_EOL;
+				}
+				// Pickup.
+				if ( isset( $this->settings['pickup'] ) && 'disabled' !== $this->settings['pickup'] ) {
+					$yml .= '        <pickup>' . $this->settings['pickup'] . '</pickup>' . PHP_EOL;
+				}
+				// Delivery.
+				if ( isset( $this->settings['delivery'] ) && 'disabled' !== $this->settings['delivery'] ) {
+					$yml .= '        <delivery>' . $this->settings['delivery'] . '</delivery>' . PHP_EOL;
+				}
+
 				$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>' . PHP_EOL;
+
+				// type_prefix.
+				if ( isset( $this->settings['type_prefix'] ) && 'not_set' !== $this->settings['type_prefix'] ) {
+					$type_prefix = $offer->get_attribute( 'pa_' . $this->settings['type_prefix'] );
+					if ( $type_prefix ) {
+						$yml .= '        <typePrefix>' . wp_strip_all_tags( $type_prefix ) . '</typePrefix>' . PHP_EOL;
+					}
+				}
 
 				// Vendor.
 				if ( isset( $this->settings['vendor'] ) && 'not_set' !== $this->settings['vendor'] ) {
-					$vendor = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['vendor'], array(
-						'fields' => 'names',
-					));
+					$vendor = $offer->get_attribute( 'pa_' . $this->settings['vendor'] );
 					if ( $vendor ) {
-						$yml .= '        <vendor>' . wp_strip_all_tags( array_shift( $vendor ) ) . '</vendor>' . PHP_EOL;
+						$yml .= '        <vendor>' . wp_strip_all_tags( $vendor ) . '</vendor>' . PHP_EOL;
 					}
 				}
 
 				// Model.
 				if ( isset( $this->settings['model'] ) && 'not_set' !== $this->settings['model'] ) {
-					$model = wc_get_product_terms( $product->get_id(), 'pa_' . $this->settings['model'], array(
-						'fields' => 'names',
-					));
+					$model = $offer->get_attribute( 'pa_' . $this->settings['model'] );
 					if ( $model ) {
-						$yml .= '        <model>' . wp_strip_all_tags( array_shift( $model ) ) . '</model>' . PHP_EOL;
+						$yml .= '        <model>' . wp_strip_all_tags( $model ) . '</model>' . PHP_EOL;
 					}
 				}
 
@@ -360,42 +359,55 @@ class ME_WC {
 				}
 
 				// Description.
-				if ( self::woo_latest_versions() ) {
-					$description = $offer->get_description();
-					if ( empty( $description ) ) {
-						$description = $product->get_description();
-					}
-				} else {
-					if ( $product->is_type( 'variable' ) && ! $offer->get_variation_description() ) {
-						$description = $offer->get_variation_description();
-					} else {
-						$description = $offer->post->post_content;
-					}
+				$description = $this->get_description( $this->settings['description'] );
+				if ( $description ) {
+					$yml .= '        <description><![CDATA[' . $description . ']]></description>' . PHP_EOL;
 				}
 
-				if ( $description ) {
-					$yml .= '        <description><![CDATA[' . html_entity_decode( $description, ENT_COMPAT, 'UTF-8' ) . ']]></description>' . PHP_EOL;
-				}
 				// Sales notes.
 				if ( strlen( $this->settings['sales_notes'] ) > 0 ) {
 					$yml .= '        <sales_notes>' . wp_strip_all_tags( $this->settings['sales_notes'] ) . '</sales_notes>' . PHP_EOL;
 				}
 
+				// Manufacturer warranty.
+				if ( isset( $this->settings['warranty'] ) && 'not_set' !== $this->settings['warranty'] ) {
+					$warranty = $offer->get_attribute( 'pa_' . $this->settings['warranty'] );
+					if ( $warranty ) {
+						$yml .= '        <manufacturer_warranty>' . wp_strip_all_tags( $warranty ) . '</manufacturer_warranty>' . PHP_EOL;
+					}
+				}
+
+				// Coutry of origin.
+				if ( isset( $this->settings['origin'] ) && 'not_set' !== $this->settings['origin'] ) {
+					$origin = $offer->get_attribute( 'pa_' . $this->settings['origin'] );
+					if ( $origin ) {
+						$yml .= '        <country_of_origin>' . wp_strip_all_tags( $origin ) . '</country_of_origin>' . PHP_EOL;
+					}
+				}
+
 				// Params: size and weight.
 				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) :
-					if ( $offer->has_weight() ) {
-						$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
-						if ( in_array( $weight_unit, $this->weight_units ) )
-							$yml .= '        <param name="' . __( 'Weight', 'woocommerce' ) . '" unit="' . __( $weight_unit, 'woocommerce' ) . '">' . $offer->get_weight() . '</param>' . PHP_EOL;
+					$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
+					if ( $offer->has_weight() && 'kg' === $weight_unit ) {
+						$yml .= '        <weight>' . $offer->get_weight() . '</weight>' . PHP_EOL;
 					}
 
-					if ( $offer->has_dimensions() ) {
-						$size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
-						if ( in_array( $size_unit, $this->size_units ) ) {
-							$yml .= '        <param name="' . __( 'Length', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_length() . '</param>' . PHP_EOL;
-							$yml .= '        <param name="' . __( 'Width', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_width() . '</param>' . PHP_EOL;
-							$yml .= '        <param name="' . __( 'Height', 'woocommerce' ) . '" unit="' . __( $size_unit, 'woocommerce' ) . '">' . $offer->get_height() . '</param>' . PHP_EOL;
+					$size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
+					if ( $offer->has_dimensions() && 'cm' === $size_unit ) {
+
+						if ( self::woo_latest_versions() ) {
+							// WooCommerce version 3.0 and higher.
+							$dimensions = implode( '/', $offer->get_dimensions( false ) );
+						} else {
+							// WooCommerce 2.6 and lower.
+							$dimensions = implode( '/', array_filter( array(
+								$offer->get_length(),
+								$offer->get_width(),
+								$offer->get_height(),
+							) ) );
 						}
+
+						$yml .= '        <dimensions>' . $dimensions . '</dimensions>' . PHP_EOL;
 					}
 				endif;
 
@@ -408,17 +420,6 @@ class ME_WC {
 						}
 					endforeach;
 				}
-
-				/*
-				Backup for params.
-                foreach ( $attributes as $attribute ) :
-                    foreach ( $this->settings['params'] as $param_id ) :
-                        if ( $attribute['name'] == wc_attribute_taxonomy_name_by_id( $param_id ) )
-                            $yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '</param>' . PHP_EOL;
-                    endforeach;
-                endforeach;
-				*/
-
 				$yml .= '      </offer>' . PHP_EOL;
 			endwhile;
 
@@ -434,12 +435,67 @@ class ME_WC {
 	 * @return string
 	 */
 	private function yml_footer() {
-
 		$yml  = '    </offers>' . PHP_EOL;
 		$yml .= '  </shop>' . PHP_EOL;
 		$yml .= '</yml_catalog>' . PHP_EOL;
 
 		return $yml;
+	}
+
+	/**
+	 * Get product description.
+	 *
+	 * @since   1.0.0
+	 * @used-by ME_WC::yml_offers()
+	 * @param   string $type  Description type. Accepts: default, long, short.
+	 * @return  string
+	 */
+	private function get_description( $type = 'default' ) {
+		/* @var WC_Product $product */
+		global $product, $offer;
+
+		switch ( $type ) {
+			case 'default':
+				if ( self::woo_latest_versions() ) {
+					// Try to get variation description.
+					$description = $offer->get_description();
+					// If not there - get product description.
+					if ( empty( $description ) ) {
+						$description = $product->get_description();
+					}
+				} else {
+					if ( $product->is_type( 'variable' ) && ! $offer->get_variation_description() ) {
+						$description = $offer->get_variation_description();
+					} else {
+						$description = $offer->post->post_content;
+					}
+				}
+				break;
+			case 'long':
+				// Get product description.
+				if ( self::woo_latest_versions() ) {
+					$description = $product->get_description();
+				} else {
+					$description = $offer->post->post_content;
+				}
+				break;
+			case 'short':
+				// Get product short description.
+				if ( self::woo_latest_versions() ) {
+					$description = $product->get_description();
+				} else {
+					$description = $offer->post->post_excerpt;
+				}
+				break;
+		}
+
+		// Leave in only allowed html tags.
+		$description = strip_tags( strip_shortcodes( $description ), '<h3><ul><li><p>' );
+		$description = html_entity_decode( $description, ENT_COMPAT, 'UTF-8' );
+		// Cannot be longer then 3000 characters.
+		$description = substr( $description, 0, 2999 );
+
+		return $description;
 	}
 
 	/**

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2017-06-10 09:59+0300\n"
-"PO-Revision-Date: 2017-06-10 10:02+0300\n"
+"POT-Creation-Date: 2017-10-01 10:54+0300\n"
+"PO-Revision-Date: 2017-10-01 10:56+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.4\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: market-exporter.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -22,46 +22,50 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #. Plugin Name of the plugin/theme
-#: admin/class-market-exporter-admin.php:71
-#: admin/class-market-exporter-admin.php:72
+#: admin/class-market-exporter-admin.php:83
+#: admin/class-market-exporter-admin.php:84
 msgid "Market Exporter"
 msgstr "Market Exporter"
 
-#: admin/class-market-exporter-admin.php:102
+#: admin/class-market-exporter-admin.php:119
 msgid "Global settings"
 msgstr "Основные настройки"
 
-#: admin/class-market-exporter-admin.php:110
-#: admin/class-market-exporter-admin.php:116
-#, fuzzy
-#| msgid "Website Name"
+#: admin/class-market-exporter-admin.php:127
+#: admin/class-market-exporter-admin.php:133
 msgid "Website name"
-msgstr "Название сайта"
+msgstr "Название магазина"
 
-#: admin/class-market-exporter-admin.php:117
+#: admin/class-market-exporter-admin.php:134
 msgid ""
 "Not longer than 20 characters. Has to be the name of the shop, that is "
 "configured in Yandex Market."
 msgstr ""
-"Не более 20 символов. Должно совпадать с названием магазина, который "
-"настроен в Яндекс Маркет."
+"Короткое название магазина, должно содержать не более 20 символов. В "
+"названии нельзя использовать слова, не имеющие отношения к наименованию "
+"магазина, например «лучший», «дешевый», указывать номер телефона и т. п."
+"<br>\n"
+"<br>\n"
+"Название магазина должно совпадать с фактическим названием магазина, которое "
+"публикуется на сайте. При несоблюдении данного требования наименование может "
+"быть изменено Яндекс.Маркетом самостоятельно без уведомления магазина."
 
-#: admin/class-market-exporter-admin.php:125
-#: admin/class-market-exporter-admin.php:131
-#, fuzzy
-#| msgid "Company Name"
+#: admin/class-market-exporter-admin.php:142
+#: admin/class-market-exporter-admin.php:148
 msgid "Company name"
-msgstr "Название организации"
+msgstr "Наименование компании"
 
-#: admin/class-market-exporter-admin.php:132
+#: admin/class-market-exporter-admin.php:149
 msgid "Full company name. Not published in Yandex Market."
-msgstr "Полное наименование организации. Не публикуется на Яндекс Маркет."
+msgstr ""
+"Полное наименование компании, владеющей магазином. Не публикуется, "
+"используется для внутренней идентификации."
 
-#: admin/class-market-exporter-admin.php:140
+#: admin/class-market-exporter-admin.php:157
 msgid "Add date to YML file name"
-msgstr "Добавить дату в имя файла YML"
+msgstr "Добавить дату в имя файла"
 
-#: admin/class-market-exporter-admin.php:146
+#: admin/class-market-exporter-admin.php:163
 msgid ""
 "If enabled YML file will have current date at the end: ym-export-yyyy-mm-dd."
 "yml."
@@ -69,81 +73,74 @@ msgstr ""
 "Если активна, то к имена файла YML будет добавляться текущая дата: yml-"
 "export-yyyy-mm-dd.yml."
 
-#: admin/class-market-exporter-admin.php:154
-#: admin/class-market-exporter-admin.php:160
-msgid "Images per product"
-msgstr "Изображений на товарное предложение"
+#: admin/class-market-exporter-admin.php:171
+msgid "Cron"
+msgstr "Выгрузка по расписанию"
 
-#: admin/class-market-exporter-admin.php:161
-msgid "Max number of images to export for product. Max 10 images."
-msgstr ""
-"Максимальное количество изображений для товарного предложения. Макс 10 "
-"изображений."
-
-#: admin/class-market-exporter-admin.php:167
+#: admin/class-market-exporter-admin.php:179
+#: admin/class-market-exporter-admin.php:200
+#: admin/class-market-exporter-admin.php:379
 msgid "Disabled"
 msgstr "Отключено"
 
-#: admin/class-market-exporter-admin.php:173
-msgid "Vendor property"
-msgstr "Элемент vendor"
+#: admin/class-market-exporter-admin.php:180
+msgid "Every hour"
+msgstr "Каждый час"
 
-#: admin/class-market-exporter-admin.php:179
-msgid "Custom property used to specify vendor."
-msgstr ""
-"Атрибут, который отвечает за значение элемента vendor на Яндекс Маркет."
+#: admin/class-market-exporter-admin.php:181
+msgid "Twice a day"
+msgstr "Два раза в сутки"
 
-#: admin/class-market-exporter-admin.php:188
-#, fuzzy
-#| msgid "Vendor property"
-msgid "Model property"
-msgstr "Элемент vendor"
+#: admin/class-market-exporter-admin.php:182
+msgid "Daily"
+msgstr "Каждый день"
 
 #: admin/class-market-exporter-admin.php:194
-#, fuzzy
-#| msgid "Custom property used to specify vendor."
-msgid "Custom property used to specify model."
-msgstr ""
-"Атрибут, который отвечает за значение элемента vendor на Яндекс Маркет."
+msgid "Settings for offers"
+msgstr "Настройки товарных предложений"
 
-#: admin/class-market-exporter-admin.php:203
-msgid "Market category property"
-msgstr "Элемент market_catergory"
-
-#: admin/class-market-exporter-admin.php:210
-#, fuzzy
-#| msgid ""
-#| "Category of product on Yandex Market. Can be set to a value from <a href="
-#| "\"%s\" target=\"_blank\">this list</a> only."
-msgid "Category of product on Yandex Market. Can be set to a value from"
-msgstr ""
-"Категория товаров на Яндекс Маркет. Может принимать значение из <a href=\"%s"
-"\" target=\"_blank\">этого списка</a>."
-
-#: admin/class-market-exporter-admin.php:212
-msgid "this list"
-msgstr "из этого списка"
+#: admin/class-market-exporter-admin.php:207
+msgid "Vendor"
+msgstr "Производитель"
 
 #: admin/class-market-exporter-admin.php:213
-msgid "only."
-msgstr "."
+msgid "Vendor property."
+msgstr "Элемент vendor."
 
-#: admin/class-market-exporter-admin.php:223
+#: admin/class-market-exporter-admin.php:222
+msgid "Model"
+msgstr "Модель"
+
+#: admin/class-market-exporter-admin.php:228
+msgid "Model property."
+msgstr "Элемент model."
+
+#: admin/class-market-exporter-admin.php:236
+msgid "typePrefix"
+msgstr "Тип/категория товара"
+
+#: admin/class-market-exporter-admin.php:242
+msgid "Property typePrefix. Type or product category."
+msgstr ""
+"Элемент typePrefix (например, «мобильный телефон», «стиральная машина», "
+"«угловой диван»)."
+
+#: admin/class-market-exporter-admin.php:251
 msgid "Export products with backorders"
 msgstr "Экспорт товаров со статусом предзаказ"
 
-#: admin/class-market-exporter-admin.php:229
+#: admin/class-market-exporter-admin.php:257
 msgid ""
 "If enabled products that are available for backorder will be exported to YML."
 msgstr ""
 "Если активна, то товары, доступные для предзаказа, будут экспортированы в "
 "YML."
 
-#: admin/class-market-exporter-admin.php:237
+#: admin/class-market-exporter-admin.php:265
 msgid "Include selected categories"
 msgstr "Включать следующие категории"
 
-#: admin/class-market-exporter-admin.php:243
+#: admin/class-market-exporter-admin.php:271
 msgid ""
 "Only selected categories will be included in the export file. Hold down the "
 "control (ctrl) button on Windows or command (cmd) on Mac to select multiple "
@@ -153,117 +150,206 @@ msgstr ""
 "выбрать несколько категорий, зажмите клавишу ctrl (на Windows) или cmd (на "
 "Mac). Если не выбрана ни одна категория, то экспортируются все товары."
 
-#: admin/class-market-exporter-admin.php:251
-#: admin/class-market-exporter-admin.php:257
-#, fuzzy
-#| msgid "Enable sales_notes"
-msgid "Sales notes"
-msgstr "Использовать элемент sales_notes"
+#: admin/class-market-exporter-admin.php:279
+msgid "sales_notes"
+msgstr "sales_notes"
 
-#: admin/class-market-exporter-admin.php:258
+#: admin/class-market-exporter-admin.php:285
 msgid "Not longer than 50 characters."
 msgstr "Не более 50 символов."
 
-#: admin/class-market-exporter-admin.php:266
-msgid "Export weight and size data"
-msgstr "Экспортировать габариты и вес"
+#: admin/class-market-exporter-admin.php:293
+msgid "Manufacturer warranty"
+msgstr "Гарантия производителя"
 
-#: admin/class-market-exporter-admin.php:272
+#: admin/class-market-exporter-admin.php:299
 msgid ""
-"If enabled weight and size data from WooCommerce will be exported to Width, "
-"Depth, Height and Weight params."
+"Define if manufacturer warranty is available for selected product. Available "
+"values: true of false."
+msgstr ""
+"Элемент предназначен для отметки товаров, имеющих официальную гарантию "
+"производителя. Возможные  значения: true, false."
+
+#: admin/class-market-exporter-admin.php:308
+msgid "Country of origin"
+msgstr "Страна производитель"
+
+#: admin/class-market-exporter-admin.php:316
+#, php-format
+msgid ""
+"Define country of origin for a product. See <a href=\"%s\" target=\"_blank"
+"\">this link</a> for a list of available values."
+msgstr ""
+"Элемент предназначен для указания страны производства товара. Список стран, "
+"которые могут быть указаны в этом элементе, доступен <a href=\"%s\" target="
+"\"_blank\">здесь</a>."
+
+#: admin/class-market-exporter-admin.php:326
+msgid "Weight and size data"
+msgstr "Габариты и вес"
+
+#: admin/class-market-exporter-admin.php:332
+msgid ""
+"If enabled weight and size data from WooCommerce will be exported to Weight "
+"and Dimensions elements."
 msgstr ""
 "Если активна, то данные о весе и размерах товара будут экспортированы в "
-"параметры Width, Depth, Height и Weight."
+"элементы weight и dimensions (вес должен быть указан в кг., размеры в см.)"
 
-#: admin/class-market-exporter-admin.php:280
-#, fuzzy
-#| msgid "Include selected categories"
+#: admin/class-market-exporter-admin.php:340
 msgid "Use selected parameters"
-msgstr "Включать следующие категории"
+msgstr "Использовать следующие параметры"
 
-#: admin/class-market-exporter-admin.php:286
-#, fuzzy
-#| msgid ""
-#| "Only selected categories will be included in the export file. Hold down "
-#| "the control (ctrl) button on Windows or command (cmd) on Mac to select "
-#| "multiple options. If nothing is selected - all the categories will be "
-#| "exported."
+#: admin/class-market-exporter-admin.php:346
 msgid ""
 "Selected attributes will be exported as a parameters. Hold down the control "
 "(ctrl) button on Windows or command (cmd) on Mac to select multiple options."
 msgstr ""
-"Только выбранные категории товаров будут экспортированы в файл. Чтобы "
-"выбрать несколько категорий, зажмите клавишу ctrl (на Windows) или cmd (на "
-"Mac). Если не выбрана ни одна категория, то экспортируются все товары."
+"Выбранные атрибуты будут экспортированы в качестве параметров (элемент "
+"param). Чтобы выбрать несколько категорий, зажмите клавишу ctrl (на Windows) "
+"или cmd (на Mac). Если не выбрана ни одна категория, то экспортируются все "
+"товары."
 
-#: admin/class-market-exporter-admin.php:303
-msgid "Settings that are used in the export process."
-msgstr "Настройки экспорта."
+#: admin/class-market-exporter-admin.php:354
+#: admin/class-market-exporter-admin.php:360
+msgid "Images per product"
+msgstr "Изображений на товарное предложение"
 
-#: admin/class-market-exporter-admin.php:424
-#: admin/partials/market-exporter-admin-display.php:44
+#: admin/class-market-exporter-admin.php:361
+msgid "Not more than 10 images"
+msgstr "Не более 10 изображений"
+
+#: admin/class-market-exporter-admin.php:373
+msgid "Delivery options"
+msgstr "Настройка доставки"
+
+#: admin/class-market-exporter-admin.php:380
+msgid "true"
+msgstr "true"
+
+#: admin/class-market-exporter-admin.php:381
+msgid "false"
+msgstr "false"
+
+#: admin/class-market-exporter-admin.php:387
+msgid "Delivery"
+msgstr "Доставка"
+
+#: admin/class-market-exporter-admin.php:393
+msgid ""
+"Use the delivery element to indicate the possibility of delivery to the "
+"buyer's address in the home region of the store."
+msgstr ""
+"Используйте элемент delivery, чтобы указать возможность доставки по адресу "
+"покупателя в домашнем регионе магазина."
+
+#: admin/class-market-exporter-admin.php:402
+msgid "Pickup"
+msgstr "Самовывоз"
+
+#: admin/class-market-exporter-admin.php:408
+msgid ""
+"Use the pickup element to indicate the possibility of receiving goods at the "
+"issuance point."
+msgstr ""
+"Используйте элемент pickup, чтобы указать возможность получения товара в "
+"пункте выдачи."
+
+#: admin/class-market-exporter-admin.php:417
+msgid "Store"
+msgstr "Покупка в торговом зале"
+
+#: admin/class-market-exporter-admin.php:423
+msgid ""
+"Use the store element to indicate the possibility of buying without a "
+"preliminary order at the point of sale."
+msgstr ""
+"Используйте элемент store, чтобы указать возможность покупки без "
+"предварительного заказа в точке продажи."
+
+#: admin/class-market-exporter-admin.php:436
+msgid "Extra settings"
+msgstr "Дополнительные настройки"
+
+#: admin/class-market-exporter-admin.php:444
+msgid "Product description"
+msgstr "Описание товара"
+
+#: admin/class-market-exporter-admin.php:450
+msgid ""
+"Specify the way the description is exported. Default is to try and get the "
+"product description, if empty - get short description."
+msgstr ""
+"Опция для выгрузки элемента description. По умолчанию, будет выгружаться "
+"описание товара, если оно пустое, то будет использовано краткое описание."
+
+#: admin/class-market-exporter-admin.php:453
+msgid "Default"
+msgstr "По умолчанию"
+
+#: admin/class-market-exporter-admin.php:454
+msgid "Only description"
+msgstr "Только описание"
+
+#: admin/class-market-exporter-admin.php:455
+msgid "Only short description"
+msgstr "Только краткое описание"
+
+#: admin/class-market-exporter-admin.php:463
+msgid "Update file on product change"
+msgstr "Обновлять при изменениях"
+
+#: admin/class-market-exporter-admin.php:469
+msgid "Regenerate file on product create/update."
+msgstr "Обновлять файл при внесении изменений или создании нового товара."
+
+#: admin/class-market-exporter-admin.php:645
+#: admin/partials/market-exporter-admin-display.php:43
 msgid "Settings"
 msgstr "Настройки"
 
-#: admin/class-market-exporter-fs.php:92
+#: admin/class-market-exporter-fs.php:94
 msgid "Error creating directory."
 msgstr "Ошибка при создании директории."
 
-#: admin/class-market-exporter-fs.php:97
+#: admin/class-market-exporter-fs.php:99
 msgid "Error uploading file."
 msgstr "Ошибка при сохранении файла."
 
-#: admin/class-market-exporter-wc.php:376
-msgid "Weight"
-msgstr "Вес"
-
-#: admin/class-market-exporter-wc.php:382
-msgid "Length"
-msgstr "Длина"
-
-#: admin/class-market-exporter-wc.php:383
-msgid "Width"
-msgstr "Ширина"
-
-#: admin/class-market-exporter-wc.php:384
-msgid "Height"
-msgstr "Высота"
-
-#: admin/partials/market-exporter-admin-display.php:25
+#: admin/partials/market-exporter-admin-display.php:24
 #, php-format
 msgid "Version: %s"
 msgstr "Версия: %s"
 
-#: admin/partials/market-exporter-admin-display.php:36
+#: admin/partials/market-exporter-admin-display.php:35
 msgid "Generate file"
 msgstr "Генерировать файл"
 
-#: admin/partials/market-exporter-admin-display.php:40
+#: admin/partials/market-exporter-admin-display.php:39
 msgid "Files"
 msgstr "Файлы"
 
-#: admin/partials/market-exporter-admin-display.php:48
-#: admin/partials/market-exporter-admin-display.php:186
+#: admin/partials/market-exporter-admin-display.php:47
+#: admin/partials/market-exporter-admin-display.php:185
 msgid "News"
 msgstr "Новости"
 
-#: admin/partials/market-exporter-admin-display.php:57
+#: admin/partials/market-exporter-admin-display.php:56
 msgid "You don't have the permission to do this."
 msgstr "У Вас недостаточно прав."
 
-#: admin/partials/market-exporter-admin-display.php:71
+#: admin/partials/market-exporter-admin-display.php:70
 #, php-format
 msgid ""
 "Currently only the following currency is supported: Russian Ruble (RUB), "
-"Ukrainian Hryvnia (UAH), US Dollar (USD) and Euro (EUR). Please <a href=\"%s"
-"\">update currency</a>."
+"Ukrainian Hryvnia (UAH), Tenge (KZT), US Dollar (USD) and Euro (EUR). Please "
+"<a href=\"%s\">update currency</a>."
 msgstr ""
 "Поддерживаются следующие валюты: Российский рубль (RUB), Украинская гривна "
-"(UAH), Доллар США (USD) и Евро (EUR). Пожалуйста, <a href=\"%s\">обновите "
-"валюту</a>."
+"(UAH), Тенге (KZT), Доллар США (USD) и Евро (EUR). Пожалуйста, <a href=\"%s"
+"\">обновите валюту</a>."
 
-#: admin/partials/market-exporter-admin-display.php:74
+#: admin/partials/market-exporter-admin-display.php:73
 #, php-format
 msgid ""
 "No shipping methods are available. Please <a href=\"%s\">update or add at "
@@ -271,20 +357,19 @@ msgid ""
 msgstr ""
 "Не указаны способы доставки. Пожалуйста, <a href=\"%s\">обновите данные</a>."
 
-#: admin/partials/market-exporter-admin-display.php:77
+#: admin/partials/market-exporter-admin-display.php:76
 #, php-format
 msgid ""
 "Unable to find any products. Are you sure <a href=\"%s\">some exist</a>?"
 msgstr ""
 "Не найдено ни одного товара. Вы точно <a href=\"%s\">добавили</a> товар?"
 
-#: admin/partials/market-exporter-admin-display.php:80
-#, fuzzy, php-format
-#| msgid "File exported successfully: <a href=\"%s\">%s</a>."
+#: admin/partials/market-exporter-admin-display.php:79
+#, php-format
 msgid "File exported successfully: <a href=\"%1$s\">%2$s</a>."
 msgstr "Файл создан: <a href=\"%s\">%s</a>."
 
-#: admin/partials/market-exporter-admin-display.php:87
+#: admin/partials/market-exporter-admin-display.php:86
 msgid ""
 "This plugin is used to generate a valid YML file for exporting your products "
 "in WooCommerce to Yandex Market."
@@ -292,7 +377,7 @@ msgstr ""
 "Данный плагин используется для генерации валидного YML файла для "
 "экспортированная товаров из WooCommerce в Яндекс Маркет."
 
-#: admin/partials/market-exporter-admin-display.php:89
+#: admin/partials/market-exporter-admin-display.php:88
 msgid ""
 "Please be patient while the YML file is generated. This can take a while if "
 "your server is slow (inexpensive hosting) or if you have many products in "
@@ -306,50 +391,48 @@ msgstr ""
 "WooCommerce. Не уходите с этой страницы, пока этот процесс не будет "
 "завершен, или файл YML не будет создан. Вы будете уведомлены при завершении."
 
-#: admin/partials/market-exporter-admin-display.php:91
+#: admin/partials/market-exporter-admin-display.php:90
 msgid "To begin, just press the button below."
 msgstr "Чтобы начать, нажмите на кнопку ниже."
 
-#: admin/partials/market-exporter-admin-display.php:93
+#: admin/partials/market-exporter-admin-display.php:92
 msgid "Generate YML file"
 msgstr "Генерировать YML файл"
 
-#: admin/partials/market-exporter-admin-display.php:95
-#: admin/partials/market-exporter-admin-display.php:142
+#: admin/partials/market-exporter-admin-display.php:94
+#: admin/partials/market-exporter-admin-display.php:141
 msgid "You must enable Javascript in order to proceed!"
 msgstr "Для продолжения необходимо активировать Javascript в Вашем браузере!"
 
-#: admin/partials/market-exporter-admin-display.php:110
+#: admin/partials/market-exporter-admin-display.php:109
 msgid "Generated YML files"
 msgstr "Доступные YML файлы"
 
-#: admin/partials/market-exporter-admin-display.php:118
+#: admin/partials/market-exporter-admin-display.php:117
 msgid "File name"
 msgstr "Имя файла"
 
-#: admin/partials/market-exporter-admin-display.php:119
+#: admin/partials/market-exporter-admin-display.php:118
 msgid "Action"
 msgstr "Действие"
 
-#: admin/partials/market-exporter-admin-display.php:133
+#: admin/partials/market-exporter-admin-display.php:132
 msgid "Open file"
 msgstr "Открыть файл"
 
-#: admin/partials/market-exporter-admin-display.php:140
+#: admin/partials/market-exporter-admin-display.php:139
 msgid "Delete selected files"
 msgstr "Удалить выбранные файлы"
 
-#: admin/partials/market-exporter-admin-display.php:162
+#: admin/partials/market-exporter-admin-display.php:161
 msgid "Settings Saved"
 msgstr "Настройки сохранены"
 
-#: admin/partials/market-exporter-admin-display.php:179
-#, fuzzy
-#| msgid "Settings"
+#: admin/partials/market-exporter-admin-display.php:178
 msgid "Save Settings"
-msgstr "Настройки"
+msgstr "Сохранить"
 
-#: includes/class-market-exporter.php:248
+#: includes/class-market-exporter.php:259
 msgid ""
 "The Market Exporter plugin requires <a href=\"https://wordpress.org/plugins/"
 "woocommerce/\">WooCommerce</a> to be installed and activated. Please check "
@@ -358,6 +441,14 @@ msgstr ""
 "Плагину Market Exporter необходим активированный <a href=\"https://wordpress."
 "org/plugins/woocommerce/\">WooCommerce</a>. Пожалуйста, установите или "
 "активируйте WooCommerce."
+
+#: includes/class-market-exporter.php:275
+msgid ""
+"Do you like the plugin? Please support the development by <a href=\"https://"
+"wordpress.org/plugins/market-exporter/\">writing a review</a>!"
+msgstr ""
+"Поддержите разработку плагина, <a href=\"https://wordpress.org/plugins/"
+"market-exporter/\">оставив отзыв</a>!"
 
 #. Plugin URI of the plugin/theme
 msgid "https://github.com/av3nger/market-exporter/"
@@ -378,6 +469,68 @@ msgstr "Антон Ванюков"
 #. Author URI of the plugin/theme
 msgid "http://www.vanyukov.su"
 msgstr "http://www.vanyukov.su"
+
+#~ msgid "Weight"
+#~ msgstr "Вес"
+
+#~ msgid "Length"
+#~ msgstr "Длина"
+
+#~ msgid "Width"
+#~ msgstr "Ширина"
+
+#~ msgid "Height"
+#~ msgstr "Высота"
+
+#~ msgid "Description"
+#~ msgstr "Описание"
+
+#~ msgid "Settings in the shop tag"
+#~ msgstr "Элементы, входящие в shop"
+
+#~ msgid ""
+#~ "typePrefix property. Type or product category. See <a href=\"%s\" target="
+#~ "\"_blank\">this link</a> for naming rules."
+#~ msgstr ""
+#~ "Элемент Тип / категория товара (например, «мобильный телефон», "
+#~ "«стиральная машина», «угловой диван»)."
+
+#~ msgid "Sales notes"
+#~ msgstr "sales_notes"
+
+#~ msgid "name"
+#~ msgstr "Название магазина"
+
+#~ msgid "company"
+#~ msgstr "Наименование компании"
+
+#~ msgid "Market category property"
+#~ msgstr "Элемент market_catergory"
+
+#~ msgid "Category of product on Yandex Market. Can be set to a value from"
+#~ msgstr "Категория товаров на Яндекс Маркет. Может принимать значение из"
+
+#~ msgid "this list"
+#~ msgstr "этого списка"
+
+#~ msgid "only."
+#~ msgstr "."
+
+#~ msgid "Max number of images to export for product. Max 10 images."
+#~ msgstr ""
+#~ "Максимальное количество изображений для товарного предложения. Макс 10 "
+#~ "изображений."
+
+#~ msgid "Custom property used to specify vendor."
+#~ msgstr ""
+#~ "Атрибут, который отвечает за значение элемента vendor на Яндекс Маркет."
+
+#~ msgid "Custom property used to specify model."
+#~ msgstr ""
+#~ "Атрибут, который отвечает за значение элемента model на Яндекс Маркет."
+
+#~ msgid "Settings that are used in the export process."
+#~ msgstr "Настройки экспорта."
 
 #~ msgid ""
 #~ "If enabled will use product field \"short description\" as value for "

@@ -52,7 +52,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		self::$version = '0.4.4';
+		self::$version = '1.0.0';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -153,9 +153,11 @@ class Market_Exporter {
 		$basename = plugin_basename( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
 		$this->loader->add_filter( "plugin_action_links_{$basename}", $plugin_admin, 'plugin_add_settings_link' );
 		// Add cron support.
-		$this->loader->add_action( 'market_exporter_cron', $plugin_yml, 'generate_YML' );
+		$this->loader->add_action( 'market_exporter_cron', $plugin_yml, 'generate_yml' );
 		// Add ajax support to dismiss notice.
 		$this->loader->add_action( 'wp_ajax_dismiss_rate_notice', $this, 'dismiss_notice' );
+		// Add support to update file on product update.
+		$this->loader->add_action( 'woocommerce_update_product', $plugin_admin, 'generate_file_on_update' );
 	}
 
 	/**

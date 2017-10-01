@@ -32,3 +32,4 @@ delete_option( 'market_exporter_company_name' );
 delete_option( 'market_exporter_shop_settings' );
 delete_option( 'market_exporter_version' );
 delete_option( 'market_exporter_notice_hide' );
+delete_option( 'market_exporter_doing_cron' );

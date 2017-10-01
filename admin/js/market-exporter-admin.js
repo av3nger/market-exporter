@@ -30,26 +30,10 @@
 	 */
 
 	$(document).ready(function() {
-        $('#vendor').select2({
-            minimumResultsForSearch: Infinity
-		});
-
-        $('#model').select2({
-            minimumResultsForSearch: Infinity
-        });
-
-        $('#market_category').select2({
-            minimumResultsForSearch: Infinity
-        });
-
-        $('#params').select2({
-            minimumResultsForSearch: Infinity
-        });
-
-		$('#cron').select2({
+		/* Enable Select2 for all select fields */
+		$('select').select2({
 			minimumResultsForSearch: Infinity
 		});
-
 
 		$('#rate-notice').on('click', function() {
 			$.post( ajax_strings.ajax_url, {
@@ -57,9 +41,7 @@
 				action: 'dismiss_rate_notice'
 			});
 		});
-
     });
-
 
 })( jQuery );
 
