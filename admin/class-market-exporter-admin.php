@@ -536,7 +536,7 @@ class Market_Exporter_Admin {
 
 			if ( 'params' === esc_attr( $args['label_for'] ) ) {
 				foreach ( wc_get_attribute_taxonomies() as $attribute ) {
-					echo '<option value="' . esc_attr( $attribute->attribute_id ) . '" ' . selected( in_array( $attribute->attribute_id, $select_array, true ), true, false ) . '>' . esc_html( $attribute->attribute_label ) . '</option>';
+					echo '<option value="' . esc_attr( $attribute->attribute_id ) . '" ' . selected( in_array( absint( $attribute->attribute_id ), $select_array, true ) ) . '>' . esc_html( $attribute->attribute_label ) . '</option>';
 				}
 			}
 			echo '</select>';

@@ -266,7 +266,7 @@ class ME_WC {
 
 				// NOTE: Below this point we start using $offer instead of $product.
 				$yml .= '      <offer id="' . $offer_id . '" available="' . ( ( $offer->is_in_stock() ) ? 'true' : 'false' ) . '">' . PHP_EOL;
-				$yml .= '        <url>' . get_permalink( $offer->get_id() ) . '</url>' . PHP_EOL;
+				$yml .= '        <url>' . htmlspecialchars( get_permalink( $offer->get_id() ) ) . '</url>' . PHP_EOL;
 
 				// Price.
 				if ( $offer->get_sale_price() && ( $offer->get_sale_price() < $offer->get_regular_price() ) ) {
@@ -482,7 +482,7 @@ class ME_WC {
 			case 'short':
 				// Get product short description.
 				if ( self::woo_latest_versions() ) {
-					$description = $product->get_description();
+					$description = $product->get_short_description();
 				} else {
 					$description = $offer->post->post_excerpt;
 				}

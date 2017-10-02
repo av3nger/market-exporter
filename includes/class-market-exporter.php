@@ -52,7 +52,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		self::$version = '1.0.0';
+		self::$version = '1.0.1';
 
 		$this->load_dependencies();
 		$this->set_locale();
