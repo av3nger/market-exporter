@@ -529,7 +529,7 @@ class Market_Exporter_Admin {
 					'parent'       => 0,
 					'taxonomy'     => 'product_cat',
 				)) as $category ) {
-					echo '<option value="' . esc_attr( $category->term_id ) . '" ' . selected( in_array( $category->term_id, $select_array, true ), true, false ) . '>' . esc_html( $category->name ) . '</option>';
+					echo '<option value="' . esc_attr( $category->term_id ) . '" ' . selected( in_array( $category->term_id, $select_array, true ) ) . '>' . esc_html( $category->name ) . '</option>';
 					self::get_cats_from_array( $category->term_id, $select_array );
 				}
 			}
