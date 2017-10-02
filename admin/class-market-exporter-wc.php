@@ -135,7 +135,7 @@ class ME_WC {
 		);
 
 		// If in options some specific categories are defined for export only.
-		if ( isset( $this->settings['include_cat'] ) ) {
+		if ( isset( $this->settings['include_cat'] ) && ! empty( $this->settings['include_cat'] ) ) {
 			$args['tax_query'] = array(
 				array(
 					'taxonomy'  => 'product_cat',
@@ -493,7 +493,8 @@ class ME_WC {
 		$description = strip_tags( strip_shortcodes( $description ), '<h3><ul><li><p>' );
 		$description = html_entity_decode( $description, ENT_COMPAT, 'UTF-8' );
 		// Cannot be longer then 3000 characters.
-		$description = substr( $description, 0, 2999 );
+		// This causes an error on many installs
+		//$description = substr( $description, 0, 2999 );
 
 		return $description;
 	}
