@@ -265,7 +265,17 @@ class ME_WC {
 				endif;
 
 				// NOTE: Below this point we start using $offer instead of $product.
-				$yml .= '      <offer id="' . $offer_id . '" available="' . ( ( $offer->is_in_stock() ) ? 'true' : 'false' ) . '">' . PHP_EOL;
+				// This is used for detecting if typePrefix is set. If it is, we need to add type="vendor.model" to
+				// offer and remove the name attribute.
+				$type_prefix_set = false;
+				if ( isset( $this->settings['type_prefix'] ) && 'not_set' !== $this->settings['type_prefix'] ) {
+					$type_prefix = $offer->get_attribute( 'pa_' . $this->settings['type_prefix'] );
+					if ( $type_prefix ) {
+						$type_prefix_set = true;
+					}
+				}
+
+				$yml .= '      <offer id="' . $offer_id . '" ' . ( ( $type_prefix_set ) ? 'type="vendor.model"' : '' ) . ' available="' . ( ( $offer->is_in_stock() ) ? 'true' : 'false' ) . '">' . PHP_EOL;
 				$yml .= '        <url>' . htmlspecialchars( get_permalink( $offer->get_id() ) ) . '</url>' . PHP_EOL;
 
 				// Price.
@@ -327,14 +337,13 @@ class ME_WC {
 					$yml .= '        <delivery>' . $this->settings['delivery'] . '</delivery>' . PHP_EOL;
 				}
 
-				$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>' . PHP_EOL;
+				if ( ! $type_prefix_set ) {
+					$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>' . PHP_EOL;
+				}
 
 				// type_prefix.
-				if ( isset( $this->settings['type_prefix'] ) && 'not_set' !== $this->settings['type_prefix'] ) {
-					$type_prefix = $offer->get_attribute( 'pa_' . $this->settings['type_prefix'] );
-					if ( $type_prefix ) {
-						$yml .= '        <typePrefix>' . wp_strip_all_tags( $type_prefix ) . '</typePrefix>' . PHP_EOL;
-					}
+				if ( $type_prefix_set ) {
+					$yml .= '        <typePrefix>' . wp_strip_all_tags( $type_prefix ) . '</typePrefix>' . PHP_EOL;
 				}
 
 				// Vendor.
