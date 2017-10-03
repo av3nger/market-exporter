@@ -637,9 +637,13 @@ class Market_Exporter_Admin {
 		// Convert to int array.
 		if ( isset( $input['include_cat'] ) ) {
 			$output['include_cat'] = array_map( 'intval', $input['include_cat'] );
+		} else {
+			$output['include_cat'] = array();
 		}
 		if ( isset( $input['params'] ) ) {
 			$output['params']      = array_map( 'intval', $input['params'] );
+		} else {
+			$output['params']      = array();
 		}
 
 		/**

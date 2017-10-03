@@ -298,13 +298,13 @@ class ME_WC {
 				}
 
 				// Get images.
-				$image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
+				$main_image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
 				// If no image found for product, it's probably a variation without an image, get the image from parent.
-				if ( ! $image ) {
-					$image = get_the_post_thumbnail_url( $product->get_id(), 'full' );
+				if ( ! $main_image ) {
+					$main_image = get_the_post_thumbnail_url( $product->get_id(), 'full' );
 				}
-				if ( strlen( utf8_decode( $image ) ) <= 512 ) {
-					$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+				if ( strlen( utf8_decode( $main_image ) ) <= 512 ) {
+					$yml .= '        <picture>' . esc_url( $main_image ) . '</picture>' . PHP_EOL;
 				}
 
 				if ( self::woo_latest_versions() ) {
@@ -319,7 +319,7 @@ class ME_WC {
 				}
 				foreach ( $attachment_ids as $id ) {
 					$image = wp_get_attachment_url( $id );
-					if ( strlen( utf8_decode( $image ) ) <= 512 ) {
+					if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
 						$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 					}
 				}
