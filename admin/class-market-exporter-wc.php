@@ -269,7 +269,7 @@ class ME_WC {
 				// offer and remove the name attribute.
 				$type_prefix_set = false;
 				if ( isset( $this->settings['type_prefix'] ) && 'not_set' !== $this->settings['type_prefix'] ) {
-					$type_prefix = $offer->get_attribute( 'pa_' . $this->settings['type_prefix'] );
+					$type_prefix = $product->get_attribute( 'pa_' . $this->settings['type_prefix'] );
 					if ( $type_prefix ) {
 						$type_prefix_set = true;
 					}
