@@ -41,6 +41,7 @@ class Market_Exporter_Activator {
 				'size'             => false,
 				'include_cat'      => array(),
 				'params'           => array(),
+				'params_all'       => false,
 				'delivery'         => 'disabled',
 				'pickup'           => 'disabled',
 				'store'            => 'disabled',
@@ -58,6 +59,10 @@ class Market_Exporter_Activator {
 
 		if ( version_compare( $version, '1.0.0-beta.1', '<' ) ) {
 			self::update_1_0_0_beta_1();
+		}
+
+		if ( version_compare( $version, '1.0.2', '<' ) ) {
+			self::update_1_0_2();
 		}
 
 		// Update version.
@@ -136,6 +141,22 @@ class Market_Exporter_Activator {
 		// Init update file on product change option.
 		if ( ! isset( $options['update_on_change'] ) ) {
 			$options['update_on_change'] = false;
+		}
+
+		update_option( 'market_exporter_shop_settings', $options );
+	}
+
+	/**
+	 * Update to 1.0.2
+	 *
+	 * @since 1.0.2
+	 */
+	public static function update_1_0_2() {
+		$options = get_option( 'market_exporter_shop_settings' );
+
+		// Init update file on product change option.
+		if ( ! isset( $options['params_all'] ) ) {
+			$options['params_all'] = false;
 		}
 
 		update_option( 'market_exporter_shop_settings', $options );

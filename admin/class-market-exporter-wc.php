@@ -421,14 +421,44 @@ class ME_WC {
 				endif;
 
 				// Params: selected parameters.
-				if ( isset( $this->settings['params'] ) ) {
+				if ( isset( $this->settings['params'] ) && ! empty( $this->settings['params'] ) ) {
 					$attributes = $product->get_attributes();
 					foreach ( $this->settings['params'] as $param_id ) :
-						if ( array_key_exists( wc_attribute_taxonomy_name_by_id( $param_id ), $attributes ) ) {
-							$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '</param>' . PHP_EOL;
+						// Encode the name, because cyrillic letters won't work in array_key_exists.
+						// TODO: this is the worst possible solution. REFACTOR!
+						$selected_attribute = urlencode( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						$selected_attribute = strtolower( $selected_attribute );
+
+						if ( ! array_key_exists( $selected_attribute, $attributes ) ) {
+							continue;
 						}
+
+						// TODO: refactor
+						// See https://wordpress.org/support/topic/атрибуты-вариантивного-товара/#post-9607195.
+						$param_value = $offer->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						if ( empty( $param_value ) ) {
+							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						}
+
+						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $param_value . '</param>' . PHP_EOL;
+					endforeach;
+				} elseif ( isset( $this->settings['params_all'] ) && $this->settings['params_all'] ) {
+					$attributes = $product->get_attributes();
+					/* @var WC_Product_Attribute $param */
+					foreach ( $attributes as $param ) :
+
+						if ( true === $param['variation'] ) {
+							$param_value = $offer->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
+						} else {
+							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
+						}
+
+						/* @var WC_Product_Attribute $param */
+						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param->get_id() ) ) . '">' . $param_value . '</param>' . PHP_EOL;
 					endforeach;
 				}
+
+
 				$yml .= '      </offer>' . PHP_EOL;
 			endwhile;
 

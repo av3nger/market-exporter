@@ -41,6 +41,13 @@
 				action: 'dismiss_rate_notice'
 			});
 		});
+
+		// Disable multiselect if user wants to export all params.
+		$('input#params_all').on('click', function() {
+			var paramSelect = $('select#params');
+			var paramCheckbox = $(this).prop( 'checked' );
+			paramSelect.prop( 'disabled', paramCheckbox );
+		});
     });
 
 })( jQuery );
