@@ -348,6 +348,20 @@ class Market_Exporter_Admin {
 			)
 		);
 
+		// Add all parameters select.
+		add_settings_field(
+			'market_exporter_params_all',
+			__( 'Export all parameters', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'params_all',
+				'description' => __( 'All available attributes will be exported as parameters.', 'market-exporter' ),
+				'type'        => 'checkbox',
+			)
+		);
+
 		// Add image count option.
 		add_settings_field(
 			'market_exporter_image_count',
@@ -516,7 +530,12 @@ class Market_Exporter_Admin {
 				$select_array = $this->options[ $args['label_for'] ];
 			}
 
-			echo '<select id="' . esc_attr( $args['label_for'] ) . '" name="market_exporter_shop_settings[' . esc_attr( $args['label_for'] ) . '][]" multiple="multiple">';
+			// Disable params multiselect if export all params checkbox is selected.
+			if ( 'params' === esc_attr( $args['label_for'] ) && $this->options['params_all'] ) {
+				echo '<select id="' . esc_attr( $args['label_for'] ) . '" name="market_exporter_shop_settings[' . esc_attr( $args['label_for'] ) . '][]" multiple="multiple" disabled>';
+			} else {
+				echo '<select id="' . esc_attr( $args['label_for'] ) . '" name="market_exporter_shop_settings[' . esc_attr( $args['label_for'] ) . '][]" multiple="multiple">';
+			}
 
 			/*
 			 * So far multiselect can be for included categories and parameters.
@@ -529,14 +548,14 @@ class Market_Exporter_Admin {
 					'parent'       => 0,
 					'taxonomy'     => 'product_cat',
 				)) as $category ) {
-					echo '<option value="' . esc_attr( $category->term_id ) . '" ' . selected( in_array( $category->term_id, $select_array, true ), true, false ) . '>' . esc_html( $category->name ) . '</option>';
+					echo '<option value="' . esc_attr( $category->term_id ) . '" ' . selected( in_array( $category->term_id, $select_array, true ) ) . '>' . esc_html( $category->name ) . '</option>';
 					self::get_cats_from_array( $category->term_id, $select_array );
 				}
 			}
 
 			if ( 'params' === esc_attr( $args['label_for'] ) ) {
 				foreach ( wc_get_attribute_taxonomies() as $attribute ) {
-					echo '<option value="' . esc_attr( $attribute->attribute_id ) . '" ' . selected( in_array( $attribute->attribute_id, $select_array, true ), true, false ) . '>' . esc_html( $attribute->attribute_label ) . '</option>';
+					echo '<option value="' . esc_attr( $attribute->attribute_id ) . '" ' . selected( in_array( absint( $attribute->attribute_id ), $select_array, true ) ) . '>' . esc_html( $attribute->attribute_label ) . '</option>';
 				}
 			}
 			echo '</select>';
@@ -637,9 +656,17 @@ class Market_Exporter_Admin {
 		// Convert to int array.
 		if ( isset( $input['include_cat'] ) ) {
 			$output['include_cat'] = array_map( 'intval', $input['include_cat'] );
+		} else {
+			$output['include_cat'] = array();
 		}
-		if ( isset( $input['params'] ) ) {
+
+		$output['params_all']      = ( isset( $input['params_all'] ) ) ? true : false;
+
+		// Only save individual params if all params checkbox is not set.
+		if ( isset( $input['params'] ) && ! $output['params_all'] ) {
 			$output['params']      = array_map( 'intval', $input['params'] );
+		} else {
+			$output['params']      = array();
 		}
 
 		/**

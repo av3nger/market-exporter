@@ -135,7 +135,7 @@ class ME_WC {
 		);
 
 		// If in options some specific categories are defined for export only.
-		if ( isset( $this->settings['include_cat'] ) ) {
+		if ( isset( $this->settings['include_cat'] ) && ! empty( $this->settings['include_cat'] ) ) {
 			$args['tax_query'] = array(
 				array(
 					'taxonomy'  => 'product_cat',
@@ -265,8 +265,18 @@ class ME_WC {
 				endif;
 
 				// NOTE: Below this point we start using $offer instead of $product.
-				$yml .= '      <offer id="' . $offer_id . '" available="' . ( ( $offer->is_in_stock() ) ? 'true' : 'false' ) . '">' . PHP_EOL;
-				$yml .= '        <url>' . get_permalink( $offer->get_id() ) . '</url>' . PHP_EOL;
+				// This is used for detecting if typePrefix is set. If it is, we need to add type="vendor.model" to
+				// offer and remove the name attribute.
+				$type_prefix_set = false;
+				if ( isset( $this->settings['type_prefix'] ) && 'not_set' !== $this->settings['type_prefix'] ) {
+					$type_prefix = $product->get_attribute( 'pa_' . $this->settings['type_prefix'] );
+					if ( $type_prefix ) {
+						$type_prefix_set = true;
+					}
+				}
+
+				$yml .= '      <offer id="' . $offer_id . '" ' . ( ( $type_prefix_set ) ? 'type="vendor.model"' : '' ) . ' available="' . ( ( $offer->is_in_stock() ) ? 'true' : 'false' ) . '">' . PHP_EOL;
+				$yml .= '        <url>' . htmlspecialchars( get_permalink( $offer->get_id() ) ) . '</url>' . PHP_EOL;
 
 				// Price.
 				if ( $offer->get_sale_price() && ( $offer->get_sale_price() < $offer->get_regular_price() ) ) {
@@ -288,13 +298,13 @@ class ME_WC {
 				}
 
 				// Get images.
-				$image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
+				$main_image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
 				// If no image found for product, it's probably a variation without an image, get the image from parent.
-				if ( ! $image ) {
-					$image = get_the_post_thumbnail_url( $product->get_id(), 'full' );
+				if ( ! $main_image ) {
+					$main_image = get_the_post_thumbnail_url( $product->get_id(), 'full' );
 				}
-				if ( strlen( utf8_decode( $image ) ) <= 512 ) {
-					$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+				if ( strlen( utf8_decode( $main_image ) ) <= 512 ) {
+					$yml .= '        <picture>' . esc_url( $main_image ) . '</picture>' . PHP_EOL;
 				}
 
 				if ( self::woo_latest_versions() ) {
@@ -309,7 +319,7 @@ class ME_WC {
 				}
 				foreach ( $attachment_ids as $id ) {
 					$image = wp_get_attachment_url( $id );
-					if ( strlen( utf8_decode( $image ) ) <= 512 ) {
+					if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
 						$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 					}
 				}
@@ -327,14 +337,13 @@ class ME_WC {
 					$yml .= '        <delivery>' . $this->settings['delivery'] . '</delivery>' . PHP_EOL;
 				}
 
-				$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>' . PHP_EOL;
+				if ( ! $type_prefix_set ) {
+					$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>' . PHP_EOL;
+				}
 
 				// type_prefix.
-				if ( isset( $this->settings['type_prefix'] ) && 'not_set' !== $this->settings['type_prefix'] ) {
-					$type_prefix = $offer->get_attribute( 'pa_' . $this->settings['type_prefix'] );
-					if ( $type_prefix ) {
-						$yml .= '        <typePrefix>' . wp_strip_all_tags( $type_prefix ) . '</typePrefix>' . PHP_EOL;
-					}
+				if ( $type_prefix_set ) {
+					$yml .= '        <typePrefix>' . wp_strip_all_tags( $type_prefix ) . '</typePrefix>' . PHP_EOL;
 				}
 
 				// Vendor.
@@ -412,14 +421,44 @@ class ME_WC {
 				endif;
 
 				// Params: selected parameters.
-				if ( isset( $this->settings['params'] ) ) {
+				if ( isset( $this->settings['params'] ) && ! empty( $this->settings['params'] ) ) {
 					$attributes = $product->get_attributes();
 					foreach ( $this->settings['params'] as $param_id ) :
-						if ( array_key_exists( wc_attribute_taxonomy_name_by_id( $param_id ), $attributes ) ) {
-							$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '</param>' . PHP_EOL;
+						// Encode the name, because cyrillic letters won't work in array_key_exists.
+						// TODO: this is the worst possible solution. REFACTOR!
+						$selected_attribute = urlencode( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						$selected_attribute = strtolower( $selected_attribute );
+
+						if ( ! array_key_exists( $selected_attribute, $attributes ) ) {
+							continue;
 						}
+
+						// TODO: refactor
+						// See https://wordpress.org/support/topic/атрибуты-вариантивного-товара/#post-9607195.
+						$param_value = $offer->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						if ( empty( $param_value ) ) {
+							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						}
+
+						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $param_value . '</param>' . PHP_EOL;
+					endforeach;
+				} elseif ( isset( $this->settings['params_all'] ) && $this->settings['params_all'] ) {
+					$attributes = $product->get_attributes();
+					/* @var WC_Product_Attribute $param */
+					foreach ( $attributes as $param ) :
+
+						if ( true === $param['variation'] ) {
+							$param_value = $offer->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
+						} else {
+							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
+						}
+
+						/* @var WC_Product_Attribute $param */
+						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param->get_id() ) ) . '">' . $param_value . '</param>' . PHP_EOL;
 					endforeach;
 				}
+
+
 				$yml .= '      </offer>' . PHP_EOL;
 			endwhile;
 
@@ -482,7 +521,7 @@ class ME_WC {
 			case 'short':
 				// Get product short description.
 				if ( self::woo_latest_versions() ) {
-					$description = $product->get_description();
+					$description = $product->get_short_description();
 				} else {
 					$description = $offer->post->post_excerpt;
 				}
@@ -493,7 +532,8 @@ class ME_WC {
 		$description = strip_tags( strip_shortcodes( $description ), '<h3><ul><li><p>' );
 		$description = html_entity_decode( $description, ENT_COMPAT, 'UTF-8' );
 		// Cannot be longer then 3000 characters.
-		$description = substr( $description, 0, 2999 );
+		// This causes an error on many installs
+		//$description = substr( $description, 0, 2999 );
 
 		return $description;
 	}
