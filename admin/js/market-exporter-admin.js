@@ -48,6 +48,60 @@
 			var paramCheckbox = $(this).prop( 'checked' );
 			paramSelect.prop( 'disabled', paramCheckbox );
 		});
+
+		// Export process.
+		$('#market-exporter-generate').on('click', function(e) {
+			e.preventDefault();
+
+			$('#me-export-form').hide();
+			$('.me-progress-export').show();
+
+			process_step( 0, 0, 0 );
+		});
+
+		/**
+		 * Ajax process export process
+		 *
+		 * @param step
+		 * @param steps
+		 * @param percent
+		 */
+		function process_step( step, steps, percent ) {
+			// Send ajax to do the step.
+			$.ajax({
+				type: 'POST',
+				url: ajax_strings.ajax_url,
+				data: {
+					_ajax_nonce: ajax_strings.export_nonce,
+					action: 'export_step',
+					step: step,
+					steps: steps
+				},
+				success: function ( response ) {
+					// Update progress bar.
+					update_progress( percent );
+
+					var data = response.data;
+					if ( data.step !== data.steps ) {
+						process_step( data.step, data.steps, data.percent );
+					} else {
+						update_progress( 100 );
+						$( '.me-progress-export .status').html( ajax_strings.msg_created + '<a href=' + data.file + ' target="_blank">' + data.file + '</a>' );
+					}
+				}
+			});
+		}
+
+		/**
+		 * Update progress bar for the export process.
+		 *
+		 * @param percent
+		 */
+		function update_progress( percent ) {
+			$( '.me-progress-export .status').text( ajax_strings.msg_progress );
+			$('.me-progress-export .me-prgoress-container').css( 'width', percent + '%' );
+			$('.me-progress-export .me-prgoress-container').text( percent + '%' );
+		}
     });
 
 })( jQuery );

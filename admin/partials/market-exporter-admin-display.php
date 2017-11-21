@@ -55,41 +55,68 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 
 			check_admin_referer( $this->plugin_name . '-generate' );
 
-			// Select what version of plugin to use.
-			$plugin_option = get_option( 'market_exporter_shop_settings' );
 			$market_exporter = new ME_WC();
 
 			$return_code = $market_exporter->generate_yml();
+			?>
+			<p>
+				<?php
+				switch ( $return_code ) {
+					case 100:
+						/* translators: %s: link to WooCommerce settings page */
+						echo sprintf( __( 'Currently only the following currency is supported: Russian Ruble (RUB), Ukrainian Hryvnia (UAH), Tenge (KZT), US Dollar (USD) and Euro (EUR). Please <a href="%s">update currency</a>.', 'market-exporter' ), §admin_url( 'admin.php?page=wc-settings' ) );
+						break;
+					case 200:
+						/* translators: %s: link to WooCommerce shipping settings */
+						echo sprintf( __( 'No shipping methods are available. Please <a href="%s">update or add at least one</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings&tab=shipping' ) );
+						break;
+					case 300:
+						/* translators: %s: link to WooCommerce product page */
+						echo sprintf( __( 'Unable to find any products. Are you sure <a href="%s">some exist</a>?', 'market-exporter' ), admin_url( 'post-new.php?post_type=product' ) );
+						break;
+				}
+				?>
+			</p>
 
-			switch ( $return_code ) {
-				case 100:
-					echo ' <p>' . sprintf( __( 'Currently only the following currency is supported: Russian Ruble (RUB), Ukrainian Hryvnia (UAH), Tenge (KZT), US Dollar (USD) and Euro (EUR). Please <a href="%s">update currency</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings' ) ) . '</p>';
-					break;
-				case 200:
-					echo ' <p>' . sprintf( __( 'No shipping methods are available. Please <a href="%s">update or add at least one</a>.', 'market-exporter' ), admin_url( 'admin.php?page=wc-settings&tab=shipping' ) ) . '</p>';
-					break;
-				case 300:
-					echo '	<p>' . sprintf( __( 'Unable to find any products. Are you sure <a href="%s">some exist</a>?', 'market-exporter' ), admin_url( 'post-new.php?post_type=product' ) ) . '</p>';
-					break;
-				default:
-					echo '	<p>' . sprintf( __( 'File exported successfully: <a href="%1$s">%2$s</a>.', 'market-exporter' ), $return_code, $return_code ) . '</p>';
-			}
+			<p>
+				<?php esc_html_e( 'File exported successfully:', 'market-exporter' ); ?>
+				<a href="<?php esc_url( $return_code ); ?>"><?php echo esc_html( $return_code ); ?></a>
+			</p>
+			<?php
 		else :
 			// Display the form by default. ?>
-
-			<form method="post" action="">
+			<form method="post" id="me-export-form">
 				<?php wp_nonce_field( $this->plugin_name . '-generate' ) ?>
-				<p><?php esc_html_e( 'This plugin is used to generate a valid YML file for exporting your products in WooCommerce to Yandex Market.', 'market-exporter' ); ?></p>
+				<p>
+					<?php esc_html_e( 'This plugin is used to generate a valid YML file for exporting your products in WooCommerce to Yandex Market.', 'market-exporter' ); ?>
+				</p>
 
-				<p><?php esc_html_e( 'Please be patient while the YML file is generated. This can take a while if your server is slow (inexpensive hosting) or if you have many products in WooCommerce. Do not navigate away from this page until this script is done or the YML file will not be created. You will be notified via this page when the process is completed.', 'market-exporter' ); ?></p>
+				<p>
+					<?php esc_html_e( 'Please be patient while the YML file is generated. This can take a while if your server is slow (inexpensive hosting) or if you have many products in WooCommerce. Do not navigate away from this page until this script is done or the YML file will not be created. You will be notified via this page when the process is completed.', 'market-exporter' ); ?>
+				</p>
 
-				<p><?php esc_html_e( 'To begin, just press the button below.', 'market-exporter' ); ?></p>
+				<p>
+					<?php esc_html_e( 'To begin, just press the button below.', 'market-exporter' ); ?>
+				</p>
 
-				<p><input type="submit" class="button button-primary hide-if-no-js" name="market-exporter-generate" id="market-exporter-generate" value="<?php esc_attr_e( 'Generate YML file', 'market-exporter' ) ?>" /></p>
+				<input type="submit" class="button button-primary hide-if-no-js" name="market-exporter-generate" id="market-exporter-generate" value="<?php esc_attr_e( 'Generate YML file', 'market-exporter' ) ?>" />
 
-				<noscript><p><em><?php esc_html_e( 'You must enable Javascript in order to proceed!', 'market-exporter' ); ?></em></p></noscript>
-
+				<noscript>
+					<p>
+						<em>
+							<?php esc_html_e( 'You must enable Javascript in order to proceed!', 'market-exporter' ); ?>
+						</em>
+					</p>
+				</noscript>
 			</form>
+			<div class="me-progress-export">
+				<div class="me-progress-bar">
+					<div id="me-bar" class="me-prgoress-container" style="width:0%">0%</div>
+				</div>
+				<span class="status">
+					<?php esc_html_e( 'Starting export process...', 'market-exporter' ); ?>
+				</span>
+			</div>
 		<?php endif; ?>
 
 		<!-- end general tab -->
@@ -123,9 +150,9 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 				if ( $files ) :
 					foreach ( $files as $file ) :?>
 						<tr>
-							<td class="row-title"><input type="checkbox" name="files[]" value="<?php echo $file['name']; ?>"></td>
-							<td><?php echo $file['name']; ?></td>
-							<td><a href="<?php echo $folder . $file['name']; ?>" target="_blank"><?php esc_html_e( 'Open file', 'market-exporter' ); ?></a></td>
+							<td class="row-title"><input type="checkbox" name="files[]" value="<?php echo esc_attr( $file['name'] ); ?>"></td>
+							<td><?php echo esc_html( $file['name'] ); ?></td>
+							<td><a href="<?php echo esc_url( $folder . $file['name'] ); ?>" target="_blank"><?php esc_html_e( 'Open file', 'market-exporter' ); ?></a></td>
 						</tr>
 					<?php endforeach;
 				endif; ?>

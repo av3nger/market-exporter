@@ -63,11 +63,13 @@ class Market_Exporter_FS {
 	 * Write YML file to /wp-content/uploads/ dir.
 	 *
 	 * @since  0.0.1
-	 * @param  string $yml  Variable to display contents of the YML file.
-	 * @param  string $date Yes or No for date at the end of the file.
-	 * @return string       Return the path of the saved file.
+	 * @param  string $yml     Variable to display contents of the YML file.
+	 * @param  string $date    Yes or No for date at the end of the file.
+	 * @param  bool   $append  Append to the end of file? Default: false.
+	 * @param  bool   $new     Create a new file by deleting the old one. Only needed for use when $append = true.
+	 * @return string          Return the path of the saved file.
 	 */
-	public function write_file( $yml, $date ) {
+	public function write_file( $yml, $date, $append = false, $new = false ) {
 		// If unable to initialize filesystem, quit.
 		if ( ! $this->init_fs() ) {
 			return false;
@@ -94,8 +96,20 @@ class Market_Exporter_FS {
 				esc_html_e( 'Error creating directory.', 'market-exporter' );
 			}
 		}
+
 		// Create the file.
-		if ( ! $wp_filesystem->put_contents( $filepath, $yml, FS_CHMOD_FILE ) ) {
+		if ( $append ) {
+			// Delete old file.
+			if ( $new && $wp_filesystem->exists( $filepath ) ) {
+				$wp_filesystem->delete( $filepath );
+			}
+
+			$result = @file_put_contents( $filepath, $yml, FILE_APPEND | LOCK_EX );
+		} else {
+			$result = $wp_filesystem->put_contents( $filepath, $yml, FS_CHMOD_FILE );
+		}
+
+		if ( ! $result ) {
 			esc_html_e( 'Error uploading file.', 'market-exporter' );
 		}
 

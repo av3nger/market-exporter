@@ -67,8 +67,11 @@ class Market_Exporter_Admin {
 		wp_enqueue_script( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'js/market-exporter-admin.js', array( 'jquery' ), null, false );
 
 		wp_localize_script( "{$this->plugin_name}-admin", 'ajax_strings', array(
-			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'nonce'    => wp_create_nonce( 'me_dismiss_notice' ),
+			'ajax_url'     => admin_url( 'admin-ajax.php' ),
+			'nonce'        => wp_create_nonce( 'me_dismiss_notice' ),
+			'export_nonce' => wp_create_nonce( 'me_export' ),
+			'msg_created'  => __( 'File created: ', 'market-exporter' ),
+			'msg_progress' => __( 'Products are being exported to YML file. Please do not leave the page...', 'market-exporter' ),
 		) );
 	}
 

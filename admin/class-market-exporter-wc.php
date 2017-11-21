@@ -18,6 +18,13 @@ class ME_WC {
 	private $settings;
 
 	/**
+	 * Products to export per query.
+	 *
+	 * @since 1.0.3
+	 */
+	const PRODUCTS_PER_QUERY = 200;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @since 0.3.0
@@ -82,7 +89,6 @@ class ME_WC {
 	 * @return string Returns currency if it is supported, else false.
 	 */
 	private function check_currency() {
-
 		$currency = get_woocommerce_currency();
 
 		switch ( $currency ) {
@@ -105,20 +111,23 @@ class ME_WC {
 	 * Check if any products ara available for export.
 	 *
 	 * @since  0.3.0
+	 * @param  int $per_page  Products to show per page.
+	 * @param  int $offset    Offset by number of products.
 	 * @return bool|WP_Query Return products.
 	 */
-	private function check_products() {
+	private function check_products( $per_page = -1, $offset = 0 ) {
 
 		$args = array(
-			'posts_per_page' => -1,
-			'post_type'     => array( 'product' ),
-			'post_status'   => 'publish',
-			'meta_query'    => array(
+			'posts_per_page' => $per_page,
+			'offset'         => $offset,
+			'post_type'      => array( 'product' ),
+			'post_status'    => 'publish',
+			'meta_query'     => array(
 				array(
-					'key'   => '_price',
-					'value' => 0,
+					'key'     => '_price',
+					'value'   => 0,
 					'compare' => '>',
-					'type'  => 'NUMERIC',
+					'type'    => 'NUMERIC',
 				),
 				// TODO: по умолчанию выгружать товары у которых “Статус остатка – В наличии.” и остаток при этом больше 0.
 				// Таким образом товары доступные в WooCommerce для предзаказа выгружаться по умолчанию не будут.
@@ -439,25 +448,28 @@ class ME_WC {
 						if ( empty( $param_value ) ) {
 							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
 						}
-
 						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $param_value . '</param>' . PHP_EOL;
 					endforeach;
 				} elseif ( isset( $this->settings['params_all'] ) && $this->settings['params_all'] ) {
 					$attributes = $product->get_attributes();
-					/* @var WC_Product_Attribute $param */
+					/* @var WC_Product_Attribute|array $param */
 					foreach ( $attributes as $param ) :
+						if ( self::woo_latest_versions() ) {
+							$taxonomy = wc_attribute_taxonomy_name_by_id( $param->get_id() );
+						} else {
+							$taxonomy = $param['name'];
+						}
 
 						if ( true === $param['variation'] ) {
-							$param_value = $offer->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
+							$param_value = $offer->get_attribute( $taxonomy );
 						} else {
-							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
+							$param_value = $product->get_attribute( $taxonomy );
 						}
 
 						/* @var WC_Product_Attribute $param */
-						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param->get_id() ) ) . '">' . $param_value . '</param>' . PHP_EOL;
+						$yml .= '        <param name="' . wc_attribute_label( $taxonomy ) . '">' . $param_value . '</param>' . PHP_EOL;
 					endforeach;
-				}
-
+				} // End if().
 
 				$yml .= '      </offer>' . PHP_EOL;
 			endwhile;
@@ -562,5 +574,81 @@ class ME_WC {
 
 		return false;
 	}
+
+	/**
+	 * Process ajax export.
+	 *
+	 * @since 1.0.3
+	 * @used-by Market_Exporter::define_admin_hooks()
+	 */
+	public function process_step() {
+		check_ajax_referer( 'me_export' );
+
+		if ( ! isset( $_POST['step'] ) || ! isset( $_POST['steps'] ) ) { // Input var okay.
+			die();
+		}
+
+		$step  = absint( wp_unslash( $_POST['step'] ) ); // Input var okay.
+		$steps = absint( wp_unslash( $_POST['steps'] ) ); // Input var okay.
+
+		$start = false;
+		if ( ! $step && ! $steps ) {
+			$start = true;
+		}
+
+		// Check currency.
+		if ( ! $currency = $this->check_currency() ) {
+			$data = array(
+				'status' => 'error',
+				'code'   => 100,
+				'text'   => 'no-supported-currency',
+			);
+			wp_send_json_success( $data );
+		}
+
+		if ( $start ) {
+			// If starting new export and no products.
+			if ( ! $query = $this->check_products() ) {
+				$data = array(
+					'status' => 'error',
+					'code'   => 300,
+					'text'   => 'no-products-found',
+				);
+				wp_send_json_success( $data );
+			}
+		}
+
+		$me_fs = new Market_Exporter_FS( 'market-exporter' );
+
+		if ( $start ) {
+			$me_fs->write_file( $this->yml_header( $currency ), $this->settings['file_date'], true, true );
+
+			if ( isset( $query ) && self::PRODUCTS_PER_QUERY < $query->found_posts ) {
+				// TODO: Products 101? Will be only one step, but we need two.
+				$steps = absint( $query->found_posts / self::PRODUCTS_PER_QUERY );
+			}
+		}
+
+		// TODO: Add error handler for this?
+		$query = $this->check_products( self::PRODUCTS_PER_QUERY, self::PRODUCTS_PER_QUERY * $step );
+
+		$file_path = $me_fs->write_file( $this->yml_offers( $currency, $query ), $this->settings['file_date'], true );
+
+		$step++;
+		if ( $step === $steps ) {
+			$file_path = $me_fs->write_file( $this->yml_footer(), $this->settings['file_date'], true );
+		}
+
+		$data = array(
+			'status'  => 'success',
+			'step'    => $step,
+			'steps'   => $steps,
+			'percent' => absint( 100 / $steps * $step ),
+			'file'    => $file_path,
+		);
+
+		wp_send_json_success( $data );
+	}
+
 
 }

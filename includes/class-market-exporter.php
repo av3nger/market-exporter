@@ -139,7 +139,6 @@ class Market_Exporter {
 	 * @access private
 	 */
 	private function define_admin_hooks() {
-
 		$plugin_admin = new Market_Exporter_Admin( $this->get_plugin_name() );
 		$plugin_yml = new ME_WC();
 
@@ -158,6 +157,8 @@ class Market_Exporter {
 		$this->loader->add_action( 'wp_ajax_dismiss_rate_notice', $this, 'dismiss_notice' );
 		// Add support to update file on product update.
 		$this->loader->add_action( 'woocommerce_update_product', $plugin_admin, 'generate_file_on_update' );
+		// Add ajax callback for export progress bar.
+		$this->loader->add_action( 'wp_ajax_export_step', $plugin_yml, 'process_step' );
 	}
 
 	/**

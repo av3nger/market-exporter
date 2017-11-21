@@ -77,3 +77,28 @@
 #market-exporter table td > input[type="checkbox"] {
 	margin: 0 0 0 8px;
 }
+
+/* progress bar */
+#me_pages .me-progress-export {
+	display: none;
+}
+
+.me-progress-bar {
+	color: #000;
+	background-color: #fff;
+	width: 50%;
+	margin-bottom: 10px;
+}
+
+.me-prgoress-container:after, .me-prgoress-container:before {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.me-prgoress-container {
+	/*padding: 0.01em 16px;*/
+	color: #fff;
+	background-color: #4CAF50;
+	text-align:center
+}
