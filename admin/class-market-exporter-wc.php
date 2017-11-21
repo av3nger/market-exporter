@@ -329,6 +329,10 @@ class ME_WC {
 				if ( 1 < $this->settings['image_count'] ) {
 					$exported = 1;
 					while ( $exported < $this->settings['image_count'] ) {
+						if ( ! isset( $attachment_ids[ $exported ] ) ) {
+							break;
+						}
+
 						$image = wp_get_attachment_url( $attachment_ids[ $exported ] );
 						if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
 							$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
@@ -369,7 +373,7 @@ class ME_WC {
 
 				// Model.
 				if ( isset( $this->settings['model'] ) && 'not_set' !== $this->settings['model'] ) {
-					$model = $offer->get_attribute( 'pa_' . $this->settings['model'] );
+					$model = $product->get_attribute( 'pa_' . $this->settings['model'] );
 					if ( $model ) {
 						$yml .= '        <model>' . wp_strip_all_tags( $model ) . '</model>' . PHP_EOL;
 					}
