@@ -326,10 +326,14 @@ class ME_WC {
 				if ( count( $attachment_ids ) > 9 ) {
 					$attachment_ids = array_slice( $attachment_ids, 0, 9 );
 				}
-				foreach ( $attachment_ids as $id ) {
-					$image = wp_get_attachment_url( $id );
-					if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
-						$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+				if ( 1 < $this->settings['image_count'] ) {
+					$exported = 1;
+					while ( $exported < $this->settings['image_count'] ) {
+						$image = wp_get_attachment_url( $attachment_ids[ $exported ] );
+						if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
+							$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+						}
+						$exported++;
 					}
 				}
 
@@ -623,6 +627,7 @@ class ME_WC {
 		if ( $start ) {
 			$me_fs->write_file( $this->yml_header( $currency ), $this->settings['file_date'], true, true );
 
+			$steps = 1;
 			if ( isset( $query ) && self::PRODUCTS_PER_QUERY < $query->found_posts ) {
 				// TODO: Products 101? Will be only one step, but we need two.
 				$steps = absint( $query->found_posts / self::PRODUCTS_PER_QUERY );
