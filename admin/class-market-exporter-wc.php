@@ -255,15 +255,15 @@ class ME_WC {
 			 * That means that there is at least one product available.
 			 * Variation products will have more than 1 count.
 			 */
-			$variations = array();
+			$variations      = array();
 			$variation_count = 1;
 			if ( $product->is_type( 'variable' ) ) :
-				$variations = $product->get_available_variations();
+				$variations      = $product->get_available_variations();
 				$variation_count = count( $variations );
 			endif;
 
 			while ( $variation_count > 0 ) :
-				$variation_count--;
+				$variation_count --;
 
 				// If variable product, get product id from $variations array.
 				$offer_id = ( ( $product->is_type( 'variable' ) ) ? $variations[ $variation_count ]['variation_id'] : $product->get_id() );
@@ -303,7 +303,7 @@ class ME_WC {
 				// TODO: display error message if category is not set for product.
 				if ( $categories ) {
 					$category = array_shift( $categories );
-					$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+					$yml      .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
 				}
 
 				// Get images.
@@ -337,7 +337,7 @@ class ME_WC {
 						if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
 							$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 						}
-						$exported++;
+						$exported ++;
 					}
 				}
 
@@ -412,7 +412,7 @@ class ME_WC {
 				}
 
 				// Params: size and weight.
-				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) :
+				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) {
 					$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
 					if ( $offer->has_weight() && 'kg' === $weight_unit ) {
 						$yml .= '        <weight>' . $offer->get_weight() . '</weight>' . PHP_EOL;
@@ -435,12 +435,12 @@ class ME_WC {
 
 						$yml .= '        <dimensions>' . $dimensions . '</dimensions>' . PHP_EOL;
 					}
-				endif;
+				}
 
 				// Params: selected parameters.
 				if ( isset( $this->settings['params'] ) && ! empty( $this->settings['params'] ) ) {
 					$attributes = $product->get_attributes();
-					foreach ( $this->settings['params'] as $param_id ) :
+					foreach ( $this->settings['params'] as $param_id ) {
 						// Encode the name, because cyrillic letters won't work in array_key_exists.
 						// TODO: this is the worst possible solution. REFACTOR!
 						$selected_attribute = urlencode( wc_attribute_taxonomy_name_by_id( $param_id ) );
@@ -457,11 +457,11 @@ class ME_WC {
 							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
 						}
 						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $param_value . '</param>' . PHP_EOL;
-					endforeach;
+					}
 				} elseif ( isset( $this->settings['params_all'] ) && $this->settings['params_all'] ) {
 					$attributes = $product->get_attributes();
 					/* @var WC_Product_Attribute|array $param */
-					foreach ( $attributes as $param ) :
+					foreach ( $attributes as $param ) {
 						if ( self::woo_latest_versions() ) {
 							$taxonomy = wc_attribute_taxonomy_name_by_id( $param->get_id() );
 						} else {
@@ -476,8 +476,13 @@ class ME_WC {
 
 						/* @var WC_Product_Attribute $param */
 						$yml .= '        <param name="' . wc_attribute_label( $taxonomy ) . '">' . $param_value . '</param>' . PHP_EOL;
-					endforeach;
+					}
 				} // End if().
+
+				// Downloadable.
+				if ( $product->is_downloadable() ) {
+					$yml .= '        <downloadable>true</downloadable>';
+				}
 
 				$yml .= '      </offer>' . PHP_EOL;
 			endwhile;
