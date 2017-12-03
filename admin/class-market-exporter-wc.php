@@ -129,11 +129,6 @@ class ME_WC {
 					'compare' => '>',
 					'type'    => 'NUMERIC',
 				),
-				// TODO: по умолчанию выгружать товары у которых “Статус остатка – В наличии.” и остаток при этом больше 0.
-				// Таким образом товары доступные в WooCommerce для предзаказа выгружаться по умолчанию не будут.
-				// А включением настройки "Экспорт товаров со статусом предзаказ" давать возможность отображать товары
-				// со “Статус остатка – В наличии.” и остатком 0 и меньше нуля. Тогда в ЯМ будут выгружаться и товары
-				// в предзаказе WooCommerce.
 				array(
 					'key'   => '_stock_status',
 					'value' => 'instock',
@@ -142,6 +137,23 @@ class ME_WC {
 			'orderby'   => 'ID',
 			'order'     => 'DESC',
 		);
+
+		// Support for backorders.
+		if ( isset( $this->settings['backorders'] ) && true === $this->settings['backorders'] ) {
+			array_pop( $args['meta_query'] );
+
+			$args['meta_query'][] = array(
+				'relation' => 'OR',
+				array(
+					'key'   => '_stock_status',
+					'value' => 'instock',
+				),
+				array(
+					'key'   => '_backorders',
+					'value' => 'yes',
+				),
+			);
+		}
 
 		// If in options some specific categories are defined for export only.
 		if ( isset( $this->settings['include_cat'] ) && ! empty( $this->settings['include_cat'] ) ) {
