@@ -652,6 +652,9 @@ class ME_WC {
 			if ( isset( $query ) && self::PRODUCTS_PER_QUERY < $query->found_posts ) {
 				// TODO: Products 101? Will be only one step, but we need two.
 				$steps = absint( $query->found_posts / self::PRODUCTS_PER_QUERY );
+				if ( $query->found_posts % self::PRODUCTS_PER_QUERY ) {
+					$steps++;
+				}
 			}
 		}
 
