@@ -13,6 +13,28 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 } else {
 	$tab = sanitize_text_field( wp_unslash( $_GET['tab'] ) ); // Input var ok.
 }
+
+$product = wc_get_product( 41 );
+
+var_dump( $product );
+
+foreach ( $product->get_children() as $product ) {
+	var_dump( $product
+	);
+}
+
+/* @var WC_Product_Variable $product */
+$variations = $product->get_available_variations();
+
+foreach ( $variations as $product ) {
+	var_dump(
+		$product
+	);
+}
+
+var_dump(
+	$product->get_id()
+);
 ?>
 
 <div class="wrap" id="me_pages">
