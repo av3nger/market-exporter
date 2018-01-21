@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Fired when the plugin is uninstalled.
  *
@@ -19,7 +18,10 @@
  * For more information, see the following discussion:
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
- * @since    0.0.1
+ * @link       https://github.com/av3nger/market-exporter/
+ * @since      0.0.1
+ *
+ * @package    Market_Exporter
  */
 
 // If uninstall not called from WordPress, then exit.

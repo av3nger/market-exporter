@@ -1,0 +1,37 @@
+{
+  "name": "market-exporter",
+  "version": "1.0.3",
+  "description": "Market Exporter provides a way to export products from WooCommerce installations into a YML file for use in Yandex Market.",
+  "scripts": {
+    "watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/av3nger/market-exporter.git"
+  },
+  "keywords": [
+    "market",
+    "export",
+    "yml",
+    "woocommerce",
+    "yandex market"
+  ],
+  "author": "Anton Vanyukov",
+  "license": "GPL-2.0+",
+  "bugs": {
+    "url": "https://github.com/av3nger/market-exporter/issues"
+  },
+  "homepage": "https://github.com/av3nger/market-exporter#readme",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.35",
+    "@babel/preset-env": "^7.0.0-beta.35",
+    "babel-loader": "^8.0.0-beta.0",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "jquery": "^3.3.1",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.10.0"
+  }
+}

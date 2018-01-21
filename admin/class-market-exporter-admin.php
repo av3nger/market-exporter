@@ -1,12 +1,23 @@
 <?php
 /**
- * Market Exporter: Market_Exporter_Admin class
+ * The admin-specific functionality of the plugin.
  *
- * The admin-specific functionality of the plugin. Defines the plugin name, version, and two examples hooks for
- * how to enqueue the admin-specific stylesheet and JavaScript.
+ * @link       https://github.com/av3nger/market-exporter/
+ * @since      0.0.1
  *
- * @package Market_Exporter
- * @since   0.0.1
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/admin
+ */
+
+/**
+ * The admin-specific functionality of the plugin.
+ *
+ * Defines the plugin name, version, and two examples hooks for how to
+ * enqueue the admin-specific stylesheet and JavaScript.
+ *
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/admin
+ * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
 class Market_Exporter_Admin {
 
@@ -15,27 +26,38 @@ class Market_Exporter_Admin {
 	 *
 	 * @since  0.0.1
 	 * @access private
-	 * @var    string $plugin_name The ID of this plugin.
+	 * @var    string  $plugin_name The ID of this plugin.
 	 */
 	private $plugin_name;
+
+	/**
+	 * The version of this plugin.
+	 *
+	 * @since  1.0.3
+	 * @access private
+	 * @var    string  $version  The current version of this plugin.
+	 */
+	private $version;
 
 	/**
 	 * Plugin options.
 	 *
 	 * @since  0.4.4
 	 * @access private
-	 * @var    array $options  Current plugin options.
+	 * @var    array   $options  Current plugin options.
 	 */
 	private $options;
 
 	/**
-	 * Initialize the class and set its properties.
+	 * Market_Exporter_Admin constructor.
 	 *
 	 * @since 0.0.1
-	 * @param string $plugin_name The name of this plugin.
+	 * @param string $plugin_name  The name of this plugin.
+	 * @param string $version      Plugin version.
 	 */
-	public function __construct( $plugin_name ) {
+	public function __construct( $plugin_name, $version ) {
 		$this->plugin_name = $plugin_name;
+		$this->version     = $version;
 		$this->options     = get_option( 'market_exporter_shop_settings' );
 	}
 
@@ -49,8 +71,7 @@ class Market_Exporter_Admin {
 		if ( 'woocommerce_page_market-exporter' !== $hook ) {
 			return;
 		}
-		wp_enqueue_style( "{$this->plugin_name}-select2", plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), null, 'all' );
-		wp_enqueue_style( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'css/market-exporter-admin.css', array(), null, 'all' );
+		wp_enqueue_style( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'css/app.css', array(), $this->version, 'all' );
 	}
 
 	/**
@@ -63,8 +84,7 @@ class Market_Exporter_Admin {
 		if ( 'woocommerce_page_market-exporter' !== $hook ) {
 			return;
 		}
-		wp_enqueue_script( "{$this->plugin_name}-select2", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), null, false );
-		wp_enqueue_script( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'js/market-exporter-admin.js', array( 'jquery' ), null, false );
+		wp_enqueue_script( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'js/app.js', array( 'jquery' ), $this->version, false );
 
 		wp_localize_script( "{$this->plugin_name}-admin", 'ajax_strings', array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -94,6 +114,7 @@ class Market_Exporter_Admin {
 	 * @since 0.0.1
 	 */
 	public function display_admin_page() {
+		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( __FILE__ ) . 'partials/market-exporter-admin-display.php';
 	}
 

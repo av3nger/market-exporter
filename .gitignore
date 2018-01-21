@@ -11,3 +11,10 @@ readme.txt
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# node stuff #
+composer.lock
+package-lock.json
+.saas-cache/
+node_modules
+npm-debug.log

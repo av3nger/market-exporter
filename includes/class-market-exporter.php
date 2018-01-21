@@ -1,13 +1,28 @@
 <?php
 /**
- * Market Exporter: Market_Exporter class
+ * The file that defines the core plugin class
+ *
+ * A class definition that includes attributes and functions used across both the
+ * public-facing side of the site and the admin area.
+ *
+ * @link       https://github.com/av3nger/market-exporter/
+ * @since      0.0.1
+ *
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ */
+
+/**
+ * The core plugin class.
  *
  * The core plugin class. This is used to define internationalization, admin-specific hooks, and
  * public-facing site hooks. Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @package Market_Exporter
- * @since   0.0.1
+ * @since      0.0.1
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
 class Market_Exporter {
 
@@ -34,11 +49,12 @@ class Market_Exporter {
 	 * The current version of the plugin.
 	 *
 	 * @since  0.0.1
-	 * @since  0.4.4            Changed from protected to public static.
+	 * @since  0.4.4  Changed from protected to public static.
+	 * @since  1.0.3  Changed back to protected.
 	 * @access protected
-	 * @var    string $version  The current version of the plugin.
+	 * @var    string $version The current version of the plugin.
 	 */
-	public static $version;
+	protected $version;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -50,9 +66,12 @@ class Market_Exporter {
 	 * @since 0.0.1
 	 */
 	public function __construct() {
-
+		if ( defined( 'MARKET_EXPORTER_VERSION' ) ) {
+			$this->version = MARKET_EXPORTER_VERSION;
+		} else {
+			$this->version = '0.0.1';
+		}
 		$this->plugin_name = 'market-exporter';
-		self::$version = '1.0.2';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -71,7 +90,6 @@ class Market_Exporter {
 		}
 
 		$this->define_admin_hooks();
-
 	}
 
 	/**
@@ -90,28 +108,31 @@ class Market_Exporter {
 	 * @access private
 	 */
 	private function load_dependencies() {
-
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
+		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-market-exporter-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
+		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-market-exporter-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
+		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-admin.php';
+		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-fs.php';
+		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-wc.php';
 
 		$this->loader = new Market_Exporter_Loader();
-
 	}
 
 	/**
@@ -124,12 +145,10 @@ class Market_Exporter {
 	 * @access private
 	 */
 	private function set_locale() {
-
 		$plugin_i18n = new Market_Exporter_i18n();
 		$plugin_i18n->set_domain( $this->get_plugin_name() );
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
@@ -139,8 +158,7 @@ class Market_Exporter {
 	 * @access private
 	 */
 	private function define_admin_hooks() {
-
-		$plugin_admin = new Market_Exporter_Admin( $this->get_plugin_name() );
+		$plugin_admin = new Market_Exporter_Admin( $this->get_plugin_name(), $this->get_version() );
 		$plugin_yml = new ME_WC();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -150,7 +168,7 @@ class Market_Exporter {
 		// Add Settings page.
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
 		// Add Settings link to plugin in plugins list.
-		$basename = plugin_basename( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
+		$basename = plugin_basename( MARKET_EXPORTER_PLUGIN_DIR . 'market-exporter.php' );
 		$this->loader->add_filter( "plugin_action_links_{$basename}", $plugin_admin, 'plugin_add_settings_link' );
 		// Add cron support.
 		$this->loader->add_action( 'market_exporter_cron', $plugin_yml, 'generate_yml' );
@@ -195,7 +213,6 @@ class Market_Exporter {
 	 *
 	 * @since      0.0.1
 	 * @return     string  The version number of the plugin.
-	 * @deprecated 0.4.4   Exchanged for public static variable.
 	 */
 	public function get_version() {
 		return $this->version;
@@ -211,16 +228,16 @@ class Market_Exporter {
 	 * @since 0.0.1
 	 */
 	public function run_plugin() {
-
-		if ( ! self::check_prerequisites() ) {
-			$plugins = get_option( 'active_plugins' );
-			$market_exporter = plugin_basename( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
-			if ( in_array( $market_exporter, $plugins ) ) {
-				unset( $_GET['activate'] );
-				deactivate_plugins( MARKET_EXPORTER__PLUGIN_DIR . 'market-exporter.php' );
-			}
+		if ( self::check_prerequisites() ) {
+			return;
 		}
 
+		$plugins = get_option( 'active_plugins' );
+		$market_exporter = plugin_basename( MARKET_EXPORTER_PLUGIN_DIR . 'market-exporter.php' );
+		if ( in_array( $market_exporter, $plugins, true ) ) {
+			unset( $_GET['activate'] ); // Input var okay.
+			deactivate_plugins( MARKET_EXPORTER_PLUGIN_DIR . 'market-exporter.php' );
+		}
 	}
 
 	/**
@@ -231,10 +248,11 @@ class Market_Exporter {
 	 * Check if WooCommerce is active using is_plugin_active().
 	 *
 	 * @since  0.0.1
+	 * @since  1.0.3  Changed access method from public to private.
+	 * @access private
 	 * @return bool
 	 */
-	public static function check_prerequisites() {
-
+	private static function check_prerequisites() {
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
@@ -245,7 +263,6 @@ class Market_Exporter {
 		}
 
 		return true;
-
 	}
 
 	/**

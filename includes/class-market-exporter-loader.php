@@ -1,13 +1,24 @@
 <?php
 /**
- * Market Exporter: Market_Exporter_Loader class
+ * Register all actions and filters for the plugin
  *
- * Register all actions and filters for the plugin. Maintain a list of all hooks that are registered throughout
- * the plugin, and register them with the WordPress API. Call the run function to execute the list of actions
- * and filters.
+ * @link       https://github.com/av3nger/market-exporter/
+ * @since      0.0.1
  *
- * @package Market_Exporter
- * @since   0.0.1
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ */
+
+/**
+ * Register all actions and filters for the plugin.
+ *
+ * Maintain a list of all hooks that are registered throughout
+ * the plugin, and register them with the WordPress API. Call the
+ * run function to execute the list of actions and filters.
+ *
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
 class Market_Exporter_Loader {
 
@@ -35,10 +46,8 @@ class Market_Exporter_Loader {
 	 * @since 0.0.1
 	 */
 	public function __construct() {
-
 		$this->actions = array();
 		$this->filters = array();
-
 	}
 
 	/**
@@ -84,7 +93,6 @@ class Market_Exporter_Loader {
 	 * @return  array                 The collection of actions and filters registered with WordPress.
 	 */
 	private function add( $hooks, $hook, $component, $callback, $priority, $accepted_args ) {
-
 		$hooks[] = array(
 			'hook'          => $hook,
 			'component'     => $component,
@@ -94,7 +102,6 @@ class Market_Exporter_Loader {
 		);
 
 		return $hooks;
-
 	}
 
 	/**
@@ -103,7 +110,6 @@ class Market_Exporter_Loader {
 	 * @since 0.0.1
 	 */
 	public function run() {
-
 		foreach ( $this->filters as $hook ) {
 			add_filter( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args'] );
 		}
@@ -111,7 +117,6 @@ class Market_Exporter_Loader {
 		foreach ( $this->actions as $hook ) {
 			add_action( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args'] );
 		}
-
 	}
 
 }

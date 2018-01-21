@@ -1,12 +1,27 @@
 <?php
 /**
- * Market Exporter: Market_Exporter_i18n class
+ * Define the internationalization functionality
  *
- * Define the internationalization functionality. Loads and defines the internationalization files for this plugin
+ * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @package Market_Exporter
- * @since   0.0.1
+ * @link       https://github.com/av3nger/market-exporter/
+ * @since      0.0.1
+ *
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ */
+
+/**
+ * Define the internationalization functionality.
+ *
+ * Loads and defines the internationalization files for this plugin
+ * so that it is ready for translation.
+ *
+ * @since      0.0.1
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
 class Market_Exporter_i18n {
 
@@ -25,13 +40,11 @@ class Market_Exporter_i18n {
 	 * @since 0.0.1
 	 */
 	public function load_plugin_textdomain() {
-
 		load_plugin_textdomain(
 			$this->domain,
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);
-
 	}
 
 	/**

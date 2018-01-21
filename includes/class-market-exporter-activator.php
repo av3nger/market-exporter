@@ -1,11 +1,23 @@
 <?php
 /**
- * Market Exporter: Market_Exporter_Activator class
+ * Fired during plugin activation
  *
- * This class defines all code necessary to run during the plugin's activation. Fired during plugin activation.
+ * @link       https://github.com/av3nger/market-exporter/
+ * @since      0.0.1
  *
- * @package Market_Exporter
- * @since   0.0.1
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ */
+
+/**
+ * Fired during plugin activation.
+ *
+ * This class defines all code necessary to run during the plugin's activation.
+ *
+ * @since      0.0.1
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
 class Market_Exporter_Activator {
 
@@ -66,7 +78,7 @@ class Market_Exporter_Activator {
 		}
 
 		// Update version.
-		update_option( 'market_exporter_version', Market_Exporter::$version );
+		update_option( 'market_exporter_version', MARKET_EXPORTER_VERSION );
 	}
 
 	/**

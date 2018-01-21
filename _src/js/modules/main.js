@@ -1,4 +1,7 @@
-(function( $ ) {
+import $ from 'jquery';
+import '../modules/select2';
+
+$(() => {
 	'use strict';
 
 	/**
@@ -44,17 +47,16 @@
 
 		// Disable multiselect if user wants to export all params.
 		$('input#params_all').on('click', function() {
-			var paramSelect = $('select#params');
-			var paramCheckbox = $(this).prop( 'checked' );
+			const paramSelect = $('select#params');
+			const paramCheckbox = $(this).prop( 'checked' );
 			paramSelect.prop( 'disabled', paramCheckbox );
 		});
-    });
-
-})( jQuery );
+	});
+});
 
 function toggle(source) {
-  var checkboxes = document.getElementsByName('files[]');
-  for ( var i=0, n=checkboxes.length; i<n; i++ ) {
+  const checkboxes = document.getElementsByName('files[]');
+  for ( let i=0, n=checkboxes.length; i<n; i++ ) {
     checkboxes[i].checked = source.checked;
   }
 }

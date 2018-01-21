@@ -2,20 +2,28 @@
 /**
  * The plugin bootstrap file
  *
- * @package Market Exporter
+ * This file is read by WordPress to generate the plugin information in the plugin
+ * admin area. This file also includes all of the dependencies used by the plugin,
+ * registers the activation and deactivation functions, and defines a function
+ * that starts the plugin.
+ *
+ * @link              https://github.com/av3nger/market-exporter/
+ * @since             0.0.1
+ * @package           Market_Exporter
  *
  * @wordpress-plugin
- * Plugin Name: Market Exporter
- * Plugin URI: https://github.com/av3nger/market-exporter/
- * Description: Market Exporter provides a way to export products from WooCommerce installations into a YML file for use in Yandex Market.
- * Version: 1.0.2
- * Author: Anton Vanyukov
- * Author URI: http://www.vanyukov.su
- * License: GPLv2 or later
- * Text Domain: market-exporter
- * Domain Path: /languages
+ * Plugin Name:       Market Exporter
+ * Plugin URI:        https://github.com/av3nger/market-exporter/
+ * Description:       Market Exporter provides a way to export products from WooCommerce installations into a YML file for use in Yandex Market.
+ * Version:           1.0.2
+ * Author:            Anton Vanyukov
+ * Author URI:        http://www.vanyukov.su
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       market-exporter
+ * Domain Path:       /languages
  * WC requires at least: 2.6.9
- * WC tested up to: 3.2.1
+ * WC tested up to:      3.2.1
  */
 
 // If this file is called directly, abort.
@@ -23,8 +31,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Glogal variables.
-define( 'MARKET_EXPORTER__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+/**
+ * Currently plugin version.
+ * Start at version 1.0.0 and use SemVer - https://semver.org
+ * Rename this for your plugin and update it as you release new versions.
+ */
+define( 'MARKET_EXPORTER_VERSION', '1.0.2' );
+
+/**
+ * Plugin directory.
+ */
+define( 'MARKET_EXPORTER_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 /**
  * The code that runs during plugin activation.
@@ -33,6 +50,7 @@ define( 'MARKET_EXPORTER__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
  * @since 0.0.1
  */
 function activate_market_exporter() {
+	/* @noinspection PhpIncludeInspection */
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-market-exporter-activator.php';
 	Market_Exporter_Activator::activate();
 }
@@ -44,6 +62,7 @@ function activate_market_exporter() {
  * @since 0.0.1
  */
 function deactivate_market_exporter() {
+	/* @noinspection PhpIncludeInspection */
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-market-exporter-deactivator.php';
 	Market_Exporter_Deactivator::deactivate();
 }
@@ -55,6 +74,7 @@ register_deactivation_hook( __FILE__, 'deactivate_market_exporter' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
+/* @noinspection PhpIncludeInspection */
 require plugin_dir_path( __FILE__ ) . 'includes/class-market-exporter.php';
 
 /**
