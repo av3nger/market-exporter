@@ -15,7 +15,7 @@
  * Text Domain: market-exporter
  * Domain Path: /languages
  * WC requires at least: 2.6.9
- * WC tested up to: 3.2.1
+ * WC tested up to: 3.3.3
  */
 
 // If this file is called directly, abort.

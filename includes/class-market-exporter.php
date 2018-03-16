@@ -139,7 +139,6 @@ class Market_Exporter {
 	 * @access private
 	 */
 	private function define_admin_hooks() {
-
 		$plugin_admin = new Market_Exporter_Admin( $this->get_plugin_name() );
 		$plugin_yml = new ME_WC();
 
