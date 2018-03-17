@@ -18,6 +18,14 @@ class Market_Exporter_FS {
 	private $plugin_name;
 
 	/**
+	 * Use WP_Filesystem API.
+	 *
+	 * @since 1.0.4
+	 * @var bool $fs_api
+	 */
+	private $fs_api = false;
+
+	/**
 	 * Market_Exporter_FS constructor.
 	 *
 	 * @param string $plugin_name Plugin slug.
@@ -40,22 +48,26 @@ class Market_Exporter_FS {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 		}
 
-		$credentials = request_filesystem_credentials( $url, '', false, false, null );
-		if ( false === ( $credentials ) ) {
-			// If we get here, then we don't have credentials yet,
-			// but have just produced a form for the user to fill in,
-			// so stop processing for now.
-			return true; // Stop the normal page form from displaying.
+		// Check if the user has write permissions.
+		$access_type = get_filesystem_method();
+		if ( 'direct' === $access_type ) {
+			$this->fs_api = true;
+
+			// You can safely run request_filesystem_credentials() without any issues
+			// and don't need to worry about passing in a URL.
+			$credentials = request_filesystem_credentials( $url, '', false, false, null );
+
+			// Mow we have some credentials, try to get the wp_filesystem running.
+			if ( ! WP_Filesystem( $credentials ) ) {
+				// Our credentials were no good, ask the user for them again.
+				return false;
+			}
+		} else {
+			// Don't have direct write access.
+			$this->fs_api = false;
 		}
 
-		// Mow we have some credentials, try to get the wp_filesystem running.
-		if ( ! WP_Filesystem( $credentials ) ) {
-			// Our credentials were no good, ask the user for them again.
-			request_filesystem_credentials( $url, '', true, false, null );
-
-			return true;
-		}
-
+		$this->fs_api = false;
 		return true;
 	}
 
@@ -73,10 +85,6 @@ class Market_Exporter_FS {
 			return false;
 		}
 
-		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
-		/* @var WP_Filesystem_Base $wp_filesystem */
-		global $wp_filesystem;
-
 		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.
 		$upload_dir = wp_upload_dir();
 		$folder     = trailingslashit( $upload_dir['basedir'] ) . trailingslashit( $this->plugin_name );
@@ -88,15 +96,36 @@ class Market_Exporter_FS {
 
 		$filepath = $folder . $filename;
 
-		// Check if 'uploads/market-exporter' folder exists. If not - create it.
-		if ( ! $wp_filesystem->exists( $folder ) ) {
-			if ( ! $wp_filesystem->mkdir( $folder, FS_CHMOD_DIR ) ) {
-				esc_html_e( 'Error creating directory.', 'market-exporter' );
+		// Use WP_Filesystem API.
+		if ( $this->fs_api ) {
+			// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
+			/* @var WP_Filesystem_Base $wp_filesystem */
+			global $wp_filesystem;
+
+			// Check if 'uploads/market-exporter' folder exists. If not - create it.
+			if ( ! $wp_filesystem->exists( $folder ) ) {
+				if ( ! $wp_filesystem->mkdir( $folder, FS_CHMOD_DIR ) ) {
+					esc_html_e( 'Error creating directory.', 'market-exporter' );
+				}
 			}
-		}
-		// Create the file.
-		if ( ! $wp_filesystem->put_contents( $filepath, $yml, FS_CHMOD_FILE ) ) {
-			esc_html_e( 'Error uploading file.', 'market-exporter' );
+			// Create the file.
+			if ( ! $wp_filesystem->put_contents( $filepath, $yml, FS_CHMOD_FILE ) ) {
+				esc_html_e( 'Error uploading file.', 'market-exporter' );
+			}
+		} else {
+			// Check if 'uploads/market-exporter' folder exists. If not - create it.
+			if ( ! is_dir( $folder ) ) {
+				if ( ! @wp_mkdir_p( $folder ) ) {
+					esc_html_e( 'Error creating directory.', 'market-exporter' );
+				}
+			}
+			// Create the file.
+			$file = fopen( $filepath, 'w' );
+			if ( ! fwrite( $file, $yml ) ) {
+				esc_html_e( 'Error uploading file.', 'market-exporter' );
+			} elseif ( $file ) {
+				fclose( $file );
+			}
 		}
 
 		return $upload_dir['baseurl'] . '/' . $this->plugin_name . '/' . $filename;
@@ -114,15 +143,29 @@ class Market_Exporter_FS {
 			return false;
 		}
 
-		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
-		/* @var WP_Filesystem_Base $wp_filesystem */
-		global $wp_filesystem;
-
 		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.
 		$upload_dir = wp_upload_dir();
 		$folder     = trailingslashit( $upload_dir['basedir'] ) . trailingslashit( $this->plugin_name );
 
-		return $wp_filesystem->dirlist( $folder );
+		// Use WP_Filesystem API.
+		if ( $this->fs_api ) {
+			// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
+			/* @var WP_Filesystem_Base $wp_filesystem */
+			global $wp_filesystem;
+			return $wp_filesystem->dirlist( $folder );
+		} else {
+			$dir = scandir( $folder );
+			// Let's form the same array as dirlist provides.
+			$structure = array();
+			foreach ( $dir as $directory ) {
+				if ( '.' === $directory || '..' === $directory ) {
+					continue;
+				}
+
+				$structure[ $directory ]['name'] = $directory;
+			}
+			return $structure;
+		}
 	}
 
 	/**
@@ -138,16 +181,23 @@ class Market_Exporter_FS {
 			return false;
 		}
 
-		// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
-		/* @var WP_Filesystem_Base $wp_filesystem */
-		global $wp_filesystem;
-
 		// Get the upload directory and make a ym-export-YYYY-mm-dd.yml file.
 		$upload_dir = wp_upload_dir();
 		$folder     = trailingslashit( $upload_dir['basedir'] ) . trailingslashit( $this->plugin_name );
 
-		foreach ( $files as $file ) {
-			$wp_filesystem->delete( $folder . $file );
+		// Use WP_Filesystem API.
+		if ( $this->fs_api ) {
+			// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
+			/* @var WP_Filesystem_Base $wp_filesystem */
+			global $wp_filesystem;
+
+			foreach ( $files as $file ) {
+				$wp_filesystem->delete( $folder . $file );
+			}
+		} else {
+			foreach ( $files as $file ) {
+				@unlink( $folder . $file );
+			}
 		}
 
 		return true;
