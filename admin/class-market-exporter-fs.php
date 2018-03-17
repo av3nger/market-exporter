@@ -67,7 +67,6 @@ class Market_Exporter_FS {
 			$this->fs_api = false;
 		}
 
-		$this->fs_api = false;
 		return true;
 	}
 
