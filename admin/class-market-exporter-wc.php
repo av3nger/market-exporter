@@ -335,7 +335,7 @@ class ME_WC {
 					if ( isset( $cost ) || isset( $days ) || isset( $order_before ) ) {
 						$cost = isset( $cost ) ? $cost[0] : $this->settings['cost'];
 						$days = isset( $days ) ? $days[0] : $this->settings['days'];
-						$order_before = isset( $order_before ) ? $order_before[0] : $this->settings['order_before'];
+						$order_before = isset( $order_before ) ? $order_before[0] : '';
 
 						$yml .= '        <delivery-options>' . PHP_EOL;
 						if ( isset( $order_before ) && ! empty( $order_before ) ) {
