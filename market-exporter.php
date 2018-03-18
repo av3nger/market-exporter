@@ -10,7 +10,7 @@
  * Description: Market Exporter provides a way to export products from WooCommerce installations into a YML file for use in Yandex Market.
  * Version: 1.0.3
  * Author: Anton Vanyukov
- * Author URI: http://www.vanyukov.su
+ * Author URI: https://www.vanyukov.su
  * License: GPLv2 or later
  * Text Domain: market-exporter
  * Domain Path: /languages
