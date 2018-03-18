@@ -326,6 +326,25 @@ class ME_WC {
 					$yml     .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
 				}
 
+				// Delivery-options.
+				if ( isset( $this->settings['delivery_options'] ) && $this->settings['delivery_options'] ) {
+					$cost = get_post_custom_values( 'me_do_cost', $product->get_id() );
+					$days = get_post_custom_values( 'me_do_days', $product->get_id() );
+
+					if ( isset( $cost ) || isset( $days ) ) {
+						$cost = isset( $cost ) ? $cost[0] : $this->settings['cost'];
+						$days = isset( $days ) ? $days[0] : $this->settings['days'];
+
+						$yml .= '        <delivery-options>' . PHP_EOL;
+						if ( isset( $this->settings['order_before'] ) && ! empty( $this->settings['order_before'] ) ) {
+							$yml .= '        <option cost="' . $cost . '" days="' . $days . '" order-before="' . $this->settings['order_before'] . '"/>';
+						} else {
+							$yml .= '        <option cost="' . $cost . '" days="' . $days . '"/>';
+						}
+						$yml .= '        </delivery-options>' . PHP_EOL;
+					}
+				}
+
 				// Get images.
 				$main_image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
 				// If no image found for product, it's probably a variation without an image, get the image from parent.
