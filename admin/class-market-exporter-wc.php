@@ -227,6 +227,23 @@ class ME_WC {
 			}
 		endforeach;
 		$yml .= '    </categories>' . PHP_EOL;
+
+		// Settings for delivery-options.
+		if ( isset( $this->settings['delivery_options'] ) && $this->settings['delivery_options'] ) {
+			$yml .= '    <delivery-options>' . PHP_EOL;
+
+			$cost = $this->settings['cost'];
+			$days = $this->settings['days'];
+
+			if ( isset( $this->settings['order_before'] ) && ! empty( $this->settings['order_before'] ) ) {
+				$yml .= '        <option cost="' . $cost . '" days="' . $days . '" order-before="' . $this->settings['order_before'] . '"/>';
+			} else {
+				$yml .= '        <option cost="' . $cost . '" days="' . $days . '"/>';
+			}
+
+			$yml .= '    </delivery-options>' . PHP_EOL;
+		}
+
 		$yml .= '    <offers>' . PHP_EOL;
 
 		return $yml;
@@ -307,6 +324,27 @@ class ME_WC {
 				if ( $categories ) {
 					$category = array_shift( $categories );
 					$yml     .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+				}
+
+				// Delivery-options.
+				if ( isset( $this->settings['delivery_options'] ) && $this->settings['delivery_options'] ) {
+					$cost         = get_post_custom_values( 'me_do_cost', $product->get_id() );
+					$days         = get_post_custom_values( 'me_do_days', $product->get_id() );
+					$order_before = get_post_custom_values( 'me_do_order_before', $product->get_id() );
+
+					if ( isset( $cost ) || isset( $days ) || isset( $order_before ) ) {
+						$cost = isset( $cost ) ? $cost[0] : $this->settings['cost'];
+						$days = isset( $days ) ? $days[0] : $this->settings['days'];
+						$order_before = isset( $order_before ) ? $order_before[0] : '';
+
+						$yml .= '        <delivery-options>' . PHP_EOL;
+						if ( isset( $order_before ) && ! empty( $order_before ) ) {
+							$yml .= '        <option cost="' . $cost . '" days="' . $days . '" order-before="' . $order_before . '"/>';
+						} else {
+							$yml .= '        <option cost="' . $cost . '" days="' . $days . '"/>';
+						}
+						$yml .= '        </delivery-options>' . PHP_EOL;
+					}
 				}
 
 				// Get images.
