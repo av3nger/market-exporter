@@ -227,6 +227,23 @@ class ME_WC {
 			}
 		endforeach;
 		$yml .= '    </categories>' . PHP_EOL;
+
+		// Settings for delivery-options.
+		if ( isset( $this->settings['delivery_options'] ) && $this->settings['delivery_options'] ) {
+			$yml .= '    <delivery-options>' . PHP_EOL;
+
+			$cost = $this->settings['cost'];
+			$days = $this->settings['days'];
+
+			if ( isset( $this->settings['order_before'] ) && ! empty( $this->settings['order_before'] ) ) {
+				$yml .= '        <option cost="' . $cost . '" days="' . $days . '" order-before="' . $this->settings['order_before'] . '"/>';
+			} else {
+				$yml .= '        <option cost="' . $cost . '" days="' . $days . '"/>';
+			}
+
+			$yml .= '    </delivery-options>' . PHP_EOL;
+		}
+
 		$yml .= '    <offers>' . PHP_EOL;
 
 		return $yml;

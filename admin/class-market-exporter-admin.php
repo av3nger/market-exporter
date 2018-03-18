@@ -442,6 +442,70 @@ class Market_Exporter_Admin {
 
 		/**
 		 **************************
+		 * Delivery options settings
+		 **************************
+		 */
+		// Add all parameters select.
+		add_settings_field(
+			'market_exporter_delivery_options',
+			__( 'Use delivery-options', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_delivery',
+			array(
+				'label_for'   => 'delivery_options',
+				'description' => __( 'Use delivery-options parameters defined below. Global options.', 'market-exporter' ),
+				'type'        => 'checkbox',
+			)
+		);
+
+		// Cost element.
+		add_settings_field(
+			'market_exporter_cost',
+			__( 'Cost', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_delivery',
+			array(
+				'label_for'   => 'cost',
+				'placeholder' => __( '100', 'market-exporter' ),
+				'description' => __( 'Delivery-options cost element. Used to indicate the price of delivery. Use maximum value if cost is differs for different locations.', 'market-exporter' ),
+				'type'        => 'text',
+			)
+		);
+
+		// Days element.
+		add_settings_field(
+			'market_exporter_days',
+			__( 'Days', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_delivery',
+			array(
+				'label_for'   => 'days',
+				'placeholder' => __( '0, 1, 2, 3-5, etc', 'market-exporter' ),
+				'description' => __( 'Delivery-options days element. Either a value or a range for the actual days it takes to deliver a product.', 'market-exporter' ),
+				'type'        => 'text',
+			)
+		);
+
+		// Days element.
+		add_settings_field(
+			'market_exporter_order_before',
+			__( 'Order before', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_delivery',
+			array(
+				'label_for'   => 'order_before',
+				'placeholder' => __( '0-24', 'market-exporter' ),
+				'description' => __( 'Delivery-options order-before element. Accepts values from 0 to 24. If the order is made before this time, delivery will be on time.', 'market-exporter' ),
+				'type'        => 'text',
+			)
+		);
+
+		/**
+		 **************************
 		 * Extra settings
 		 **************************
 		 */
@@ -494,16 +558,18 @@ class Market_Exporter_Admin {
 	 * @param array $args Arguments array.
 	 */
 	public function input_fields_cb( $args ) {
-		if ( 'text' === esc_attr( $args['type'] ) || 'checkbox' === esc_attr( $args['type'] ) ) : ?>
+		if ( 'text' === esc_attr( $args['type'] ) || 'checkbox' === esc_attr( $args['type'] ) ) :
+			$value = isset( $this->options[ $args['label_for'] ] ) ? $this->options[ $args['label_for'] ] : false;
+			?>
 
 			<input id="<?php echo esc_attr( $args['label_for'] ); ?>"
 				   type="<?php echo esc_attr( $args['type'] ); ?>"
 				   name="market_exporter_shop_settings[<?php echo esc_attr( $args['label_for'] ); ?>]"
-				   value="<?php echo esc_attr( $this->options[ $args['label_for'] ] ); ?>"
+				   value="<?php echo esc_attr( $value ); ?>"
 					<?php if ( 'text' === esc_attr( $args['type'] ) ) :?>
 						placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>"
 					<?php endif; ?>
-					<?php echo ( 'checkbox' === esc_attr( $args['type'] ) ) ? checked( $this->options[ $args['label_for'] ] ) : ''; ?>
+					<?php echo ( 'checkbox' === esc_attr( $args['type'] ) ) ? checked( $value ) : ''; ?>
 			>
 
 		<?php elseif ( 'textarea' === esc_attr( $args['type'] ) ) : ?>
@@ -675,6 +741,17 @@ class Market_Exporter_Admin {
 		$output['delivery'] = sanitize_text_field( $input['delivery'] );
 		$output['pickup']   = sanitize_text_field( $input['pickup'] );
 		$output['store']    = sanitize_text_field( $input['store'] );
+
+		/**
+		 * Delivery-options settings.
+		 */
+		$output['delivery_options'] = isset( $input['delivery_options'] ) ? true : false;
+		$output['cost']             = isset( $input['cost'] ) ? absint( $input['cost'] ) : 0;
+		$output['days']             = isset( $input['days'] ) ? sanitize_text_field( $input['days'] ) : '';
+		$output['order_before']     = '';
+		if ( isset( $input['order_before'] ) && ! empty( $input['order_before'] ) ) {
+			$output['order_before'] = absint( $input['order_before'] );
+		}
 
 		/**
 		 * Extra options.

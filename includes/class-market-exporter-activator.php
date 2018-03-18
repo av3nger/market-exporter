@@ -45,6 +45,10 @@ class Market_Exporter_Activator {
 				'delivery'         => 'disabled',
 				'pickup'           => 'disabled',
 				'store'            => 'disabled',
+				'delivery_options' => false,
+				'cost'             => 0,
+				'days'             => '',
+				'order_before'     => '',
 				'description'      => 'default',
 				'update_on_change' => false,
 			);
