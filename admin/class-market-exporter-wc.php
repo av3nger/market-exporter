@@ -432,7 +432,10 @@ class ME_WC {
 				}
 
 				// Sales notes.
-				if ( strlen( $this->settings['sales_notes'] ) > 0 ) {
+				$sales = get_post_custom_values( 'me_sales_notes', $product->get_id() );
+				if ( isset( $sales ) ) {
+					$yml .= '        <sales_notes>' . $sales[0] . '</sales_notes>' . PHP_EOL;
+				} elseif ( strlen( $this->settings['sales_notes'] ) > 0 ) {
 					$yml .= '        <sales_notes>' . wp_strip_all_tags( $this->settings['sales_notes'] ) . '</sales_notes>' . PHP_EOL;
 				}
 
