@@ -120,11 +120,6 @@ class ME_WC {
 					'compare' => '>',
 					'type'  => 'NUMERIC',
 				),
-				// TODO: по умолчанию выгружать товары у которых “Статус остатка – В наличии.” и остаток при этом больше 0.
-				// Таким образом товары доступные в WooCommerce для предзаказа выгружаться по умолчанию не будут.
-				// А включением настройки "Экспорт товаров со статусом предзаказ" давать возможность отображать товары
-				// со “Статус остатка – В наличии.” и остатком 0 и меньше нуля. Тогда в ЯМ будут выгружаться и товары
-				// в предзаказе WooCommerce.
 				array(
 					'key'   => '_stock_status',
 					'value' => 'instock',
@@ -133,6 +128,23 @@ class ME_WC {
 			'orderby'   => 'ID',
 			'order'     => 'DESC',
 		);
+
+		// Support for backorders.
+		if ( isset( $this->settings['backorders'] ) && true === $this->settings['backorders'] ) {
+			array_pop( $args['meta_query'] );
+
+			$args['meta_query'][] = array(
+				'relation' => 'OR',
+				array(
+					'key'   => '_stock_status',
+					'value' => 'instock',
+				),
+				array(
+					'key'   => '_backorders',
+					'value' => 'yes',
+				),
+			);
+		}
 
 		// If in options some specific categories are defined for export only.
 		if ( isset( $this->settings['include_cat'] ) && ! empty( $this->settings['include_cat'] ) ) {
@@ -215,6 +227,23 @@ class ME_WC {
 			}
 		endforeach;
 		$yml .= '    </categories>' . PHP_EOL;
+
+		// Settings for delivery-options.
+		if ( isset( $this->settings['delivery_options'] ) && $this->settings['delivery_options'] ) {
+			$yml .= '    <delivery-options>' . PHP_EOL;
+
+			$cost = $this->settings['cost'];
+			$days = $this->settings['days'];
+
+			if ( isset( $this->settings['order_before'] ) && ! empty( $this->settings['order_before'] ) ) {
+				$yml .= '        <option cost="' . $cost . '" days="' . $days . '" order-before="' . $this->settings['order_before'] . '"/>';
+			} else {
+				$yml .= '        <option cost="' . $cost . '" days="' . $days . '"/>';
+			}
+
+			$yml .= '    </delivery-options>' . PHP_EOL;
+		}
+
 		$yml .= '    <offers>' . PHP_EOL;
 
 		return $yml;
@@ -246,10 +275,10 @@ class ME_WC {
 			 * That means that there is at least one product available.
 			 * Variation products will have more than 1 count.
 			 */
-			$variations = array();
+			$variations      = array();
 			$variation_count = 1;
 			if ( $product->is_type( 'variable' ) ) :
-				$variations = $product->get_available_variations();
+				$variations      = $product->get_available_variations();
 				$variation_count = count( $variations );
 			endif;
 
@@ -294,7 +323,28 @@ class ME_WC {
 				// TODO: display error message if category is not set for product.
 				if ( $categories ) {
 					$category = array_shift( $categories );
-					$yml .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+					$yml     .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+				}
+
+				// Delivery-options.
+				if ( isset( $this->settings['delivery_options'] ) && $this->settings['delivery_options'] ) {
+					$cost         = get_post_custom_values( 'me_do_cost', $product->get_id() );
+					$days         = get_post_custom_values( 'me_do_days', $product->get_id() );
+					$order_before = get_post_custom_values( 'me_do_order_before', $product->get_id() );
+
+					if ( isset( $cost ) || isset( $days ) || isset( $order_before ) ) {
+						$cost = isset( $cost ) ? $cost[0] : $this->settings['cost'];
+						$days = isset( $days ) ? $days[0] : $this->settings['days'];
+						$order_before = isset( $order_before ) ? $order_before[0] : '';
+
+						$yml .= '        <delivery-options>' . PHP_EOL;
+						if ( isset( $order_before ) && ! empty( $order_before ) ) {
+							$yml .= '        <option cost="' . $cost . '" days="' . $days . '" order-before="' . $order_before . '"/>';
+						} else {
+							$yml .= '        <option cost="' . $cost . '" days="' . $days . '"/>';
+						}
+						$yml .= '        </delivery-options>' . PHP_EOL;
+					}
 				}
 
 				// Get images.
@@ -317,10 +367,18 @@ class ME_WC {
 				if ( count( $attachment_ids ) > 9 ) {
 					$attachment_ids = array_slice( $attachment_ids, 0, 9 );
 				}
-				foreach ( $attachment_ids as $id ) {
-					$image = wp_get_attachment_url( $id );
-					if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
-						$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+				if ( 1 < $this->settings['image_count'] ) {
+					$exported = 1;
+					while ( $exported < $this->settings['image_count'] ) {
+						if ( ! isset( $attachment_ids[ $exported ] ) ) {
+							break;
+						}
+
+						$image = wp_get_attachment_url( $attachment_ids[ $exported ] );
+						if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
+							$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+						}
+						$exported++;
 					}
 				}
 
@@ -356,7 +414,7 @@ class ME_WC {
 
 				// Model.
 				if ( isset( $this->settings['model'] ) && 'not_set' !== $this->settings['model'] ) {
-					$model = $offer->get_attribute( 'pa_' . $this->settings['model'] );
+					$model = $product->get_attribute( 'pa_' . $this->settings['model'] );
 					if ( $model ) {
 						$yml .= '        <model>' . wp_strip_all_tags( $model ) . '</model>' . PHP_EOL;
 					}
@@ -395,7 +453,7 @@ class ME_WC {
 				}
 
 				// Params: size and weight.
-				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) :
+				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) {
 					$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
 					if ( $offer->has_weight() && 'kg' === $weight_unit ) {
 						$yml .= '        <weight>' . $offer->get_weight() . '</weight>' . PHP_EOL;
@@ -418,12 +476,12 @@ class ME_WC {
 
 						$yml .= '        <dimensions>' . $dimensions . '</dimensions>' . PHP_EOL;
 					}
-				endif;
+				}
 
 				// Params: selected parameters.
 				if ( isset( $this->settings['params'] ) && ! empty( $this->settings['params'] ) ) {
 					$attributes = $product->get_attributes();
-					foreach ( $this->settings['params'] as $param_id ) :
+					foreach ( $this->settings['params'] as $param_id ) {
 						// Encode the name, because cyrillic letters won't work in array_key_exists.
 						// TODO: this is the worst possible solution. REFACTOR!
 						$selected_attribute = urlencode( wc_attribute_taxonomy_name_by_id( $param_id ) );
@@ -441,23 +499,32 @@ class ME_WC {
 						}
 
 						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $param_value . '</param>' . PHP_EOL;
-					endforeach;
+					}
 				} elseif ( isset( $this->settings['params_all'] ) && $this->settings['params_all'] ) {
 					$attributes = $product->get_attributes();
-					/* @var WC_Product_Attribute $param */
-					foreach ( $attributes as $param ) :
+					/* @var WC_Product_Attribute|array $param */
+					foreach ( $attributes as $param ) {
+						if ( self::woo_latest_versions() ) {
+							$taxonomy = wc_attribute_taxonomy_name_by_id( $param->get_id() );
+						} else {
+							$taxonomy = $param['name'];
+						}
 
 						if ( true === $param['variation'] ) {
-							$param_value = $offer->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
+							$param_value = $offer->get_attribute( $taxonomy );
 						} else {
 							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
 						}
 
 						/* @var WC_Product_Attribute $param */
-						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param->get_id() ) ) . '">' . $param_value . '</param>' . PHP_EOL;
-					endforeach;
-				}
+						$yml .= '        <param name="' . wc_attribute_label( $taxonomy ) . '">' . $param_value . '</param>' . PHP_EOL;
+					}
+				} // End if().
 
+				// Downloadable.
+				if ( $product->is_downloadable() ) {
+					$yml .= '        <downloadable>true</downloadable>';
+				}
 
 				$yml .= '      </offer>' . PHP_EOL;
 			endwhile;
