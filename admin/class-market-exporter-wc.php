@@ -312,7 +312,7 @@ class ME_WC {
 					$yml .= '        <price>' . $offer->get_sale_price() . '</price>' . PHP_EOL;
 					$yml .= '        <oldprice>' . $offer->get_regular_price() . '</oldprice>' . PHP_EOL;
 				} else {
-					$yml .= '        <price>' . $offer->get_regular_price() . '</price>' . PHP_EOL;
+					$yml .= '        <price>' . apply_filters( 'me_product_price', $offer->get_regular_price(), $offer->get_id() ) . '</price>' . PHP_EOL;
 				}
 
 				$yml .= '        <currencyId>' . $currency . '</currencyId>' . PHP_EOL;
