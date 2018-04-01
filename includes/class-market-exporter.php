@@ -69,7 +69,7 @@ class Market_Exporter {
 		if ( defined( 'MARKET_EXPORTER_VERSION' ) ) {
 			$this->version = MARKET_EXPORTER_VERSION;
 		} else {
-			$this->version = '0.0.1';
+			$this->version = '1.1.0';
 		}
 		$this->plugin_name = 'market-exporter';
 

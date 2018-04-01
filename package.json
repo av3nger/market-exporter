@@ -1,6 +1,6 @@
 {
   "name": "market-exporter",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Market Exporter provides a way to export products from WooCommerce installations into a YML file for use in Yandex Market.",
   "scripts": {
     "watch": "webpack --watch"
