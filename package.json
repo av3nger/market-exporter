@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/av3nger/market-exporter.git"
+    "url": "https://github.com/av3nger/market-exporter.git"
   },
   "keywords": [
     "market",
