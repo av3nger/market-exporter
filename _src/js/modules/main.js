@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import '../modules/select2';
+//import '../modules/select2';
+import Sortable from 'sortablejs';
 
 $(() => {
 	'use strict';
@@ -33,7 +34,20 @@ $(() => {
 	 */
 
 	$(document).ready(function() {
+		// List with handle
+		Sortable.create(me_yml_structure, {
+			handle: '.dashicons-move',
+			animation: 150
+		});
+
+
+
+
+
+
+
 		/* Enable Select2 for all select fields */
+		/*
 		$('select').select2({
 			minimumResultsForSearch: Infinity
 		});
@@ -51,12 +65,15 @@ $(() => {
 			const paramCheckbox = $(this).prop( 'checked' );
 			paramSelect.prop( 'disabled', paramCheckbox );
 		});
+		*/
 	});
 });
 
+/*
 function toggle(source) {
   const checkboxes = document.getElementsByName('files[]');
   for ( let i=0, n=checkboxes.length; i<n; i++ ) {
     checkboxes[i].checked = source.checked;
   }
 }
+*/

@@ -13,7 +13,7 @@
 
 ?>
 
-<div class="wrap" id="me_pages">
+<div class="wrap me-wrapper" id="me_pages">
 
 	<div class="version">
 		<?php
@@ -27,4 +27,18 @@
 
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
+	<div id="me_yml_structure" class="list-group">
+		<div class="list-group-item">
+			<span class="dashicons dashicons-move" aria-hidden="true"></span>
+			Drag me by the handle
+		</div>
+		<div class="list-group-item">
+			<span class="dashicons dashicons-move" aria-hidden="true"></span>
+			You can also select text
+		</div>
+		<div class="list-group-item">
+			<span class="dashicons dashicons-move" aria-hidden="true"></span>
+			Best of both worlds!
+		</div>
+	</div>
 </div>
