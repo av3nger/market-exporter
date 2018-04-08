@@ -3,23 +3,85 @@
  * included in this file.
  */
 
-.me-wrapper .version {
+// Version block
+.me-wrapper .me-version {
     position: relative;
     top: 15px;
     float: right;
 }
 
-.me-wrapper .list-group {
+// Tooltips
+.me-wrapper .tooltip {
+    border-radius: 5px;
+    background-color: #2F6690;
+    padding: 0 15px;
+    max-width: 400px;
 
-    margin-top: 50px;
-
-    .list-group-item {
-        background-color: #fff;
-        border: 1px solid #9d9d9d;
-        padding: 20px;
-        margin-bottom: 10px;
+    .tooltip-inner {
+        color: #fff;
     }
 
+    .tooltip-arrow {
+        position: absolute;
+        border: solid #2F6690;
+    }
+
+    &[x-placement^="top"] .tooltip-arrow {
+        border-width: 5px 5px 0 5px;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        bottom: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    &[x-placement^="bottom"] .tooltip-arrow {
+        border-width: 0 5px 5px 5px;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        top: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+// YML list elements
+.me-wrapper .me-list-group {
+    margin-top: 50px;
+
+    .me-list-header .button {
+        position: relative;
+        float: right;
+        top: -50px;
+        margin-bottom: -50px;
+    }
+
+    .me-list-group-panel {
+        background-color: #fff;
+        border: 1px solid #9d9d9d;
+        border-radius: 5px;
+        padding: 10px 20px 10px;
+        margin-bottom: 10px;
+
+        .me-list-group-item {
+            border: 1px solid #9d9d9d;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 10px;
+            
+            .me-item-controls {
+                float: right;
+            }
+
+            .me-tooltip-text {
+                display: none;
+            }
+        }
+    }
 }
 
 /*

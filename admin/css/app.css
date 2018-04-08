@@ -2,18 +2,62 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
-.me-wrapper .version {
+.me-wrapper .me-version {
   position: relative;
   top: 15px;
   float: right; }
 
-.me-wrapper .list-group {
+.me-wrapper .tooltip {
+  border-radius: 5px;
+  background-color: #2F6690;
+  padding: 0 15px;
+  max-width: 400px; }
+  .me-wrapper .tooltip .tooltip-inner {
+    color: #fff; }
+  .me-wrapper .tooltip .tooltip-arrow {
+    position: absolute;
+    border: solid #2F6690; }
+  .me-wrapper .tooltip[x-placement^="top"] .tooltip-arrow {
+    border-width: 5px 5px 0 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    bottom: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0; }
+  .me-wrapper .tooltip[x-placement^="bottom"] .tooltip-arrow {
+    border-width: 0 5px 5px 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    top: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0; }
+
+.me-wrapper .me-list-group {
   margin-top: 50px; }
-  .me-wrapper .list-group .list-group-item {
+  .me-wrapper .me-list-group .me-list-header .button {
+    position: relative;
+    float: right;
+    top: -50px;
+    margin-bottom: -50px; }
+  .me-wrapper .me-list-group .me-list-group-panel {
     background-color: #fff;
     border: 1px solid #9d9d9d;
-    padding: 20px;
+    border-radius: 5px;
+    padding: 10px 20px 10px;
     margin-bottom: 10px; }
+    .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item {
+      border: 1px solid #9d9d9d;
+      border-radius: 5px;
+      padding: 20px;
+      margin-bottom: 10px; }
+      .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item .me-item-controls {
+        float: right; }
+      .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item .me-tooltip-text {
+        display: none; }
 
 /*
 #me_pages {

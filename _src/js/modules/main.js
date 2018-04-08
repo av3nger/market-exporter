@@ -1,5 +1,5 @@
 import $ from 'jquery';
-//import '../modules/select2';
+import Tooltip from 'tooltip.js';
 import Sortable from 'sortablejs';
 
 $(() => {
@@ -34,24 +34,40 @@ $(() => {
 	 */
 
 	$(document).ready(function() {
-		// List with handle
-		Sortable.create(me_yml_structure, {
+
+		const help_tooltips = document.getElementsByClassName('dashicons-editor-help');
+
+		for (let i = 0; i < help_tooltips.length; i++) {
+			new Tooltip(help_tooltips[i], {
+				placement: 'top', // or bottom, left, right, and variations
+				title: () => {
+					const text = help_tooltips[i].parentElement.getElementsByClassName('me-tooltip-text');
+					return text[0].innerHTML;
+				},
+				html: true
+			});
+		}
+
+
+
+
+		const store_element = document.getElementById('me_yml_store');
+		Sortable.create(store_element, {
 			handle: '.dashicons-move',
+			draggable: '.me-list-group-item',
 			animation: 150
 		});
 
-
-
-
-
-
-
-		/* Enable Select2 for all select fields */
 		/*
-		$('select').select2({
-			minimumResultsForSearch: Infinity
+		const offer_element = document.getElementById('me_yml_offer');
+		Sortable.create(offer_element, {
+			handle: '.dashicons-move',
+			animation: 150
 		});
+		*/
 
+
+		/*
 		$('#rate-notice').on('click', function() {
 			$.post( ajax_strings.ajax_url, {
 				_ajax_nonce: ajax_strings.nonce,
@@ -68,12 +84,3 @@ $(() => {
 		*/
 	});
 });
-
-/*
-function toggle(source) {
-  const checkboxes = document.getElementsByName('files[]');
-  for ( let i=0, n=checkboxes.length; i<n; i++ ) {
-    checkboxes[i].checked = source.checked;
-  }
-}
-*/
