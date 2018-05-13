@@ -54,8 +54,8 @@ module.exports = {
 
 	plugins: [
 		new CleanWebpackPlugin([
-			'js',
-			'css'
+			'admin/js',
+			'admin/css'
 		]),
 		new ExtractTextPlugin({
 			filename: '../css/[name].min.css'
