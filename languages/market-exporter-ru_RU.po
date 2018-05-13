@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2018-03-18 08:51+0300\n"
-"PO-Revision-Date: 2018-03-18 09:18+0300\n"
+"POT-Creation-Date: 2018-05-13 09:20+0300\n"
+"PO-Revision-Date: 2018-05-13 09:21+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -79,7 +79,7 @@ msgstr "Выгрузка по расписанию"
 
 #: admin/class-market-exporter-admin.php:179
 #: admin/class-market-exporter-admin.php:200
-#: admin/class-market-exporter-admin.php:393
+#: admin/class-market-exporter-admin.php:407
 msgid "Disabled"
 msgstr "Отключено"
 
@@ -227,23 +227,31 @@ msgstr "Изображений на товарное предложение"
 msgid "Not more than 10 images"
 msgstr "Не более 10 изображений"
 
-#: admin/class-market-exporter-admin.php:387
+#: admin/class-market-exporter-admin.php:383
+msgid "Stock quantity"
+msgstr "Наличие на складе"
+
+#: admin/class-market-exporter-admin.php:389
+msgid "Adds the number of available products in stock."
+msgstr "При учете запасов, добавлять количество в параметр stock_quantity."
+
+#: admin/class-market-exporter-admin.php:401
 msgid "Delivery options"
 msgstr "Настройка доставки"
 
-#: admin/class-market-exporter-admin.php:394
+#: admin/class-market-exporter-admin.php:408
 msgid "true"
 msgstr "true"
 
-#: admin/class-market-exporter-admin.php:395
+#: admin/class-market-exporter-admin.php:409
 msgid "false"
 msgstr "false"
 
-#: admin/class-market-exporter-admin.php:401
+#: admin/class-market-exporter-admin.php:415
 msgid "Delivery"
 msgstr "Доставка"
 
-#: admin/class-market-exporter-admin.php:407
+#: admin/class-market-exporter-admin.php:421
 msgid ""
 "Use the delivery element to indicate the possibility of delivery to the "
 "buyer's address in the home region of the store."
@@ -251,11 +259,11 @@ msgstr ""
 "Используйте элемент delivery, чтобы указать возможность доставки по адресу "
 "покупателя в домашнем регионе магазина."
 
-#: admin/class-market-exporter-admin.php:416
+#: admin/class-market-exporter-admin.php:430
 msgid "Pickup"
 msgstr "Самовывоз"
 
-#: admin/class-market-exporter-admin.php:422
+#: admin/class-market-exporter-admin.php:436
 msgid ""
 "Use the pickup element to indicate the possibility of receiving goods at the "
 "issuance point."
@@ -263,11 +271,11 @@ msgstr ""
 "Используйте элемент pickup, чтобы указать возможность получения товара в "
 "пункте выдачи."
 
-#: admin/class-market-exporter-admin.php:431
+#: admin/class-market-exporter-admin.php:445
 msgid "Store"
 msgstr "Покупка в торговом зале"
 
-#: admin/class-market-exporter-admin.php:437
+#: admin/class-market-exporter-admin.php:451
 msgid ""
 "Use the store element to indicate the possibility of buying without a "
 "preliminary order at the point of sale."
@@ -275,25 +283,25 @@ msgstr ""
 "Используйте элемент store, чтобы указать возможность покупки без "
 "предварительного заказа в точке продажи."
 
-#: admin/class-market-exporter-admin.php:451
+#: admin/class-market-exporter-admin.php:465
 msgid "Use delivery-options"
 msgstr "Использовать delivery-options"
 
-#: admin/class-market-exporter-admin.php:457
+#: admin/class-market-exporter-admin.php:471
 msgid "Use delivery-options parameters defined below. Global options."
 msgstr ""
 "Если включено, то в качестве параметров delivery-options будут использованы "
 "значения из настроек ниже. Глобальная опция."
 
-#: admin/class-market-exporter-admin.php:465
+#: admin/class-market-exporter-admin.php:479
 msgid "Cost"
 msgstr "Стоимость доставки"
 
-#: admin/class-market-exporter-admin.php:471
+#: admin/class-market-exporter-admin.php:485
 msgid "100"
 msgstr "100"
 
-#: admin/class-market-exporter-admin.php:472
+#: admin/class-market-exporter-admin.php:486
 msgid ""
 "Delivery-options cost element. Used to indicate the price of delivery. Use "
 "maximum value if cost is differs for different locations."
@@ -301,15 +309,15 @@ msgstr ""
 "Элемент cost для delivery-options. В качестве значения используйте только "
 "целые числа. Для бесплатной доставки укажите значение 0."
 
-#: admin/class-market-exporter-admin.php:480
+#: admin/class-market-exporter-admin.php:494
 msgid "Days"
 msgstr "Срок доставки"
 
-#: admin/class-market-exporter-admin.php:486
+#: admin/class-market-exporter-admin.php:500
 msgid "0, 1, 2, 3-5, etc"
 msgstr "0, 1, 2, 3-5, и т.д."
 
-#: admin/class-market-exporter-admin.php:487
+#: admin/class-market-exporter-admin.php:501
 msgid ""
 "Delivery-options days element. Either a value or a range for the actual days "
 "it takes to deliver a product."
@@ -317,15 +325,15 @@ msgstr ""
 "Элемент days для delivery-options. Либо целое число для дней доставки, либо "
 "период «от — до»."
 
-#: admin/class-market-exporter-admin.php:495
+#: admin/class-market-exporter-admin.php:509
 msgid "Order before"
 msgstr "Заказ оформлен до"
 
-#: admin/class-market-exporter-admin.php:501
+#: admin/class-market-exporter-admin.php:515
 msgid "0-24"
 msgstr "0-24"
 
-#: admin/class-market-exporter-admin.php:502
+#: admin/class-market-exporter-admin.php:516
 msgid ""
 "Delivery-options order-before element. Accepts values from 0 to 24. If the "
 "order is made before this time, delivery will be on time."
@@ -333,15 +341,15 @@ msgstr ""
 "Элемент order-before для delivery-options. Местное время (в часовом поясе "
 "магазина), при заказе до которого действует срок доставки."
 
-#: admin/class-market-exporter-admin.php:514
+#: admin/class-market-exporter-admin.php:528
 msgid "Extra settings"
 msgstr "Дополнительные настройки"
 
-#: admin/class-market-exporter-admin.php:522
+#: admin/class-market-exporter-admin.php:536
 msgid "Product description"
 msgstr "Описание товара"
 
-#: admin/class-market-exporter-admin.php:528
+#: admin/class-market-exporter-admin.php:542
 msgid ""
 "Specify the way the description is exported. Default is to try and get the "
 "product description, if empty - get short description."
@@ -349,27 +357,27 @@ msgstr ""
 "Опция для выгрузки элемента description. По умолчанию, будет выгружаться "
 "описание товара, если оно пустое, то будет использовано краткое описание."
 
-#: admin/class-market-exporter-admin.php:531
+#: admin/class-market-exporter-admin.php:545
 msgid "Default"
 msgstr "По умолчанию"
 
-#: admin/class-market-exporter-admin.php:532
+#: admin/class-market-exporter-admin.php:546
 msgid "Only description"
 msgstr "Только описание"
 
-#: admin/class-market-exporter-admin.php:533
+#: admin/class-market-exporter-admin.php:547
 msgid "Only short description"
 msgstr "Только краткое описание"
 
-#: admin/class-market-exporter-admin.php:541
+#: admin/class-market-exporter-admin.php:555
 msgid "Update file on product change"
 msgstr "Обновлять при изменениях"
 
-#: admin/class-market-exporter-admin.php:547
+#: admin/class-market-exporter-admin.php:561
 msgid "Regenerate file on product create/update."
 msgstr "Обновлять файл при внесении изменений или создании нового товара."
 
-#: admin/class-market-exporter-admin.php:762
+#: admin/class-market-exporter-admin.php:788
 #: admin/partials/market-exporter-admin-display.php:43
 msgid "Settings"
 msgstr "Настройки"
@@ -530,7 +538,9 @@ msgid "Anton Vanyukov"
 msgstr "Антон Ванюков"
 
 #. Author URI of the plugin/theme
-msgid "http://www.vanyukov.su"
+#, fuzzy
+#| msgid "http://www.vanyukov.su"
+msgid "https://www.vanyukov.su"
 msgstr "http://www.vanyukov.su"
 
 #~ msgid "News"
