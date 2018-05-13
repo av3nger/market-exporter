@@ -39,6 +39,7 @@ class Market_Exporter_Activator {
 				'sales_notes'      => '',
 				'backorders'       => false,
 				'size'             => false,
+				'stock_quantity'   => false,
 				'include_cat'      => array(),
 				'params'           => array(),
 				'params_all'       => false,

@@ -377,6 +377,20 @@ class Market_Exporter_Admin {
 			)
 		);
 
+		// Add stock_quantity option.
+		add_settings_field(
+			'market_exporter_stock_quantity',
+			__( 'Stock quantity', 'market-exporter' ),
+			array( $this, 'input_fields_cb' ),
+			$this->plugin_name,
+			'market_exporter_section_offers',
+			array(
+				'label_for'   => 'stock_quantity',
+				'description' => __( 'Adds the number of available products in stock.', 'market-exporter' ),
+				'type'        => 'checkbox',
+			)
+		);
+
 		/**
 		 **************************
 		 * Shop tag settings
@@ -718,6 +732,7 @@ class Market_Exporter_Admin {
 
 		$output['backorders']      = ( isset( $input['backorders'] ) ) ? true : false;
 		$output['size']            = ( isset( $input['size'] ) ) ? true : false;
+		$output['stock_quantity']  = ( isset( $input['stock_quantity'] ) ) ? true : false;
 
 		// Convert to int array.
 		if ( isset( $input['include_cat'] ) ) {

@@ -262,7 +262,7 @@ class ME_WC {
 
 		$yml = '';
 
-		while ( $query->have_posts() ) :
+		while ( $query->have_posts() ) {
 
 			$query->the_post();
 
@@ -277,13 +277,13 @@ class ME_WC {
 			 */
 			$variations      = array();
 			$variation_count = 1;
-			if ( $product->is_type( 'variable' ) ) :
+			if ( $product->is_type( 'variable' ) ) {
 				$variations      = $product->get_available_variations();
 				$variation_count = count( $variations );
-			endif;
+			}
 
-			while ( $variation_count > 0 ) :
-				$variation_count--;
+			while ( $variation_count > 0 ) {
+				$variation_count --;
 
 				// If variable product, get product id from $variations array.
 				$offer_id = ( ( $product->is_type( 'variable' ) ) ? $variations[ $variation_count ]['variation_id'] : $product->get_id() );
@@ -323,7 +323,7 @@ class ME_WC {
 				// TODO: display error message if category is not set for product.
 				if ( $categories ) {
 					$category = array_shift( $categories );
-					$yml     .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+					$yml      .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
 				}
 
 				// Delivery-options.
@@ -333,8 +333,8 @@ class ME_WC {
 					$order_before = get_post_custom_values( 'me_do_order_before', $product->get_id() );
 
 					if ( isset( $cost ) || isset( $days ) || isset( $order_before ) ) {
-						$cost = isset( $cost ) ? $cost[0] : $this->settings['cost'];
-						$days = isset( $days ) ? $days[0] : $this->settings['days'];
+						$cost         = isset( $cost ) ? $cost[0] : $this->settings['cost'];
+						$days         = isset( $days ) ? $days[0] : $this->settings['days'];
 						$order_before = isset( $order_before ) ? $order_before[0] : '';
 
 						$yml .= '        <delivery-options>' . PHP_EOL;
@@ -378,7 +378,7 @@ class ME_WC {
 						if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
 							$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 						}
-						$exported++;
+						$exported ++;
 					}
 				}
 
@@ -481,6 +481,29 @@ class ME_WC {
 					}
 				}
 
+				// Params: stock_quantity
+				if ( isset( $this->settings['stock_quantity'] ) && $this->settings['stock_quantity'] ) {
+					// Compatibility for WC versions from 2.5.x to 3.0+
+					if ( method_exists( $product, 'get_manage_stock' ) ) {
+						$stock_status = $product->get_manage_stock(); // For version 3.0+
+					} else {
+						$stock_status = $product->manage_stock; // Older than version 3.0
+					}
+
+					if ( $stock_status ) {
+						// Compatibility for WC versions from 2.5.x to 3.0+
+						if ( method_exists( $product, 'get_stock_quantity' ) ) {
+							$stock_quqntity = $product->get_stock_quantity(); // For version 3.0+
+						} else {
+							$stock_quqntity = $product->stock_quqntity; // Older than version 3.0
+						}
+
+						if ( isset( $stock_quqntity ) && 0 < $stock_quqntity ) {
+							$yml .= '        <stock_quantity>' . absint( $stock_quqntity ) . '</stock_quantity>' . PHP_EOL;
+						}
+					}
+				}
+
 				// Params: selected parameters.
 				if ( isset( $this->settings['params'] ) && ! empty( $this->settings['params'] ) ) {
 					$attributes = $product->get_attributes();
@@ -530,9 +553,9 @@ class ME_WC {
 				}
 
 				$yml .= '      </offer>' . PHP_EOL;
-			endwhile;
+			} // End while().
 
-		endwhile;
+		} // End while().
 
 		return $yml;
 	}
