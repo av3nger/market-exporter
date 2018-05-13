@@ -71,7 +71,7 @@ class Market_Exporter_Admin {
 		if ( 'woocommerce_page_market-exporter' !== $hook ) {
 			return;
 		}
-		wp_enqueue_style( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'css/app.css', array(), $this->version, 'all' );
+		wp_enqueue_style( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'css/app.min.css', array(), $this->version, 'all' );
 	}
 
 	/**
@@ -84,7 +84,7 @@ class Market_Exporter_Admin {
 		if ( 'woocommerce_page_market-exporter' !== $hook ) {
 			return;
 		}
-		wp_enqueue_script( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'js/app.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'js/app.min.js', array( 'jquery' ), $this->version, false );
 
 		wp_localize_script( "{$this->plugin_name}-admin", 'ajax_strings', array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
