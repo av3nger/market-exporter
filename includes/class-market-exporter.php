@@ -123,6 +123,14 @@ class Market_Exporter {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-market-exporter-i18n.php';
 
 		/**
+		 * Settings class.
+		 *
+		 * @since 1.1.0
+		 */
+		/* @noinspection PhpIncludeInspection */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-market-exporter-settings.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		/* @noinspection PhpIncludeInspection */
@@ -161,6 +169,7 @@ class Market_Exporter {
 	 */
 	private function define_admin_hooks() {
 		$plugin_admin = new Market_Exporter_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_settings = new Market_Exporter_Settings( $this->get_plugin_name() );
 		$plugin_yml = new ME_WC();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -168,7 +177,7 @@ class Market_Exporter {
 		// Add Plugin page.
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_admin_page', 99 );
 		// Add Settings page.
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
+		$this->loader->add_action( 'admin_init', $plugin_settings, 'register_settings' );
 		// Add Settings link to plugin in plugins list.
 		$basename = plugin_basename( MARKET_EXPORTER_PLUGIN_DIR . 'market-exporter.php' );
 		$this->loader->add_filter( "plugin_action_links_{$basename}", $plugin_admin, 'plugin_add_settings_link' );

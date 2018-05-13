@@ -10,7 +10,7 @@ module.exports = {
 	mode: 'development',
 
 	entry: {
-		'app': path.resolve( __dirname, '_src/js/app.js' ),
+		'app': path.resolve( __dirname, '_src/js/index.js' ),
 	},
 
 	output: {
@@ -50,6 +50,12 @@ module.exports = {
 				}
 			]
 		}]
+	},
+
+	// This will allow us to import files without writing these extension
+	// eg: import 'app', instead of import 'app.jsx'
+	resolve: {
+		extensions: [".js", ".jsx", ".json"],
 	},
 
 	plugins: [
