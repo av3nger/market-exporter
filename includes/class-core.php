@@ -28,7 +28,7 @@ use Market_Exporter\Admin\Admin;
  * @subpackage Market_Exporter/includes
  * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class Market_Exporter {
+class Core {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
