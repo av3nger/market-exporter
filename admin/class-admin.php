@@ -9,6 +9,8 @@
  * @subpackage Market_Exporter/admin
  */
 
+namespace Market_Exporter\Admin;
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -19,7 +21,7 @@
  * @subpackage Market_Exporter/admin
  * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class Market_Exporter_Admin {
+class Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -52,7 +54,7 @@ class Market_Exporter_Admin {
 	private static $options;
 
 	/**
-	 * Market_Exporter_Admin constructor.
+	 * Admin constructor.
 	 *
 	 * @since 0.0.1
 	 * @param string $plugin_name  The name of this plugin.

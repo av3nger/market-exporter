@@ -9,6 +9,10 @@
  * @subpackage Market_Exporter/includes
  */
 
+namespace Market_Exporter\Core;
+
+use Market_Exporter\Admin\Admin;
+
 /**
  * Plugin settings functionality.
  *
@@ -18,7 +22,7 @@
  * @subpackage Market_Exporter/includes
  * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class Market_Exporter_Settings {
+class Settings {
 	/**
 	 * The ID of this plugin.
 	 *
@@ -28,7 +32,7 @@ class Market_Exporter_Settings {
 	private $plugin_name;
 
 	/**
-	 * Market_Exporter_Settings constructor.
+	 * Settings constructor.
 	 *
 	 * @param string $plugin_name  The name of this plugin.
 	 */
@@ -115,7 +119,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_website_name',
 			__( 'Website name', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_general',
 			array(
@@ -130,7 +134,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_company_name',
 			__( 'Company name', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_general',
 			array(
@@ -145,7 +149,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_file_date',
 			__( 'Add date to YML file name', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_general',
 			array(
@@ -159,7 +163,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_cron',
 			__( 'Cron', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_general',
 			array(
@@ -188,7 +192,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_vendor',
 			__( 'Vendor', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -203,7 +207,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_model',
 			__( 'Model', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -217,7 +221,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_type_prefix',
 			__( 'typePrefix', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -232,7 +236,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_backorders',
 			__( 'Export products with backorders', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -246,7 +250,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_include_cat',
 			__( 'Include selected categories', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -260,7 +264,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_sales_notes',
 			__( 'sales_notes', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -274,7 +278,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_warranty',
 			__( 'Manufacturer warranty', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -289,7 +293,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_origin',
 			__( 'Country of origin', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -307,7 +311,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_size',
 			__( 'Weight and size data', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -321,7 +325,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_params',
 			__( 'Use selected parameters', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -335,7 +339,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_params_all',
 			__( 'Export all parameters', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -349,7 +353,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_image_count',
 			__( 'Images per product', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_offers',
 			array(
@@ -375,7 +379,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_delivery',
 			__( 'Delivery', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_delivery',
 			array(
@@ -390,7 +394,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_pickup',
 			__( 'Pickup', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_delivery',
 			array(
@@ -405,7 +409,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_store',
 			__( 'Store', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_delivery',
 			array(
@@ -425,7 +429,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_delivery_options',
 			__( 'Use delivery-options', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_delivery',
 			array(
@@ -439,7 +443,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_cost',
 			__( 'Cost', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_delivery',
 			array(
@@ -454,7 +458,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_days',
 			__( 'Days', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_delivery',
 			array(
@@ -469,7 +473,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_order_before',
 			__( 'Order before', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_delivery',
 			array(
@@ -489,7 +493,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_description',
 			__( 'Product description', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_extra',
 			array(
@@ -508,7 +512,7 @@ class Market_Exporter_Settings {
 		add_settings_field(
 			'market_exporter_update_on_change',
 			__( 'Update file on product change', 'market-exporter' ),
-			array( 'Market_Exporter_Admin', 'input_fields_cb' ),
+			array( 'Market_Exporter\Admin\Admin', 'input_fields_cb' ),
 			$this->plugin_name,
 			'market_exporter_section_extra',
 			array(
@@ -558,7 +562,7 @@ class Market_Exporter_Settings {
 		$output['file_date']    = ( isset( $input['file_date'] ) ) ? true : false;
 		$output['cron']         = sanitize_text_field( $input['cron'] );
 		// Update cron schedule.
-		Market_Exporter_Admin::update_cron_schedule( $output['cron'] );
+		Admin::update_cron_schedule( $output['cron'] );
 
 		/**
 		 * Product options.

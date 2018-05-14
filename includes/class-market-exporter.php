@@ -12,6 +12,10 @@
  * @subpackage Market_Exporter/includes
  */
 
+namespace Market_Exporter\Core;
+
+use Market_Exporter\Admin\Admin;
+
 /**
  * The core plugin class.
  *
@@ -32,7 +36,7 @@ class Market_Exporter {
 	 *
 	 * @since  0.0.1
 	 * @access protected
-	 * @var    Market_Exporter_Loader $loader Maintains and registers all hooks for the plugin.
+	 * @var    Loader $loader Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -113,14 +117,14 @@ class Market_Exporter {
 		 * core plugin.
 		 */
 		/* @noinspection PhpIncludeInspection */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-market-exporter-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
 		/* @noinspection PhpIncludeInspection */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-market-exporter-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-i18n.php';
 
 		/**
 		 * Settings class.
@@ -128,7 +132,7 @@ class Market_Exporter {
 		 * @since 1.1.0
 		 */
 		/* @noinspection PhpIncludeInspection */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-market-exporter-settings.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-settings.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
@@ -136,13 +140,13 @@ class Market_Exporter {
 		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-elements.php';
 		/* @noinspection PhpIncludeInspection */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-admin.php';
 		/* @noinspection PhpIncludeInspection */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-fs.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-filesystem.php';
 		/* @noinspection PhpIncludeInspection */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-wc.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-exporter.php';
 
-		$this->loader = new Market_Exporter_Loader();
+		$this->loader = new Loader();
 	}
 
 	/**
@@ -155,7 +159,7 @@ class Market_Exporter {
 	 * @access private
 	 */
 	private function set_locale() {
-		$plugin_i18n = new Market_Exporter_i18n();
+		$plugin_i18n = new I18n();
 		$plugin_i18n->set_domain( $this->get_plugin_name() );
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
@@ -168,9 +172,9 @@ class Market_Exporter {
 	 * @access private
 	 */
 	private function define_admin_hooks() {
-		$plugin_admin = new Market_Exporter_Admin( $this->get_plugin_name(), $this->get_version() );
-		$plugin_settings = new Market_Exporter_Settings( $this->get_plugin_name() );
-		$plugin_yml = new ME_WC();
+		$plugin_admin = new Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_settings = new Settings( $this->get_plugin_name() );
+		$plugin_yml = new Exporter();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -213,7 +217,7 @@ class Market_Exporter {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since  0.0.1
-	 * @return Market_Exporter_Loader Orchestrates the hooks of the plugin.
+	 * @return Loader Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;

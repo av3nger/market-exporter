@@ -1,13 +1,27 @@
 <?php
 /**
- * Market Exporter: ME_WC class
+ * WooCommerce integration
+ *
+ * @link       https://github.com/av3nger/market-exporter/
+ * @since      0.0.1
+ *
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ */
+
+namespace Market_Exporter\Core;
+
+/**
+ * Market Exporter: Exporter class
  *
  * A class that utilizes WooCommerce builtin functions to generate the YML instead of querying the database.
  *
- * @package Market_Exporter
- * @since   0.3.0
+ * @since      0.3.0
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class ME_WC {
+class Exporter {
 
 	/**
 	 * Settings variable
@@ -61,7 +75,7 @@ class ME_WC {
 		$yml .= $this->yml_footer();
 
 		// Create file.
-		$market_exporter_fs = new Market_Exporter_FS( 'market-exporter' );
+		$market_exporter_fs = new Filesystem( 'market-exporter' );
 		$file_path = $market_exporter_fs->write_file( $yml, $this->settings['file_date'] );
 
 		// Remove cron lock.
@@ -105,7 +119,7 @@ class ME_WC {
 	 * Check if any products ara available for export.
 	 *
 	 * @since  0.3.0
-	 * @return bool|WP_Query Return products.
+	 * @return bool|\WP_Query Return products.
 	 */
 	private function check_products() {
 
@@ -157,7 +171,7 @@ class ME_WC {
 			);
 		}
 
-		$query = new WP_Query( $args );
+		$query = new \WP_Query( $args );
 
 		if ( 0 !== $query->found_posts ) {
 			return $query;
@@ -254,10 +268,10 @@ class ME_WC {
 	 *
 	 * @since  0.3.0
 	 * @param  string   $currency Currency abbreviation.
-	 * @param  WP_Query $query    Query.
+	 * @param  \WP_Query $query    Query.
 	 * @return string
 	 */
-	private function yml_offers( $currency, WP_Query $query ) {
+	private function yml_offers( $currency, \WP_Query $query ) {
 		global $product, $offer;
 
 		$yml = '';
@@ -290,7 +304,7 @@ class ME_WC {
 
 				if ( $product->is_type( 'variable' ) ) :
 					// This has to work but we need to think of a way to save the initial offer variable.
-					$offer = new WC_Product_Variation( $offer_id );
+					$offer = new \WC_Product_Variation( $offer_id );
 				endif;
 
 				// NOTE: Below this point we start using $offer instead of $product.
@@ -502,7 +516,7 @@ class ME_WC {
 					}
 				} elseif ( isset( $this->settings['params_all'] ) && $this->settings['params_all'] ) {
 					$attributes = $product->get_attributes();
-					/* @var WC_Product_Attribute|array $param */
+					/* @var \WC_Product_Attribute|array $param */
 					foreach ( $attributes as $param ) {
 						if ( self::woo_latest_versions() ) {
 							$taxonomy = wc_attribute_taxonomy_name_by_id( $param->get_id() );
@@ -516,7 +530,7 @@ class ME_WC {
 							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
 						}
 
-						/* @var WC_Product_Attribute $param */
+						/* @var \WC_Product_Attribute $param */
 						$yml .= '        <param name="' . wc_attribute_label( $taxonomy ) . '">' . $param_value . '</param>' . PHP_EOL;
 					}
 				} // End if().
@@ -557,26 +571,10 @@ class ME_WC {
 	 * @return  string
 	 */
 	private function get_description( $type = 'default' ) {
-		/* @var WC_Product $product */
+		/* @var \WC_Product $product */
 		global $product, $offer;
 
 		switch ( $type ) {
-			case 'default':
-				if ( self::woo_latest_versions() ) {
-					// Try to get variation description.
-					$description = $offer->get_description();
-					// If not there - get product description.
-					if ( empty( $description ) ) {
-						$description = $product->get_description();
-					}
-				} else {
-					if ( $product->is_type( 'variable' ) && ! $offer->get_variation_description() ) {
-						$description = $offer->get_variation_description();
-					} else {
-						$description = $offer->post->post_content;
-					}
-				}
-				break;
 			case 'long':
 				// Get product description.
 				if ( self::woo_latest_versions() ) {
@@ -591,6 +589,23 @@ class ME_WC {
 					$description = $product->get_short_description();
 				} else {
 					$description = $offer->post->post_excerpt;
+				}
+				break;
+			case 'default':
+			default:
+				if ( self::woo_latest_versions() ) {
+					// Try to get variation description.
+					$description = $offer->get_description();
+					// If not there - get product description.
+					if ( empty( $description ) ) {
+						$description = $product->get_description();
+					}
+				} else {
+					if ( $product->is_type( 'variable' ) && ! $offer->get_variation_description() ) {
+						$description = $offer->get_variation_description();
+					} else {
+						$description = $offer->post->post_content;
+					}
 				}
 				break;
 		}

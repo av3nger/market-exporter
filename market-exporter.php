@@ -26,6 +26,12 @@
  * WC tested up to:      3.2.1
  */
 
+namespace Market_Exporter;
+
+use Market_Exporter\Core\Activator;
+use Market_Exporter\Core\Deactivator;
+use Market_Exporter\Core\Market_Exporter;
+
 // If this file is called directly, abort.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -45,26 +51,26 @@ define( 'MARKET_EXPORTER_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-market-exporter-activator.php
+ * This action is documented in includes/class-activator.php
  *
  * @since 0.0.1
  */
 function activate_market_exporter() {
 	/* @noinspection PhpIncludeInspection */
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-market-exporter-activator.php';
-	Market_Exporter_Activator::activate();
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-activator.php';
+	Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-market-exporter-deactivator.php
+ * This action is documented in includes/class-deactivator.php
  *
  * @since 0.0.1
  */
 function deactivate_market_exporter() {
 	/* @noinspection PhpIncludeInspection */
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-market-exporter-deactivator.php';
-	Market_Exporter_Deactivator::deactivate();
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-deactivator.php';
+	Deactivator::deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_market_exporter' );

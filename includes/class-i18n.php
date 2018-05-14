@@ -12,6 +12,8 @@
  * @subpackage Market_Exporter/includes
  */
 
+namespace Market_Exporter\Core;
+
 /**
  * Define the internationalization functionality.
  *
@@ -23,7 +25,7 @@
  * @subpackage Market_Exporter/includes
  * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class Market_Exporter_i18n {
+class I18n {
 
 	/**
 	 * The domain specified for this plugin.

@@ -1,13 +1,27 @@
 <?php
 /**
- * Market Exporter: Market_Exporter_FS class
+ * Filesystem class
+ *
+ * @link       https://github.com/av3nger/market-exporter/
+ * @since      0.0.1
+ *
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ */
+
+namespace Market_Exporter\Core;
+
+/**
+ * Market Exporter: Filesystem class
  *
  * The file system specific functionality of the plugin.
  *
- * @package Market_Exporter
- * @since   0.0.1
+ * @since      0.0.1
+ * @package    Market_Exporter
+ * @subpackage Market_Exporter/includes
+ * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class Market_Exporter_FS {
+class Filesystem {
 
 	/**
 	 * Plugin slug.
@@ -98,7 +112,7 @@ class Market_Exporter_FS {
 		// Use WP_Filesystem API.
 		if ( $this->fs_api ) {
 			// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
-			/* @var WP_Filesystem_Base $wp_filesystem */
+			/* @var \WP_Filesystem_Base $wp_filesystem */
 			global $wp_filesystem;
 
 			// Check if 'uploads/market-exporter' folder exists. If not - create it.
@@ -149,7 +163,7 @@ class Market_Exporter_FS {
 		// Use WP_Filesystem API.
 		if ( $this->fs_api ) {
 			// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
-			/* @var WP_Filesystem_Base $wp_filesystem */
+			/* @var \WP_Filesystem_Base $wp_filesystem */
 			global $wp_filesystem;
 			return $wp_filesystem->dirlist( $folder );
 		} else {
@@ -187,7 +201,7 @@ class Market_Exporter_FS {
 		// Use WP_Filesystem API.
 		if ( $this->fs_api ) {
 			// By this point, the $wp_filesystem global should be working, so let's use it to create a file.
-			/* @var WP_Filesystem_Base $wp_filesystem */
+			/* @var \WP_Filesystem_Base $wp_filesystem */
 			global $wp_filesystem;
 
 			foreach ( $files as $file ) {

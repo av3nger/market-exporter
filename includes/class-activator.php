@@ -9,6 +9,8 @@
  * @subpackage Market_Exporter/includes
  */
 
+namespace Market_Exporter\Core;
+
 /**
  * Fired during plugin activation.
  *
@@ -19,7 +21,7 @@
  * @subpackage Market_Exporter/includes
  * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class Market_Exporter_Activator {
+class Activator {
 
 	/**
 	 * Activation procedure.

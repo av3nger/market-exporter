@@ -9,6 +9,8 @@
  * @subpackage Market_Exporter/includes
  */
 
+namespace Market_Exporter\Core;
+
 /**
  * Register all actions and filters for the plugin.
  *
@@ -20,7 +22,7 @@
  * @subpackage Market_Exporter/includes
  * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class Market_Exporter_Loader {
+class Loader {
 
 	/**
 	 * The array of actions registered with WordPress.
