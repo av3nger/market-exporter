@@ -28,7 +28,7 @@
 
 namespace Market_Exporter;
 
-use Market_Exporter\Core\Core;
+use Market_Exporter\Core\ME;
 use Market_Exporter\Core\Activator;
 use Market_Exporter\Core\Deactivator;
 
@@ -81,7 +81,7 @@ register_deactivation_hook( __FILE__, 'deactivate_market_exporter' );
  * admin-specific hooks, and public-facing site hooks.
  */
 /* @noinspection PhpIncludeInspection */
-require plugin_dir_path( __FILE__ ) . 'includes/class-core.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-me.php';
 
 /**
  * Begins execution of the plugin.
@@ -93,9 +93,6 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-core.php';
  * @since 0.0.1
  */
 function run_market_exporter() {
-
-	$plugin = new Core();
-	$plugin->run();
-
+	ME::get_instance()->run();
 }
 run_market_exporter();

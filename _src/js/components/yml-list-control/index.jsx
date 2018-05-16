@@ -1,10 +1,14 @@
 import React from 'react';
+
 import { __ } from "@wordpress/i18n/build/index";
+
 import './style.scss';
 
 class YmlListControl extends React.Component {
 	constructor(props) {
 		super(props);
+
+		window.console.log( props.settings );
 	}
 
 	render() {
@@ -20,7 +24,7 @@ class YmlListControl extends React.Component {
 				</div>
 
 				<div>
-
+					{this.props.settings.toString()}
 				</div>
 			</div>
 		);

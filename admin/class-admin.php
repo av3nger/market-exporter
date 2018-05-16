@@ -99,8 +99,10 @@ class Admin {
 		);
 
 		wp_localize_script( "{$this->plugin_name}-admin", 'ajax_strings', array(
-			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'nonce'    => wp_create_nonce( 'me_dismiss_notice' ),
+			'ajax_url'  => admin_url( 'admin-ajax.php' ),
+			'nonce'     => wp_create_nonce( 'me_dismiss_notice' ),
+			'api_nonce' => wp_create_nonce( 'wp_rest' ),
+			'api_url'   => rest_url( $this->plugin_name . '/v1/' ),
 		) );
 	}
 

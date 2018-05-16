@@ -28,7 +28,7 @@ use Market_Exporter\Admin\Admin;
  * @subpackage Market_Exporter/includes
  * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class Core {
+class ME {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -61,6 +61,30 @@ class Core {
 	protected $version;
 
 	/**
+	 * Plugin instance.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var ME|null
+	 */
+	private static $instance = null;
+
+	/**
+	 * Get plugin instance.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return ME
+	 */
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+	}
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -69,7 +93,7 @@ class Core {
 	 *
 	 * @since 0.0.1
 	 */
-	public function __construct() {
+	private function __construct() {
 		if ( defined( 'MARKET_EXPORTER_VERSION' ) ) {
 			$this->version = MARKET_EXPORTER_VERSION;
 		} else {
@@ -142,6 +166,8 @@ class Core {
 		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-admin.php';
 		/* @noinspection PhpIncludeInspection */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-endpoints.php';
+		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-filesystem.php';
 		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-exporter.php';
@@ -191,6 +217,8 @@ class Core {
 		$this->loader->add_action( 'wp_ajax_dismiss_rate_notice', $this, 'dismiss_notice' );
 		// Add support to update file on product update.
 		$this->loader->add_action( 'woocommerce_update_product', $plugin_admin, 'generate_file_on_update' );
+		// Add REST API endpoints.
+		$this->loader->add_action( 'rest_api_init', Endpoints::get_instance(), 'register_routes' );
 	}
 
 	/**
