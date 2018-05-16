@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Description from './components/description';
 
 /**
  * MarketExporter React component
@@ -33,7 +34,7 @@ class MarketExporter extends React.Component {
 	 */
 	render() {
 		return (
-			<h1>tasdasd</h1>
+			<Description />
 		);
 	}
 }
@@ -41,6 +42,6 @@ class MarketExporter extends React.Component {
 document.addEventListener('DOMContentLoaded', function() {
 	ReactDOM.render(
 		<MarketExporter />,
-		document.getElementById('wrap-me-component')
+		document.getElementById('me_components')
 	);
 });

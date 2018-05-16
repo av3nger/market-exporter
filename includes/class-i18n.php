@@ -45,7 +45,7 @@ class I18n {
 		load_plugin_textdomain(
 			$this->domain,
 			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+			basename( __DIR__ ) . '/languages/'
 		);
 	}
 

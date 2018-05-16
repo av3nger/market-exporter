@@ -89,7 +89,14 @@ class Admin {
 		if ( 'woocommerce_page_market-exporter' !== $hook ) {
 			return;
 		}
-		wp_enqueue_script( "{$this->plugin_name}-admin", plugin_dir_url( __FILE__ ) . 'js/app.min.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script(
+			"{$this->plugin_name}-admin",
+			plugins_url( 'js/app.min.js', __FILE__ ),
+			array(),
+			$this->version,
+			true
+		);
 
 		wp_localize_script( "{$this->plugin_name}-admin", 'ajax_strings', array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -120,10 +127,16 @@ class Admin {
 	 */
 	public function display_admin_page() {
 		/* @noinspection PhpIncludeInspection */
-		require_once plugin_dir_path( __FILE__ ) . 'partials/market-exporter-admin-display.php';
+		//require_once plugin_dir_path( __FILE__ ) . 'partials/market-exporter-admin-display.php';
 		?>
-		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-		<div id="wrap-me-component"></div>
+		<div class="wrap me-wrapper" id="me_pages">
+			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+			<div class="me-version">
+				<?php /* translators: version number */
+				printf( __( 'Version: %s', 'market-exporter' ), $this->version ); ?>
+			</div>
+			<div id="me_components"></div>
+		</div>
 		<?php
 	}
 

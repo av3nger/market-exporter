@@ -3,9 +3,9 @@
  * included in this file.
  */
 .me-wrapper .me-version {
-  position: relative;
-  top: 15px;
-  float: right; }
+  position: absolute;
+  top: 2em;
+  right: 2em; }
 
 .me-wrapper .tooltip {
   border-radius: 5px;

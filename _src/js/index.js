@@ -11,4 +11,4 @@ import './app';
 /**
  * Various js modules
  */
-import './main';
+//import './old_main';
