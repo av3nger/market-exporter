@@ -138,7 +138,7 @@ class Core {
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		/* @noinspection PhpIncludeInspection */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-market-exporter-elements.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-yml-elements.php';
 		/* @noinspection PhpIncludeInspection */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-admin.php';
 		/* @noinspection PhpIncludeInspection */
