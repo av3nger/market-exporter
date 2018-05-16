@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { __ } from "@wordpress/i18n/build/index";
 import Description from './components/description';
+import Button from './components/button';
+import YmlListControl from './components/yml-list-control';
 
 /**
  * MarketExporter React component
@@ -27,14 +30,29 @@ class MarketExporter extends React.Component {
 
 	}
 
+	handleOnClick() {
+		alert('asdds');
+	}
+
 	/**
 	 * Render component
 	 *
 	 * @returns {*}
 	 */
 	render() {
+		const isLoggedIn = true;
+
 		return (
-			<Description />
+			<div className="me-main-content">
+				<Description />
+				{isLoggedIn &&
+					<Button
+						buttonText={ __( 'Add first field' ) }
+						className='button button-primary me-button-callout'
+						onClick={this.handleOnClick}
+					/>}
+				<YmlListControl />
+			</div>
 		);
 	}
 }

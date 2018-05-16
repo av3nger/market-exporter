@@ -1,0 +1,36 @@
+/**
+ * YML component styles
+ */
+.me-wrapper .me-list-group {
+    margin-top: 50px;
+
+    .me-list-header .button {
+        position: relative;
+        float: right;
+        top: -50px;
+        margin-bottom: -50px;
+    }
+
+    .me-list-group-panel {
+        background-color: #fff;
+        border: 1px solid #9d9d9d;
+        border-radius: 5px;
+        padding: 10px 20px 10px;
+        margin-bottom: 10px;
+
+        .me-list-group-item {
+            border: 1px solid #9d9d9d;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 10px;
+
+            .me-item-controls {
+                float: right;
+            }
+
+            .me-tooltip-text {
+                display: none;
+            }
+        }
+    }
+}

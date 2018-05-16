@@ -10,6 +10,23 @@
     right: 2em;
 }
 
+// Main content block
+.me-wrapper .me-main-content {
+    margin-top: 2em;
+    background-color: #fff;
+    border: 1px solid #9d9d9d;
+    padding: 2em 3em;
+}
+
+
+
+
+
+
+
+// TODO: sort the code below
+
+
 // Tooltips
 .me-wrapper .tooltip {
     border-radius: 5px;
@@ -46,41 +63,6 @@
         left: calc(50% - 5px);
         margin-top: 0;
         margin-bottom: 0;
-    }
-}
-
-// YML list elements
-.me-wrapper .me-list-group {
-    margin-top: 50px;
-
-    .me-list-header .button {
-        position: relative;
-        float: right;
-        top: -50px;
-        margin-bottom: -50px;
-    }
-
-    .me-list-group-panel {
-        background-color: #fff;
-        border: 1px solid #9d9d9d;
-        border-radius: 5px;
-        padding: 10px 20px 10px;
-        margin-bottom: 10px;
-
-        .me-list-group-item {
-            border: 1px solid #9d9d9d;
-            border-radius: 5px;
-            padding: 20px;
-            margin-bottom: 10px;
-
-            .me-item-controls {
-                float: right;
-            }
-
-            .me-tooltip-text {
-                display: none;
-            }
-        }
     }
 }
 

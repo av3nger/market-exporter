@@ -7,6 +7,12 @@
   top: 2em;
   right: 2em; }
 
+.me-wrapper .me-main-content {
+  margin-top: 2em;
+  background-color: #fff;
+  border: 1px solid #9d9d9d;
+  padding: 2em 3em; }
+
 .me-wrapper .tooltip {
   border-radius: 5px;
   background-color: #2F6690;
@@ -35,29 +41,6 @@
     left: calc(50% - 5px);
     margin-top: 0;
     margin-bottom: 0; }
-
-.me-wrapper .me-list-group {
-  margin-top: 50px; }
-  .me-wrapper .me-list-group .me-list-header .button {
-    position: relative;
-    float: right;
-    top: -50px;
-    margin-bottom: -50px; }
-  .me-wrapper .me-list-group .me-list-group-panel {
-    background-color: #fff;
-    border: 1px solid #9d9d9d;
-    border-radius: 5px;
-    padding: 10px 20px 10px;
-    margin-bottom: 10px; }
-    .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item {
-      border: 1px solid #9d9d9d;
-      border-radius: 5px;
-      padding: 20px;
-      margin-bottom: 10px; }
-      .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item .me-item-controls {
-        float: right; }
-      .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item .me-tooltip-text {
-        display: none; }
 
 /*
 #me_pages {
@@ -135,6 +118,41 @@ select[multiple] {
     margin: 0 0 0 8px;
 }
 */
+
+/**
+ * Button styles
+ */
+.me-wrapper .me-button-callout {
+  display: flex;
+  margin: 2em auto 0;
+  padding: 10px 60px 35px;
+  text-transform: uppercase; }
+
+/**
+ * YML component styles
+ */
+.me-wrapper .me-list-group {
+  margin-top: 50px; }
+  .me-wrapper .me-list-group .me-list-header .button {
+    position: relative;
+    float: right;
+    top: -50px;
+    margin-bottom: -50px; }
+  .me-wrapper .me-list-group .me-list-group-panel {
+    background-color: #fff;
+    border: 1px solid #9d9d9d;
+    border-radius: 5px;
+    padding: 10px 20px 10px;
+    margin-bottom: 10px; }
+    .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item {
+      border: 1px solid #9d9d9d;
+      border-radius: 5px;
+      padding: 20px;
+      margin-bottom: 10px; }
+      .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item .me-item-controls {
+        float: right; }
+      .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item .me-tooltip-text {
+        display: none; }
 
 
 /*# sourceMappingURL=app.min.css.map*/

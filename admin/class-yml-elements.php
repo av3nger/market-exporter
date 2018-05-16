@@ -9,6 +9,8 @@
  * @subpackage Market_Exporter/admin
  */
 
+namespace Market_Exporter\Admin;
+
 /**
  * Available elements for the YML file.
  *
@@ -18,7 +20,7 @@
  * @subpackage Market_Exporter/admin
  * @author     Anton Vanyukov <a.vanyukov@testor.ru>
  */
-class Market_Exporter_Elements {
+class YML_Elements {
 
 	public static function get_header_elements() {
 		$elements = array();
