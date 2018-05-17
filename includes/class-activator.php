@@ -83,6 +83,10 @@ class Activator {
 			self::update_1_0_2();
 		}
 
+		if ( version_compare( $version, '1.1.0', '<' ) ) {
+			self::update_1_1();
+		}
+
 		// Update version.
 		update_option( 'market_exporter_version', MARKET_EXPORTER_VERSION );
 	}
@@ -178,5 +182,29 @@ class Activator {
 		}
 
 		update_option( 'market_exporter_shop_settings', $options );
+	}
+
+	/**
+	 * Update to 1.1.0
+	 *
+	 * Upgrade to new settings structure.
+	 *
+	 * @since 1.1.0
+	 */
+	public static function update_1_1() {
+		$old_options = get_option( 'market_exporter_shop_settings' );
+
+		$options = array();
+
+		$options['name']     = isset( $old_options['website_name'] ) ? $old_options['website_name'] : get_bloginfo( 'name' );
+		$options['company']  = isset( $old_options['company_name'] ) ? $old_options['company_name'] : '';
+		$options['url']      = get_site_url();
+		$options['platform'] = __( 'WordPress', 'market-exporter' );
+		$options['version']  = get_bloginfo( 'version' );
+		$options['agency']   = '';
+		$options['email']    = get_bloginfo( 'admin_email' );
+
+		update_option( 'market_exporter_settings', $options );
+		// TODO: delete old settings
 	}
 }

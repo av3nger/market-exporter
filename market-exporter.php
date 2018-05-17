@@ -15,7 +15,7 @@
  * Plugin Name:       Market Exporter
  * Plugin URI:        https://github.com/av3nger/market-exporter/
  * Description:       Market Exporter provides a way to export products from WooCommerce installations into a YML file for use in Yandex Market.
- * Version:           1.1.0
+ * Version:           1.1.0-beta.1
  * Author:            Anton Vanyukov
  * Author URI:        http://www.vanyukov.su
  * License:           GPL-2.0+
@@ -26,9 +26,8 @@
  * WC tested up to:      3.2.1
  */
 
-namespace Market_Exporter;
+//namespace Market_Exporter;
 
-use Market_Exporter\Core\ME;
 use Market_Exporter\Core\Activator;
 use Market_Exporter\Core\Deactivator;
 
@@ -42,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'MARKET_EXPORTER_VERSION', '1.1.0' );
+define( 'MARKET_EXPORTER_VERSION', '1.1.0-beta.1' );
 
 /**
  * Plugin directory.
@@ -83,16 +82,4 @@ register_deactivation_hook( __FILE__, 'deactivate_market_exporter' );
 /* @noinspection PhpIncludeInspection */
 require plugin_dir_path( __FILE__ ) . 'includes/class-me.php';
 
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since 0.0.1
- */
-function run_market_exporter() {
-	ME::get_instance()->run();
-}
-run_market_exporter();
+add_action( 'plugins_loaded', array( 'Market_Exporter\Core\ME', 'get_instance' ) );

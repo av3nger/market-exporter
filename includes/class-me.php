@@ -118,6 +118,9 @@ class ME {
 		}
 
 		$this->define_admin_hooks();
+
+		// Run the loader to execute all of the hooks with WordPress.
+		$this->loader->run();
 	}
 
 	/**
