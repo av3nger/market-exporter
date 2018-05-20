@@ -138,20 +138,20 @@ select[multiple] {
     float: right;
     top: -50px;
     margin-bottom: -50px; }
-  .me-wrapper .me-list-group .me-list-group-panel {
+  .me-wrapper .me-list-group.me-list-group-panel {
     background-color: #fff;
     border: 1px solid #9d9d9d;
     border-radius: 5px;
     padding: 10px 20px 10px;
     margin-bottom: 10px; }
-    .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item {
+    .me-wrapper .me-list-group.me-list-group-panel .me-list-group-item {
       border: 1px solid #9d9d9d;
       border-radius: 5px;
       padding: 20px;
       margin-bottom: 10px; }
-      .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item .me-item-controls {
+      .me-wrapper .me-list-group.me-list-group-panel .me-list-group-item .me-item-controls {
         float: right; }
-      .me-wrapper .me-list-group .me-list-group-panel .me-list-group-item .me-tooltip-text {
+      .me-wrapper .me-list-group.me-list-group-panel .me-list-group-item .me-tooltip-text {
         display: none; }
 
 

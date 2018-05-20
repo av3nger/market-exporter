@@ -55,18 +55,48 @@ class Endpoints extends \WP_REST_Controller {
 	 */
 	public function register_routes() {
 		$slug = ME::get_instance()->get_plugin_name();
-		$namespace = "{$slug}/v{$this->version}";
-		$endpoint = '/settings/';
+		$namespace = $slug . '/v' . $this->version;
 
-		register_rest_route( $namespace, $endpoint, array(
+		register_rest_route( $namespace, '/settings/', array(
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => function() {
-				return get_option( 'market_exporter_shop_settings' );
+				return get_option( 'market_exporter_settings' );
 			},
 			'permission_callback' => function () {
 				return current_user_can( 'manage_options' );
 			},
 		) );
+
+		register_rest_route( $namespace,'/elements/(?P<type>[-\w]+)', array(
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => array( $this, 'get_elements' ),
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		) );
+	}
+
+	/**
+	 * Get YML elements array
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function get_elements( \WP_REST_Request $request ) {
+		$method = "get_{$request['type']}_elements";
+
+		if ( ! method_exists( 'Market_Exporter\Admin\YML_Elements', $method ) ) {
+			return new \WP_Error( 'method-not-found', printf(
+				/* translators: %s: method name */
+				__( 'Method %s not found.', 'market-exporter' ),
+				$method
+			) );
+		}
+
+		$elements = call_user_func( array( 'Market_Exporter\Admin\YML_Elements', $method ) );
+
+		return new \WP_REST_Response( $elements, 200 );
 	}
 
 }

@@ -113,32 +113,4 @@ class YML_Elements {
 		return $elements;
 	}
 
-	/**
-	 * Print selected element.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $element  Element ID.
-	 * @param string $type     Type of element. Accepts: 'header'. Default: 'header'.
-	 */
-	public static function print_element( $element, $value, $type = 'header' ) {
-		$elements = call_user_func( array( 'Market_Exporter_Elements', "get_{$type}_elements" ) );
-		?>
-		<div class="me-list-group-item">
-			<div class="me-item-controls">
-				<span class="dashicons dashicons-minus"></span>
-				<span class="dashicons dashicons-move" aria-hidden="true"></span>
-			</div>
-
-			<strong>
-				<?php echo "&lt;{$element}&gt;<span contenteditable='true'>{$value}</span>&lt;/{$element}&gt;"; ?>
-			</strong>
-			<span class="dashicons dashicons-editor-help"></span>
-			<div class="me-tooltip-text">
-				<?php echo $elements[ $element ]['description']; ?>
-			</div>
-		</div>
-		<?php
-	}
-
 }

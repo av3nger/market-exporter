@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { __ } from "@wordpress/i18n/build/index";
 import fetchWP from './utils/fetchWP';
 
-import Description from './components/description';
 import Button from './components/button';
+import Description from './components/description';
 import YmlListControl from './components/yml-list-control';
 
 /**
@@ -23,7 +23,7 @@ class MarketExporter extends React.Component {
 
 		this.state = {
 			loading: true,
-			options: [],
+			options: []
 		};
 
 		this.fetchWP = new fetchWP({
@@ -56,24 +56,26 @@ class MarketExporter extends React.Component {
 	 * @returns {*}
 	 */
 	render() {
-		const isLoggedIn = true;
-
 		if ( this.state.loading ) {
-			return "Loading...";
+			return __( 'Loading...' );
 		}
 
+		const isLoggedIn = true;
 
 		return (
 			<div className="me-main-content">
 				<Description />
+
 				{isLoggedIn &&
-					<Button
-						buttonText={ __( 'Add first field' ) }
-						className='button button-primary me-button-callout'
-						onClick={this.handleOnClick}
-					/>}
+				<Button
+					buttonText={ __( 'Add first field' ) }
+					className='button button-primary me-button-callout'
+					onClick={this.handleOnClick}
+				/>}
+
 				<YmlListControl
 					settings={this.state.options}
+					fetchWP={this.fetchWP}
 				/>
 			</div>
 		);
