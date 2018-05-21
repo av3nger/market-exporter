@@ -58,13 +58,22 @@ class Endpoints extends \WP_REST_Controller {
 		$namespace = $slug . '/v' . $this->version;
 
 		register_rest_route( $namespace, '/settings/', array(
-			'methods'             => \WP_REST_Server::READABLE,
-			'callback'            => function() {
-				return get_option( 'market_exporter_settings' );
-			},
-			'permission_callback' => function () {
-				return current_user_can( 'manage_options' );
-			},
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => function() {
+					return get_option( 'market_exporter_settings' );
+				},
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+			),
+			array(
+				'methods'             => \WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'update_settings' ),
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+			),
 		) );
 
 		register_rest_route( $namespace,'/elements/(?P<type>[-\w]+)', array(
@@ -77,7 +86,16 @@ class Endpoints extends \WP_REST_Controller {
 	}
 
 	/**
-	 * Get YML elements array
+	 * Update settings.
+	 *
+	 * @param \WP_REST_Request $request
+	 */
+	public function update_settings( \WP_REST_Request $request ) {
+
+	}
+
+	/**
+	 * Get YML elements array.
 	 *
 	 * @param \WP_REST_Request $request
 	 *

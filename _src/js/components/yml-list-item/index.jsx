@@ -1,10 +1,25 @@
 import React from 'react';
 
+/**
+ * YML list item component
+ *
+ * @since 1.1.0
+ */
 class YmlListItem extends React.Component {
+	/**
+	 * YmlListItem constructor
+	 *
+	 * @param props
+	 */
 	constructor(props) {
 		super(props);
 	}
 
+	/**
+	 * Render component
+	 *
+	 * @returns {*}
+	 */
 	render() {
 		return (
 			<div className="me-list-group-item">
@@ -15,16 +30,9 @@ class YmlListItem extends React.Component {
 				<strong>
 					&lt;{this.props.name}&gt;<span contenteditable="true">{this.props.value}</span>&lt;/{this.props.name}&gt;
 				</strong>
-
-				<span className="dashicons dashicons-editor-help" />
-				<div className="me-tooltip-text">
-					{this.props.description}
-				</div>
-
 			</div>
 		);
 	}
 }
-
 
 export default YmlListItem;

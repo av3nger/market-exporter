@@ -1,0 +1,48 @@
+/**
+ * Tooltips
+ */
+.me-wrapper .me-tooltip {
+    float: right;
+    margin-left: 5px;
+}
+
+.me-wrapper .tooltip {
+    border-radius: 5px;
+    background-color: #2F6690;
+    padding: 0 15px;
+    max-width: 300px;
+
+    .tooltip-inner p {
+        color: #fff;
+        font-size: 12px;
+        font-weight: 300;
+        line-height: 15px;
+    }
+
+    .tooltip-arrow {
+        position: absolute;
+        border: solid #2F6690;
+    }
+
+    &[x-placement^="top"] .tooltip-arrow {
+        border-width: 5px 5px 0 5px;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        bottom: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    &[x-placement^="bottom"] .tooltip-arrow {
+        border-width: 0 5px 5px 5px;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        top: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}

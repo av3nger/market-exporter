@@ -2,21 +2,58 @@
  * YML component styles
  */
 .me-wrapper .me-list-group {
-    margin-top: 50px;
-
-    .me-list-header .button {
-        position: relative;
-        float: right;
-        top: -50px;
-        margin-bottom: -50px;
-    }
+    margin-top: 30px;
+    -webkit-box-shadow: 3px 3px 5px 0px rgba(148,148,148,1);
+    -moz-box-shadow: 3px 3px 5px 0px rgba(148,148,148,1);
+    box-shadow: 3px 3px 5px 0px rgba(148,148,148,1);
 
     &.me-list-group-panel {
         background-color: #fff;
         border: 1px solid #9d9d9d;
         border-radius: 5px;
-        padding: 10px 20px 10px;
         margin-bottom: 10px;
+    }
+
+    .me-list-header {
+        border-bottom: 1px solid #9d9d9d;
+        padding: 10px 30px;
+
+        .button {
+            position: relative;
+            float: right;
+            top: -40px;
+        }
+    }
+
+    .me-list-content {
+        padding: 10px 20px;
+
+        .me-list-new-item {
+            display: flex;
+            flex-flow: row wrap;
+            border: 1px solid #9d9d9d;
+            padding: 15px 30px 30px;
+            margin: 20px 0;
+
+            h3 {
+                margin-bottom: 0;
+            }
+
+            .h3, p {
+                flex: 0 0 100%;
+            }
+
+            .me-new-item {
+                border: 1px solid #9d9d9d;
+                border-radius: 5px;
+                padding: 5px 10px;
+                cursor: pointer;
+
+                .me-tooltip-text {
+                    display: none;
+                }
+            }
+        }
 
         .me-list-group-item {
             border: 1px solid #9d9d9d;
@@ -26,10 +63,6 @@
 
             .me-item-controls {
                 float: right;
-            }
-
-            .me-tooltip-text {
-                display: none;
             }
         }
     }
