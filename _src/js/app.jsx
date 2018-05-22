@@ -57,7 +57,7 @@ class MarketExporter extends React.Component {
 	 */
 	render() {
 		if ( this.state.loading ) {
-			return __( 'Loading...' );
+			return __('Loading...');
 		}
 
 		const isLoggedIn = true;
@@ -68,7 +68,7 @@ class MarketExporter extends React.Component {
 
 				{isLoggedIn &&
 				<Button
-					buttonText={ __( 'Add first field' ) }
+					buttonText={__('Add first field')}
 					className='button button-primary me-button-callout'
 					onClick={this.handleOnClick}
 				/>}

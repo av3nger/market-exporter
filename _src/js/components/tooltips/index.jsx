@@ -6,6 +6,13 @@ import './style.scss';
 /**
  * Tooltip component
  *
+ * The preceding element needs to have a class 'me-tooltip-element'.
+ *
+ * Can be shown with an icon:
+ *     <Tooltip text="Some tooltip text" showIcon="true" />
+ * or without one:
+ *     <Tooltip text="Some tooltip text" />
+ *
  * @since 1.1.0
  */
 class Tooltips extends React.Component {
@@ -21,7 +28,7 @@ class Tooltips extends React.Component {
 	 * Init tooltip.js library here
 	 */
 	componentDidMount() {
-		const help_tooltips = document.getElementsByClassName('dashicons-editor-help');
+		const help_tooltips = document.getElementsByClassName('me-tooltip-element');
 
 		for (let i = 0; i < help_tooltips.length; i++) {
 			new Tooltip(help_tooltips[i], {
@@ -41,14 +48,25 @@ class Tooltips extends React.Component {
 	 * @returns {*}
 	 */
 	render() {
-		return (
-			<div className="me-tooltip">
-				<span className="dashicons dashicons-editor-help" />
-				<div className="me-tooltip-text">
-					{this.props.tooltip.split('\n').map(item => {
-						return <p>{item}</p>;
-					})}
+		// Show tooltip with icon.
+		if ( "true" === this.props.showIcon ) {
+			return (
+				<div className="me-tooltip">
+					<span className="dashicons dashicons-editor-help me-tooltip-element" />
+					<div className="me-tooltip-text">
+						{this.props.text.split('\n').map(item => {
+							return <p>{item}</p>;
+						})}
+					</div>
 				</div>
+			);
+		}
+
+		return (
+			<div className="me-tooltip-text">
+				{this.props.text.split('\n').map(item => {
+					return <p>{item}</p>;
+				})}
 			</div>
 		);
 	}

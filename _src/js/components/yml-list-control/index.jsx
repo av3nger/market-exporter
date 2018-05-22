@@ -99,7 +99,7 @@ class YmlListControl extends React.Component {
 			return (
 				<div className="me-new-item" onClick={() => this.handleItemMove(item, 'add')}>
 					{item}
-					<Tooltips tooltip={this.state.headerFields[item].description} />
+					<Tooltips text={this.state.headerFields[item].description} showIcon="true" />
 				</div>
 			);
 		});
@@ -115,17 +115,26 @@ class YmlListControl extends React.Component {
 			);
 		});
 
+		let buttonClasses = "button button-disabled me-tooltip-element",
+			tooltipText   = __('No more items left for this type'),
+		    itemDisabled  = true;
+		if ( this.state.unusedHeaderItems.length > 0 ) {
+			buttonClasses = "button button-primary me-tooltip-element";
+			tooltipText   = __('Add new item to YML config');
+			itemDisabled  = false;
+		}
+
 		return (
 			<div className="me-list-group me-list-group-panel" id="me_yml_store">
 				<div className="me-list-header">
 					<h2>&lt;shop&gt;</h2>
 
-					// TODO: make button disabled, when no items left on list
-					// TODO: add tooltips to button
 					<input type="submit"
-						   className="button button-primary"
+						   className={buttonClasses}
 						   onClick={() => this.setState({showAddDiv: ! this.state.showAddDiv})}
-						   value={__('Add field')} />
+						   value={__('Add field')}
+						   disabled={itemDisabled} />
+					<Tooltips text={tooltipText} />
 				</div>
 
 				<div className="me-list-content">
