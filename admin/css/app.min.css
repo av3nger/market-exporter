@@ -16,6 +16,9 @@
   -moz-box-shadow: 3px 3px 5px 0px #949494;
   box-shadow: 3px 3px 5px 0px #949494; }
 
+.me-wrapper .me-tooltip-text {
+  display: none; }
+
 /**
  * Button styles
  */
@@ -85,7 +88,7 @@
       float: right;
       top: -40px; }
   .me-wrapper .me-list-group .me-list-content {
-    padding: 10px 20px; }
+    padding: 10px 30px 20px; }
     .me-wrapper .me-list-group .me-list-content .me-list-new-item {
       display: flex;
       flex-flow: row wrap;
@@ -100,16 +103,21 @@
         border: 1px solid #9d9d9d;
         border-radius: 5px;
         padding: 5px 10px;
-        cursor: pointer; }
-        .me-wrapper .me-list-group .me-list-content .me-list-new-item .me-new-item .me-tooltip-text {
-          display: none; }
+        cursor: pointer;
+        margin-right: 10px; }
     .me-wrapper .me-list-group .me-list-content .me-list-group-item {
       border: 1px solid #9d9d9d;
       border-radius: 5px;
-      padding: 20px;
+      padding: 10px 20px;
       margin-bottom: 10px; }
       .me-wrapper .me-list-group .me-list-content .me-list-group-item .me-item-controls {
         float: right; }
+        .me-wrapper .me-list-group .me-list-content .me-list-group-item .me-item-controls .dashicons-minus {
+          cursor: pointer;
+          padding: 0 7px;
+          border: 1px solid #9d9d9d;
+          border-radius: 5px;
+          margin-top: -2px; }
 
 
 /*# sourceMappingURL=app.min.css.map*/

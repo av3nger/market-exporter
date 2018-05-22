@@ -26,7 +26,7 @@
     }
 
     .me-list-content {
-        padding: 10px 20px;
+        padding: 10px 30px 20px;
 
         .me-list-new-item {
             display: flex;
@@ -48,21 +48,26 @@
                 border-radius: 5px;
                 padding: 5px 10px;
                 cursor: pointer;
-
-                .me-tooltip-text {
-                    display: none;
-                }
+                margin-right: 10px;
             }
         }
 
         .me-list-group-item {
             border: 1px solid #9d9d9d;
             border-radius: 5px;
-            padding: 20px;
+            padding: 10px 20px;
             margin-bottom: 10px;
 
             .me-item-controls {
                 float: right;
+
+                .dashicons-minus {
+                    cursor: pointer;
+                    padding: 0 7px;
+                    border: 1px solid #9d9d9d;
+                    border-radius: 5px;
+                    margin-top: -2px;
+                }
             }
         }
     }

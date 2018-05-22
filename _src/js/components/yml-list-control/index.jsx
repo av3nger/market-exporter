@@ -23,8 +23,10 @@ class YmlListControl extends React.Component {
 
 		this.state = {
 			loading: true,
-			showAddDiv: true,
-			headerFields: {}
+			showAddDiv: false,
+			headerFields: [],     // List of all available header fields
+			headerItems: [],      // Currently used header fields
+			unusedHeaderItems: [] // Not used header fields (available to add)
 		};
 	}
 
@@ -34,12 +36,52 @@ class YmlListControl extends React.Component {
 	componentDidMount() {
 		this.props.fetchWP.get('elements/header')
 			.then(
-				(json) => this.setState({
-					loading: false,
-					headerFields: json
-				}),
+				(json) => {
+					let unusedItems = [];
+
+					// Build the current items list.
+					const items = Object.keys(this.props.settings).filter(item => {
+						if ( this.props.settings[item] ) {
+							return true;
+						}
+						unusedItems.push(item);
+						return false;
+					});
+
+					this.setState({
+						loading: false,
+						headerFields: json,
+						headerItems: items,
+						unusedHeaderItems: unusedItems
+					});
+				},
 				(err) => console.log( 'error', err )
 			);
+	}
+
+	/**
+	 * Handle item move (add/remnove from YML list)
+	 *
+	 * @param {string} item
+	 * @param {string} action  Accepts: 'add', 'remove'.
+	 */
+	handleItemMove(item, action = 'add') {
+		let headerItems = this.state.headerItems.slice();
+		let unusedHeaderItems = this.state.unusedHeaderItems.slice();
+
+		if ( 'add' === action ) {
+			const index = unusedHeaderItems.indexOf(item);
+			headerItems = headerItems.concat( unusedHeaderItems.splice(index, 1) );
+		} else {
+			const index = headerItems.indexOf(item);
+			unusedHeaderItems = unusedHeaderItems.concat( headerItems.splice(index, 1) );
+		}
+
+		this.setState({
+			showAddDiv: unusedHeaderItems.length > 0,
+			headerItems: headerItems,
+			unusedHeaderItems: unusedHeaderItems
+		});
 	}
 
 	/**
@@ -52,30 +94,25 @@ class YmlListControl extends React.Component {
 			return __( 'Loading...' );
 		}
 
-		let unusedItems = {...this.state.headerFields};
+		// Build the unused items list.
+		const itemAvailable = this.state.unusedHeaderItems.map(item => {
+			return (
+				<div className="me-new-item" onClick={() => this.handleItemMove(item, 'add')}>
+					{item}
+					<Tooltips tooltip={this.state.headerFields[item].description} />
+				</div>
+			);
+		});
 
-		const items = Object.keys(this.props.settings).filter(item => {
-			if ( this.props.settings[item] ) {
-				delete unusedItems[item];
-				return true;
-			}
-			return false;
-		}).map(item => {
+		// Build the current items list.
+		const items = this.state.headerItems.map(item => {
 			return (
 				<YmlListItem
 					name={item}
 					value={this.props.settings[item]}
+					onClick={() => this.handleItemMove(item, 'remove')}
 				/>
-			)
-		});
-
-		const itemAvailable = Object.keys(unusedItems).map(item => {
-			return (
-				<div className="me-new-item">
-					{item}
-					<Tooltips tooltip={this.state.headerFields[item].description} />
-				</div>
-			)
+			);
 		});
 
 		return (
@@ -83,6 +120,8 @@ class YmlListControl extends React.Component {
 				<div className="me-list-header">
 					<h2>&lt;shop&gt;</h2>
 
+					// TODO: make button disabled, when no items left on list
+					// TODO: add tooltips to button
 					<input type="submit"
 						   className="button button-primary"
 						   onClick={() => this.setState({showAddDiv: ! this.state.showAddDiv})}
