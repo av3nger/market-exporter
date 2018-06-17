@@ -530,18 +530,23 @@ class ME_WC {
 					$attributes = $product->get_attributes();
 					/* @var WC_Product_Attribute|array $param */
 					foreach ( $attributes as $param ) {
+						$a = 'a';
 						if ( self::woo_latest_versions() ) {
 							$taxonomy = wc_attribute_taxonomy_name_by_id( $param->get_id() );
 						} else {
 							$taxonomy = $param['name'];
 						}
 
-						if ( true === $param['variation'] ) {
+						if ( isset( $param['variation'] ) && true === $param['variation'] || isset( $param['is_variation'] ) && 1 === $param['is_variation'] ) {
 							$param_value = $offer->get_attribute( $taxonomy );
 						} else {
-							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param->get_id() ) );
+							$param_value = $product->get_attribute( $taxonomy );
 						}
 
+						// Skip if empty value (when cyrillic letter are used in attribute slug).
+						if ( ! isset( $param_value ) || empty( $param_value ) ) {
+							continue;
+						}
 						/* @var WC_Product_Attribute $param */
 						$yml .= '        <param name="' . wc_attribute_label( $taxonomy ) . '">' . $param_value . '</param>' . PHP_EOL;
 					}

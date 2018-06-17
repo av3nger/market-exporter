@@ -73,6 +73,7 @@ WooCommerce также тестировался на последних верс
 * NEW: Поддержка элемента stock_quantity
 * NEW: Обновлены файлы переводов
 * FIXED: Ошибка, когда не выгружались все рисунки
+* FIXED: Ошибка "Call to a member function get_id()" на WooCommerce 2.6.x
 
 = 1.0.3 =
 * NEW: Скачиваемые товары теперь выгружаются с элементом downloadable
