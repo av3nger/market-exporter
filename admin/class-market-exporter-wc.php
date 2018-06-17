@@ -456,6 +456,7 @@ class ME_WC {
 				}
 
 				// Params: size and weight.
+				// TODO: refactor. Too many nested if...else statements.
 				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) {
 					$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
 					if ( $offer->has_weight() && 'kg' === $weight_unit ) {
@@ -463,23 +464,61 @@ class ME_WC {
 					}
 
 					$size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
-					if ( $offer->has_dimensions() && 'cm' === $size_unit ) {
+					if ( $offer->has_dimensions() ) {
 
 						if ( self::woo_latest_versions() ) {
 							// WooCommerce version 3.0 and higher.
-							$dimensions = implode( '/', $offer->get_dimensions( false ) );
+							$dimensions = $offer->get_dimensions( false );
 						} else {
 							// WooCommerce 2.6 and lower.
-							$dimensions = implode( '/', array_filter( array(
-								$offer->get_length(),
-								$offer->get_width(),
-								$offer->get_height(),
-							) ) );
+							$dimensions = array(
+								'length' => $offer->get_length(),
+								'width'  => $offer->get_width(),
+								'height' => $offer->get_height(),
+							);
 						}
 
+						$a = 'asd';
+
+						switch ( $size_unit ) {
+							case 'm':
+								$dimensions = array(
+									'length' => $dimensions['length'] * 100,
+									'width'  => $dimensions['width'] * 100,
+									'height' => $dimensions['height'] * 100,
+								);
+								break;
+							case 'mm':
+								$dimensions = array(
+									'length' => $dimensions['length'] / 10,
+									'width'  => $dimensions['width'] / 10,
+									'height' => $dimensions['height'] / 10,
+								);
+								break;
+							case 'in':
+								$dimensions = array(
+									'length' => $dimensions['length'] * 2.54,
+									'width'  => $dimensions['width'] * 2.54,
+									'height' => $dimensions['height'] * 2.54,
+								);
+								break;
+							case 'yd':
+								$dimensions = array(
+									'length' => $dimensions['length'] * 91.44,
+									'width'  => $dimensions['width'] * 91.44,
+									'height' => $dimensions['height'] * 91.44,
+								);
+								break;
+							case 'cm':
+							case 'default':
+								// Nothing to do.
+								break;
+						}
+
+						$dimensions = implode( '/', $dimensions );
 						$yml .= '        <dimensions>' . $dimensions . '</dimensions>' . PHP_EOL;
-					}
-				}
+					} // End if().
+				} // End if().
 
 				// Params: stock_quantity
 				if ( isset( $this->settings['stock_quantity'] ) && $this->settings['stock_quantity'] ) {
