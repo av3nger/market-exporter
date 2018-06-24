@@ -20,26 +20,42 @@ class Tooltips extends React.Component {
 	 * Tooltip constructor
 	 * @param props
 	 */
-	constructor(props) {
-		super(props);
+	constructor( props ) {
+		super( props );
 	}
 
 	/**
 	 * Init tooltip.js library here
 	 */
 	componentDidMount() {
-		const help_tooltips = document.getElementsByClassName('me-tooltip-element');
+		const help_tooltips = document.getElementsByClassName( 'me-tooltip-element' );
 
-		for (let i = 0; i < help_tooltips.length; i++) {
+		for ( let i = 0; i < help_tooltips.length; i++ ) {
 			new Tooltip(help_tooltips[i], {
 				placement: 'top', // or bottom, left, right, and variations
 				title: () => {
-					const text = help_tooltips[i].parentElement.getElementsByClassName('me-tooltip-text');
+					const text = help_tooltips[i].parentElement.getElementsByClassName( 'me-tooltip-text' );
 					return text[0].innerHTML;
 				},
 				html: true
 			});
 		}
+	}
+
+	/**
+	 * Show tooltip div.
+	 *
+	 * @param text
+	 * @returns {*}
+	 */
+	static showTooltip( text ) {
+		return (
+			<div className="me-tooltip-text">
+				{ text.split( '\n' ).map( item => {
+					return <p>{ item }</p>;
+				} ) }
+			</div>
+		);
 	}
 
 	/**
@@ -53,22 +69,12 @@ class Tooltips extends React.Component {
 			return (
 				<div className="me-tooltip">
 					<span className="dashicons dashicons-editor-help me-tooltip-element" />
-					<div className="me-tooltip-text">
-						{this.props.text.split('\n').map(item => {
-							return <p>{item}</p>;
-						})}
-					</div>
+					{ Tooltips.showTooltip( this.props.text ) }
 				</div>
 			);
 		}
 
-		return (
-			<div className="me-tooltip-text">
-				{this.props.text.split('\n').map(item => {
-					return <p>{item}</p>;
-				})}
-			</div>
-		);
+		return Tooltips.showTooltip( this.props.text );
 	}
 }
 

@@ -287,7 +287,6 @@ class Admin {
 	 * @deprecated 0.4.4
 	 */
 	public function crontab_activate() {
-		// Schedule task.
 		if ( ! wp_next_scheduled( 'market_exporter_cron' ) ) {
 			wp_schedule_event( time(), 'hourly', 'market_exporter_cron' );
 		}

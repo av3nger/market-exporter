@@ -15,8 +15,8 @@ class YmlListItem extends React.Component {
 	 *
 	 * @param props
 	 */
-	constructor(props) {
-		super(props);
+	constructor( props ) {
+		super( props );
 	}
 
 	/**
@@ -28,12 +28,12 @@ class YmlListItem extends React.Component {
 		return (
 			<div className="me-list-group-item">
 				<div className="me-item-controls">
-					<span className="dashicons dashicons-minus me-tooltip-element" onClick={this.props.onClick} aria-hidden="true" />
-					<Tooltips text={__('Remove item')} />
+					<span className="dashicons dashicons-minus me-tooltip-element" onClick={ this.props.onClick } aria-hidden="true" />
+					<Tooltips text={ __( 'Remove item' ) } />
 				</div>
 
 				<strong>
-					&lt;{this.props.name}&gt;<span contenteditable="true">{this.props.value}</span>&lt;/{this.props.name}&gt;
+					&lt;{ this.props.name }&gt;<span contenteditable="true">{ this.props.value }</span>&lt;/{ this.props.name }&gt;
 				</strong>
 			</div>
 		);

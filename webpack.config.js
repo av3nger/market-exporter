@@ -7,7 +7,7 @@ const ExtractTextPlugin = require( 'mini-css-extract-plugin' );
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-	mode: 'development',
+	mode: 'production',
 
 	entry: {
 		'app': path.resolve( __dirname, '_src/js/index.js' ),
@@ -73,7 +73,13 @@ module.exports = {
 
 	devtool: 'source-map', // Generates source Maps for these files
 
+	stats: {
+		colors: true,
+		entrypoints: true
+	},
+
 	watchOptions: {
-		poll: 500
+		ignored: /node_modules/,
+		poll: 1000
 	}
 };

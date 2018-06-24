@@ -11,10 +11,10 @@ import './style.scss';
  * @returns {*}
  * @constructor
  */
-function Button(props) {
+function Button( props ) {
 	return (
-		<button className={props.className} onClick={props.onClick}>
-			{props.buttonText}
+		<button className={ props.className } onClick={ props.onClick }>
+			{ props.buttonText }
 		</button>
 	);
 }
