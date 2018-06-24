@@ -18,36 +18,38 @@ class MarketExporter extends React.Component {
 	 *
 	 * @param props
 	 */
-	constructor(props) {
-		super(props);
+	constructor( props ) {
+		super( props );
 
 		this.state = {
 			loading: true,
 			options: []
 		};
 
-		this.fetchWP = new fetchWP({
+		this.fetchWP = new fetchWP( {
 			restURL: this.props.wpObject.api_url,
 			restNonce: this.props.wpObject.api_nonce,
-		});
+		} );
 	}
 
 	/**
 	 * Init component states
 	 */
 	componentDidMount() {
-		this.fetchWP.get('settings')
-			.then(
-				(json) => this.setState({
-					loading: false,
-					options: json
-				}),
-				(err) => console.log( 'error', err )
-			);
+		this.fetchWP.get( 'settings' ).then(
+			( json ) => this.setState( {
+				loading: false,
+				options: json
+			} ), ( err ) => console.log( 'error', err )
+		);
 	}
 
-	handleOnClick() {
-		alert('asdds');
+	handleAddField() {
+		alert( 'Add first field' );
+	}
+
+	handleGenerateFile() {
+		alert( 'Generate YML' );
 	}
 
 	/**
@@ -57,32 +59,32 @@ class MarketExporter extends React.Component {
 	 */
 	render() {
 		if ( this.state.loading ) {
-			return __('Loading...');
+			return __( 'Loading...' );
 		}
 
-		const isFieldAdded = false;
+		const isFieldAdded = 0 !== this.state.options.length;
 
 		return (
 			<div className="me-main-content">
 				<Description />
 
-				{!isFieldAdded &&
+				{ ! isFieldAdded &&
 				<Button
-					buttonText={__('Add first field')}
+					buttonText={ __( 'Add first field' ) }
 					className='button button-primary me-button-callout'
-					onClick={this.handleOnClick}
-				/>}
+					onClick={ this.handleAddField }
+				/> }
 
-				{isFieldAdded &&
+				{ isFieldAdded &&
 				<Button
-					buttonText={__('Generate YML')}
+					buttonText={ __( 'Generate YML' ) }
 					className='button button-primary me-button-callout'
-					onClick={this.handleOnClick}
+					onClick={ this.handleGenerateFile }
 				/>}
 
 				<YmlListControl
-					settings={this.state.options}
-					fetchWP={this.fetchWP}
+					settings={ this.state.options }
+					fetchWP={ this.fetchWP }
 				/>
 			</div>
 		);
@@ -93,10 +95,10 @@ MarketExporter.propTypes = {
 	wpObject: PropTypes.object
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener( 'DOMContentLoaded', function() {
 	ReactDOM.render(
 		/** @var {object} window.ajax_strings */
-		<MarketExporter wpObject={window.ajax_strings}/>,
-		document.getElementById('me_components')
+		<MarketExporter wpObject={ window.ajax_strings }/>,
+		document.getElementById( 'me_components' )
 	);
-});
+} );
