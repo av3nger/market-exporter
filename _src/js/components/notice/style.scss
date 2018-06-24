@@ -1,0 +1,52 @@
+/**
+ * Error message styles
+ */
+.me-notice {
+    padding: 5px 20px;
+
+    & p:before {
+        font-family: Dashicons, sans-serif;
+        font-size: 20px;
+        margin-right: 10px;
+        float: left;
+        position: relative;
+        top: -5px;
+
+    }
+
+    &.me-error {
+        color: #D8000C;
+        background-color: #FFD2D2;
+
+        & p:before {
+            content: "\f153";
+        }
+    }
+
+    &.me-info {
+        color: #00529B;
+        background-color: #BDE5F8;
+
+        & p:before {
+            content: "\f534";
+        }
+    }
+
+    &.me-success {
+        color: #4F8A10;
+        background-color: #DFF2BF;
+
+        & p:before {
+            content: "\f147";
+        }
+    }
+
+    &.me-warning {
+        color: #9F6000;
+        background-color: #FEEFB3;
+
+        & p:before {
+            content: "\f534";
+        }
+    }
+}

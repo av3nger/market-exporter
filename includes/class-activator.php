@@ -201,7 +201,6 @@ class Activator {
 		$options['url']      = get_site_url();
 		$options['platform'] = __( 'WordPress', 'market-exporter' );
 		$options['version']  = get_bloginfo( 'version' );
-		$options['agency']   = '';
 		$options['email']    = get_bloginfo( 'admin_email' );
 
 		update_option( 'market_exporter_settings', $options );

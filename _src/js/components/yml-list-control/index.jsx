@@ -2,6 +2,7 @@ import React from 'react';
 
 import { __ } from "@wordpress/i18n/build/index";
 
+import Notice from "../notice";
 import Tooltips from '../tooltips';
 import YmlListItem from '../yml-list-item';
 
@@ -24,9 +25,11 @@ class YmlListControl extends React.Component {
 		this.state = {
 			loading: true,
 			showAddDiv: false,
-			headerFields: [],     // List of all available header fields
-			headerItems: [],      // Currently used header fields
-			unusedHeaderItems: [] // Not used header fields (available to add)
+			headerFields: [],      // List of all available header fields
+			headerItems: [],       // Currently used header fields
+			unusedHeaderItems: [], // Not used header fields (available to add)
+			updateError: false,
+			updateMessage: ''
 		};
 	}
 
@@ -34,15 +37,17 @@ class YmlListControl extends React.Component {
 	 * Init component states
 	 */
 	componentDidMount() {
-		this.props.fetchWP.get( 'elements/header' )
-			.then( ( json ) => {
+		this.props.fetchWP.get( 'elements/header' ).then(
+			( json ) => {
 				let unusedItems = [];
 
 				// Build the current items list.
-				const items = Object.keys( this.props.settings ).filter( item => {
+				//const items = Object.keys( this.props.settings ).filter( item => {
+				const items = Object.keys( json ).filter( item => {
 					if ( this.props.settings[item] ) {
 						return true;
 					}
+
 					unusedItems.push( item );
 					return false;
 				} );
@@ -53,7 +58,8 @@ class YmlListControl extends React.Component {
 					headerItems: items,
 					unusedHeaderItems: unusedItems
 				} );
-			}, ( err ) => console.log( 'error', err )
+			},
+			( err ) => console.log( 'error', err )
 		);
 	}
 
@@ -64,6 +70,19 @@ class YmlListControl extends React.Component {
 	 * @param {string} action  Accepts: 'add', 'remove'.
 	 */
 	handleItemMove( item, action = 'add' ) {
+		this.props.fetchWP.post( 'settings', { item: item, action: action } ).then(
+			( json ) => this.moveItem( item, action ),
+			( err )  => this.setState({ updateError: true, updateMessage: err.message })
+		);
+	}
+
+	/**
+	 * Move item in the UI.
+	 *
+	 * @param {string} item
+	 * @param {string} action
+	 */
+	moveItem( item, action ) {
 		let headerItems = this.state.headerItems.slice();
 		let unusedHeaderItems = this.state.unusedHeaderItems.slice();
 
@@ -75,11 +94,11 @@ class YmlListControl extends React.Component {
 			unusedHeaderItems = unusedHeaderItems.concat( headerItems.splice( index, 1 ) );
 		}
 
-		this.setState( {
+		this.setState({
 			showAddDiv: unusedHeaderItems.length > 0,
 			headerItems: headerItems,
 			unusedHeaderItems: unusedHeaderItems
-		} );
+		});
 	}
 
 	/**
@@ -144,6 +163,8 @@ class YmlListControl extends React.Component {
 						{ itemAvailable }
 					</div>
 					}
+
+					{ this.state.updateError && <Notice type='error' message={ this.state.updateMessage } /> }
 
 					<h3>{ __( 'header elements' ) }</h3>
 

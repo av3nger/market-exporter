@@ -62,20 +62,18 @@ class MarketExporter extends React.Component {
 			return __( 'Loading...' );
 		}
 
-		const isFieldAdded = 0 !== this.state.options.length;
-
 		return (
 			<div className="me-main-content">
 				<Description />
 
-				{ ! isFieldAdded &&
+				{ ! this.state.options &&
 				<Button
 					buttonText={ __( 'Add first field' ) }
 					className='button button-primary me-button-callout'
 					onClick={ this.handleAddField }
 				/> }
 
-				{ isFieldAdded &&
+				{ this.state.options &&
 				<Button
 					buttonText={ __( 'Generate YML' ) }
 					className='button button-primary me-button-callout'

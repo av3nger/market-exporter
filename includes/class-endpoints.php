@@ -89,9 +89,51 @@ class Endpoints extends \WP_REST_Controller {
 	 * Update settings.
 	 *
 	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function update_settings( \WP_REST_Request $request ) {
+		$params = $request->get_params();
 
+		$error_data = array(
+			'status' => 500,
+		);
+
+		if ( ! isset( $params['item'] ) || ! isset( $params['action'] ) ) {
+			// No valid action - return error.
+			return new \WP_Error( 'update-error',
+				__( 'Either action or item not defined', 'market-exporter' ),
+				$error_data
+			);
+		}
+
+		$updated  = false;
+		$settings = get_option( 'market_exporter_settings' );
+		$item     = sanitize_text_field( $params['item'] );
+
+		// Remove item from settings array.
+		if ( 'remove' === $params['action'] ) {
+			unset( $settings[ $item ] );
+			$updated = true;
+		}
+
+		// Add item to settings array.
+		if ( 'add' === $params['action'] ) {
+			$elements = \Market_Exporter\Admin\YML_Elements::get_header_elements();
+			$settings[ $item ] = $elements[ $item ]['default'];
+			$updated = true;
+		}
+
+		if ( $updated ) {
+			update_option( 'market_exporter_settings', $settings );
+			return new \WP_REST_Response( true, 200 );
+		}
+
+		// No valid action - return error.
+		return new \WP_Error( 'update-error',
+			__( 'Unable to update the settings', 'market-exporter' ),
+			$error_data
+		);
 	}
 
 	/**

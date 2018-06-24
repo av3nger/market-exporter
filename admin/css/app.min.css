@@ -29,6 +29,39 @@
   text-transform: uppercase; }
 
 /**
+ * Error message styles
+ */
+.me-notice {
+  padding: 5px 20px; }
+  .me-notice p:before {
+    font-family: Dashicons, sans-serif;
+    font-size: 20px;
+    margin-right: 10px;
+    float: left;
+    position: relative;
+    top: -5px; }
+  .me-notice.me-error {
+    color: #D8000C;
+    background-color: #FFD2D2; }
+    .me-notice.me-error p:before {
+      content: "\F153"; }
+  .me-notice.me-info {
+    color: #00529B;
+    background-color: #BDE5F8; }
+    .me-notice.me-info p:before {
+      content: "\F534"; }
+  .me-notice.me-success {
+    color: #4F8A10;
+    background-color: #DFF2BF; }
+    .me-notice.me-success p:before {
+      content: "\F147"; }
+  .me-notice.me-warning {
+    color: #9F6000;
+    background-color: #FEEFB3; }
+    .me-notice.me-warning p:before {
+      content: "\F534"; }
+
+/**
  * Tooltips
  */
 .me-wrapper .me-tooltip {
