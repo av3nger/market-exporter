@@ -23,44 +23,10 @@ class YmlListControl extends React.Component {
 		super( props );
 
 		this.state = {
-			loading: true,
 			showAddDiv: false,
-			headerFields: [],      // List of all available header fields
-			headerItems: [],       // Currently used header fields
-			unusedHeaderItems: [], // Not used header fields (available to add)
 			updateError: false,
 			updateMessage: ''
 		};
-	}
-
-	/**
-	 * Init component states
-	 */
-	componentDidMount() {
-		this.props.fetchWP.get( 'elements/header' ).then(
-			( json ) => {
-				let unusedItems = [];
-
-				// Build the current items list.
-				//const items = Object.keys( this.props.settings ).filter( item => {
-				const items = Object.keys( json ).filter( item => {
-					if ( this.props.settings[item] ) {
-						return true;
-					}
-
-					unusedItems.push( item );
-					return false;
-				} );
-
-				this.setState( {
-					loading: false,
-					headerFields: json,
-					headerItems: items,
-					unusedHeaderItems: unusedItems
-				} );
-			},
-			( err ) => console.log( 'error', err )
-		);
 	}
 
 	/**
@@ -83,8 +49,8 @@ class YmlListControl extends React.Component {
 	 * @param {string} action
 	 */
 	moveItem( item, action ) {
-		let headerItems = this.state.headerItems.slice();
-		let unusedHeaderItems = this.state.unusedHeaderItems.slice();
+		let headerItems = this.props.headerItems.slice();
+		let unusedHeaderItems = this.props.unusedHeaderItems.slice();
 
 		if ( 'add' === action ) {
 			const index = unusedHeaderItems.indexOf( item );
@@ -96,8 +62,8 @@ class YmlListControl extends React.Component {
 
 		this.setState({
 			showAddDiv: unusedHeaderItems.length > 0,
-			headerItems: headerItems,
-			unusedHeaderItems: unusedHeaderItems
+			headerItems: headerItems, // TODO: we need to update this. move the action to app.js?
+			unusedHeaderItems: unusedHeaderItems // TODO: same here
 		});
 	}
 
@@ -107,22 +73,18 @@ class YmlListControl extends React.Component {
 	 * @returns {*}
 	 */
 	render() {
-		if ( this.state.loading ) {
-			return __( 'Loading...' );
-		}
-
 		// Build the unused items list.
-		const itemAvailable = this.state.unusedHeaderItems.map( item => {
+		const itemAvailable = this.props.unusedHeaderItems.map( item => {
 			return (
 				<div className="me-new-item" onClick={ () => this.handleItemMove( item, 'add' ) }>
 					{item}
-					<Tooltips text={ this.state.headerFields[item].description } showIcon="true" />
+					<Tooltips text={ this.props.headerFields[item].description } showIcon="true" />
 				</div>
 			);
 		} );
 
 		// Build the current items list.
-		const items = this.state.headerItems.map( item => {
+		const items = this.props.headerItems.map( item => {
 			return (
 				<YmlListItem
 					name={ item }
@@ -135,7 +97,7 @@ class YmlListControl extends React.Component {
 		let buttonClasses = "button button-disabled me-tooltip-element",
 			tooltipText   = __('No more items left for this type'),
 		    itemDisabled  = true;
-		if ( this.state.unusedHeaderItems.length > 0 ) {
+		if ( this.props.unusedHeaderItems.length > 0 ) {
 			buttonClasses = "button button-primary me-tooltip-element";
 			tooltipText   = __('Add new item to YML config');
 			itemDisabled  = false;

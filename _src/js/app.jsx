@@ -23,7 +23,10 @@ class MarketExporter extends React.Component {
 
 		this.state = {
 			loading: true,
-			options: []
+			options: [],           // Plugin options
+			headerFields: [],      // List of all available header fields
+			headerItems: [],       // Currently used header fields
+			unusedHeaderItems: [], // Not used header fields (available to add)
 		};
 
 		this.fetchWP = new fetchWP( {
@@ -37,10 +40,41 @@ class MarketExporter extends React.Component {
 	 */
 	componentDidMount() {
 		this.fetchWP.get( 'settings' ).then(
-			( json ) => this.setState( {
-				loading: false,
-				options: json
-			} ), ( err ) => console.log( 'error', err )
+			( json ) => this.getHeaderElements( json ),
+			( err )  => console.log( 'error', err )
+		);
+	}
+
+	/**
+	 * Get header elements
+	 *
+	 * @param options
+	 */
+	getHeaderElements( options ) {
+		this.fetchWP.get( 'elements/header' ).then(
+			( json ) => {
+				let unusedItems = [];
+
+				// Build the current items list.
+				//const items = Object.keys( this.props.settings ).filter( item => {
+				const items = Object.keys( json ).filter( item => {
+					if ( options[item] ) {
+						return true;
+					}
+
+					unusedItems.push( item );
+					return false;
+				} );
+
+				this.setState( {
+					loading: false,
+					options: options,
+					headerFields: json,
+					headerItems: items,
+					unusedHeaderItems: unusedItems
+				} );
+			},
+			( err ) => console.log( 'error', err )
 		);
 	}
 
@@ -82,7 +116,10 @@ class MarketExporter extends React.Component {
 
 				<YmlListControl
 					settings={ this.state.options }
-					fetchWP={ this.fetchWP }
+					fetchWP={ this.fetchWP } // TODO: do we need this?
+					headerFields={ this.state.headerFields }
+					headerItems={ this.state.headerItems }
+					unusedHeaderItems={ this.state.unusedHeaderItems }
 				/>
 			</div>
 		);
