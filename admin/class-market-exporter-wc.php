@@ -220,10 +220,11 @@ class ME_WC {
 			$args['include'] = $this->settings['include_cat'];
 		}
 		foreach ( get_categories( $args ) as $category ) :
+			$name = apply_filters( 'me_filter_category_name', $category->name );
 			if ( 0 === $category->parent ) {
-				$yml .= '      <category id="' . $category->cat_ID . '">' . wp_strip_all_tags( $category->name ) . '</category>' . PHP_EOL;
+				$yml .= '      <category id="' . $category->cat_ID . '">' . wp_strip_all_tags( $name ) . '</category>' . PHP_EOL;
 			} else {
-				$yml .= '      <category id="' . $category->cat_ID . '" parentId="' . $category->parent . '">' . wp_strip_all_tags( $category->name ) . '</category>' . PHP_EOL;
+				$yml .= '      <category id="' . $category->cat_ID . '" parentId="' . $category->parent . '">' . wp_strip_all_tags( $name ) . '</category>' . PHP_EOL;
 			}
 		endforeach;
 		$yml .= '    </categories>' . PHP_EOL;
@@ -268,7 +269,7 @@ class ME_WC {
 
 			$product = wc_get_product( $query->post->ID );
 
-			if ( apply_filters( 'market_exporter_exclude_post', false, $query->post, $product ) ) {
+			if ( apply_filters( 'me_exclude_post', false, $query->post, $product ) ) {
 				continue;
 			}
 
