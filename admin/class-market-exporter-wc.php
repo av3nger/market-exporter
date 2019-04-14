@@ -569,7 +569,11 @@ class ME_WC {
 							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
 						}
 
-						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $param_value . '</param>' . PHP_EOL;
+						$param_name  = wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						$param_name  = apply_filters( 'me_param_name', $param_name );
+						$param_value = apply_filters( 'me_param_value', $param_value );
+
+						$yml .= '        <param name="' . $param_name . '">' . $param_value . '</param>' . PHP_EOL;
 					}
 				} elseif ( isset( $this->settings['params_all'] ) && $this->settings['params_all'] ) {
 					$attributes = $product->get_attributes();
@@ -592,8 +596,12 @@ class ME_WC {
 						if ( ! isset( $param_value ) || empty( $param_value ) ) {
 							continue;
 						}
+
+						$param_name  = apply_filters( 'me_param_name', wc_attribute_label( $taxonomy ) );
+						$param_value = apply_filters( 'me_param_value', $param_value );
+
 						/* @var WC_Product_Attribute $param */
-						$yml .= '        <param name="' . wc_attribute_label( $taxonomy ) . '">' . $param_value . '</param>' . PHP_EOL;
+						$yml .= '        <param name="' . $param_name . '">' . $param_value . '</param>' . PHP_EOL;
 					}
 				} // End if().
 
