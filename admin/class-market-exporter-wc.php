@@ -353,7 +353,7 @@ class ME_WC {
 				if ( ! $main_image ) {
 					$main_image = get_the_post_thumbnail_url( $product->get_id(), 'full' );
 				}
-				if ( strlen( utf8_decode( $main_image ) ) <= 512 ) {
+				if ( false !== $main_image && strlen( utf8_decode( $main_image ) ) <= 512 ) {
 					$yml .= '        <picture>' . esc_url( $main_image ) . '</picture>' . PHP_EOL;
 				}
 
@@ -375,7 +375,7 @@ class ME_WC {
 						}
 
 						$image = wp_get_attachment_url( $attachment_ids[ $exported - 1 ] );
-						if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
+						if ( false !== $image && strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
 							$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 						}
 						$exported ++;

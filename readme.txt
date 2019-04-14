@@ -1,7 +1,7 @@
  === Market Exporter ===
 Contributors: vanyukov
 Donate link: http://yasobe.ru/na/market_exporter
-Tags: market, export, yml, woocommerce, yandex market 
+Tags: market, export, yml, woocommerce, yandex market
 Requires at least: 4.7.3
 Tested up to: 4.9.6
 Stable tag: 1.0.4
@@ -66,6 +66,11 @@ WooCommerce также тестировался на последних верс
 4. Скриншот страницы настроек.
 
 == Changelog ==
+
+= 1.0.5 =
+* NEW: Добавлена поддержка Freemius
+* FIXED: Выгрузка изобаржений
+* FIXED: Небольшие улучшения кода
 
 = 1.0.4 =
 * NEW: Возможность задавать sales_notes для отдельных товаров (необходимо создать произвольное поле для товара с именем me_sales_notes, в каечестве значение указывается sales_notes для товара)
