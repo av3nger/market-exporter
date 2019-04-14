@@ -54,12 +54,22 @@ class ME_WC {
 			return 300;
 		}
 
+		$myinc = 0;
+		// Get plugin settings.
+    $this->settings = get_option( 'market_exporter_shop_settings' );
+		// Maybe we need to include only selected categories?
+
+		
+    if ( isset( $this->settings['include_cat'] ) ) {
+			$myinc = $this->settings['include_cat'];
+    }
+      
 		// Generate XML data.
 		$yml  = '';
-		$yml .= $this->yml_header( $currency );
-		$yml .= $this->yml_offers( $currency, $query );
-		$yml .= $this->yml_footer();
-
+		$yml .= $this->yml_header( $currency, $myinc );
+		$yml .= $this->yml_offers( $currency, $query, $myinc);
+    $yml .= $this->yml_footer();
+    
 		// Create file.
 		$market_exporter_fs = new Market_Exporter_FS( 'market-exporter' );
 		$file_path = $market_exporter_fs->write_file( $yml, $this->settings['file_date'] );
@@ -190,7 +200,7 @@ class ME_WC {
 	 *
 	 * @return string
 	 */
-	private function yml_header( $currency ) {
+	private function yml_header( $currency, $myinc ) {
 		$yml  = '<?xml version="1.0" encoding="' . get_bloginfo( 'charset' ) . '"?>' . PHP_EOL;
 		$yml .= '<!DOCTYPE yml_catalog SYSTEM "shops.dtd">' . PHP_EOL;
 		$yml .= '<yml_catalog date="' . current_time( 'Y-m-d H:i' ) . '">' . PHP_EOL;
@@ -216,16 +226,47 @@ class ME_WC {
 			'orderby'  => 'term_id',
 		);
 		// Maybe we need to include only selected categories?
+		
+		
 		if ( isset( $this->settings['include_cat'] ) ) {
-			$args['include'] = $this->settings['include_cat'];
-		}
-		foreach ( get_categories( $args ) as $category ) :
+
+    //ADD FIX FILTER CATEGORY (by Ruuvi)
+$i = 0;
+while ($i < count($myinc)){
+
+		$args = array(
+			'taxonomy' => 'product_cat',
+			'orderby'  => 'term_id',
+			'include'  => $myinc,
+			'hide_empty' => '0',
+		);
+
+
+		foreach ( get_categories($args) as $category ) {
+
+		if (current($myinc) == $category->cat_ID || current($myinc) == $category->parent){
+			if ( 0 == $category->parent ) {
+				$yml .= '      <category id="' . $category->cat_ID . '">' . wp_strip_all_tags( $category->name ) . '</category>' . PHP_EOL;
+			} else {
+				$yml .= '      <category id="' . $category->cat_ID . '" parentId="' . $category->parent . '">' . wp_strip_all_tags( $category->name ) . '</category>' . PHP_EOL;
+			}
+			array_shift($myinc);
+			}
+}
+
+}
+		}else{
+		
+		
+		foreach ( get_categories( $args ) as $category ) {
 			if ( 0 === $category->parent ) {
 				$yml .= '      <category id="' . $category->cat_ID . '">' . wp_strip_all_tags( $category->name ) . '</category>' . PHP_EOL;
 			} else {
 				$yml .= '      <category id="' . $category->cat_ID . '" parentId="' . $category->parent . '">' . wp_strip_all_tags( $category->name ) . '</category>' . PHP_EOL;
 			}
-		endforeach;
+}
+}
+		
 		$yml .= '    </categories>' . PHP_EOL;
 
 		// Settings for delivery-options.
@@ -257,7 +298,7 @@ class ME_WC {
 	 * @param  WP_Query $query    Query.
 	 * @return string
 	 */
-	private function yml_offers( $currency, WP_Query $query ) {
+	private function yml_offers( $currency, WP_Query $query, $myinc) {
 		global $product, $offer;
 
 		$yml = '';
@@ -281,7 +322,7 @@ class ME_WC {
 				$variations      = $product->get_available_variations();
 				$variation_count = count( $variations );
 			}
-
+   
 			while ( $variation_count > 0 ) {
 				$variation_count --;
 
@@ -303,6 +344,15 @@ class ME_WC {
 						$type_prefix_set = true;
 					}
 				}
+				//ADD FIX FILTER CATEGORY (by Ruuvi)
+$categories = get_the_terms( $product->get_id(), 'product_cat' );
+
+if($categories){
+					$category = array_shift( $categories );
+}
+
+if($myinc !== 0 && in_array($category->term_id, $myinc)){
+				
 
 				$yml .= '      <offer id="' . $offer_id . '" ' . ( ( $type_prefix_set ) ? 'type="vendor.model"' : '' ) . ' available="' . ( ( $offer->is_in_stock() ) ? 'true' : 'false' ) . '">' . PHP_EOL;
 				$yml .= '        <url>' . htmlspecialchars( get_permalink( $offer->get_id() ) ) . '</url>' . PHP_EOL;
@@ -317,14 +367,7 @@ class ME_WC {
 
 				$yml .= '        <currencyId>' . $currency . '</currencyId>' . PHP_EOL;
 
-				// Category.
-				// Not using $offer_id, because variable products inherit category from parent.
-				$categories = get_the_terms( $product->get_id(), 'product_cat' );
-				// TODO: display error message if category is not set for product.
-				if ( $categories ) {
-					$category = array_shift( $categories );
-					$yml      .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
-				}
+        $yml      .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
 
 				// Delivery-options.
 				if ( isset( $this->settings['delivery_options'] ) && $this->settings['delivery_options'] ) {
@@ -353,7 +396,8 @@ class ME_WC {
 				if ( ! $main_image ) {
 					$main_image = get_the_post_thumbnail_url( $product->get_id(), 'full' );
 				}
-				if ( strlen( utf8_decode( $main_image ) ) <= 512 ) {
+				//if ( strlen( utf8_decode( $main_image ) ) <= 512 ) {
+				if ( false !== $main_image && strlen( utf8_decode( $main_image ) ) <= 512 ) {
 					$yml .= '        <picture>' . esc_url( $main_image ) . '</picture>' . PHP_EOL;
 				}
 
@@ -375,7 +419,8 @@ class ME_WC {
 						}
 
 						$image = wp_get_attachment_url( $attachment_ids[ $exported - 1 ] );
-						if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
+						//if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
+						if ( false !== $image && strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
 							$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 						}
 						$exported ++;
@@ -597,10 +642,302 @@ class ME_WC {
 				}
 
 				$yml .= '      </offer>' . PHP_EOL;
-			} // End while().
+				//END CATALOG FILTER (by Ruuvi)
+			}elseif($myinc === 0){
+
+				$yml .= '      <offer id="' . $offer_id . '" ' . ( ( $type_prefix_set ) ? 'type="vendor.model"' : '' ) . ' available="' . ( ( $offer->is_in_stock() ) ? 'true' : 'false' ) . '">' . PHP_EOL;
+				$yml .= '        <url>' . htmlspecialchars( get_permalink( $offer->get_id() ) ) . '</url>' . PHP_EOL;
+
+				// Price.
+				if ( $offer->get_sale_price() && ( $offer->get_sale_price() < $offer->get_regular_price() ) ) {
+					$yml .= '        <price>' . $offer->get_sale_price() . '</price>' . PHP_EOL;
+					$yml .= '        <oldprice>' . $offer->get_regular_price() . '</oldprice>' . PHP_EOL;
+				} else {
+					$yml .= '        <price>' . apply_filters( 'me_product_price', $offer->get_regular_price(), $offer->get_id() ) . '</price>' . PHP_EOL;
+				}
+
+				$yml .= '        <currencyId>' . $currency . '</currencyId>' . PHP_EOL;
+
+        $yml      .= '        <categoryId>' . $category->term_id . '</categoryId>' . PHP_EOL;
+
+				// Delivery-options.
+				if ( isset( $this->settings['delivery_options'] ) && $this->settings['delivery_options'] ) {
+					$cost         = get_post_custom_values( 'me_do_cost', $product->get_id() );
+					$days         = get_post_custom_values( 'me_do_days', $product->get_id() );
+					$order_before = get_post_custom_values( 'me_do_order_before', $product->get_id() );
+
+					if ( isset( $cost ) || isset( $days ) || isset( $order_before ) ) {
+						$cost         = isset( $cost ) ? $cost[0] : $this->settings['cost'];
+						$days         = isset( $days ) ? $days[0] : $this->settings['days'];
+						$order_before = isset( $order_before ) ? $order_before[0] : '';
+
+						$yml .= '        <delivery-options>' . PHP_EOL;
+						if ( isset( $order_before ) && ! empty( $order_before ) ) {
+							$yml .= '        <option cost="' . $cost . '" days="' . $days . '" order-before="' . $order_before . '"/>';
+						} else {
+							$yml .= '        <option cost="' . $cost . '" days="' . $days . '"/>';
+						}
+						$yml .= '        </delivery-options>' . PHP_EOL;
+					}
+				}
+
+				// Get images.
+				$main_image = get_the_post_thumbnail_url( $offer->get_id(), 'full' );
+				// If no image found for product, it's probably a variation without an image, get the image from parent.
+				if ( ! $main_image ) {
+					$main_image = get_the_post_thumbnail_url( $product->get_id(), 'full' );
+				}
+				//if ( strlen( utf8_decode( $main_image ) ) <= 512 ) {
+				if ( false !== $main_image && strlen( utf8_decode( $main_image ) ) <= 512 ) {
+					$yml .= '        <picture>' . esc_url( $main_image ) . '</picture>' . PHP_EOL;
+				}
+
+				if ( self::woo_latest_versions() ) {
+					$attachment_ids = $product->get_gallery_image_ids();
+				} else {
+					$attachment_ids = $product->get_gallery_attachment_ids();
+				}
+
+				// Each product can have max 10 images, one was added on top.
+				if ( count( $attachment_ids ) > 9 ) {
+					$attachment_ids = array_slice( $attachment_ids, 0, 9 );
+				}
+				if ( 1 < $this->settings['image_count'] ) {
+					$exported = 1;
+					while ( $exported < $this->settings['image_count'] ) {
+						if ( ! isset( $attachment_ids[ $exported - 1 ] ) ) {
+							break;
+						}
+
+						$image = wp_get_attachment_url( $attachment_ids[ $exported - 1 ] );
+						//if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
+						if ( false !== $image && strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
+							$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
+						}
+						$exported ++;
+					}
+				}
+
+				// Store.
+				if ( isset( $this->settings['store'] ) && 'disabled' !== $this->settings['store'] ) {
+					$yml .= '        <store>' . $this->settings['store'] . '</store>' . PHP_EOL;
+				}
+				// Pickup.
+				if ( isset( $this->settings['pickup'] ) && 'disabled' !== $this->settings['pickup'] ) {
+					$yml .= '        <pickup>' . $this->settings['pickup'] . '</pickup>' . PHP_EOL;
+				}
+				// Delivery.
+				if ( isset( $this->settings['delivery'] ) && 'disabled' !== $this->settings['delivery'] ) {
+					$yml .= '        <delivery>' . $this->settings['delivery'] . '</delivery>' . PHP_EOL;
+				}
+
+				if ( ! $type_prefix_set ) {
+					$yml .= '        <name>' . $this->clean( $offer->get_title() ) . '</name>' . PHP_EOL;
+				}
+
+				// type_prefix.
+				if ( $type_prefix_set ) {
+					$yml .= '        <typePrefix>' . wp_strip_all_tags( $type_prefix ) . '</typePrefix>' . PHP_EOL;
+				}
+
+				// Vendor.
+				if ( isset( $this->settings['vendor'] ) && 'not_set' !== $this->settings['vendor'] ) {
+					$vendor = $offer->get_attribute( 'pa_' . $this->settings['vendor'] );
+					if ( $vendor ) {
+						$yml .= '        <vendor>' . wp_strip_all_tags( $vendor ) . '</vendor>' . PHP_EOL;
+					}
+				}
+
+				// Model.
+				if ( isset( $this->settings['model'] ) && 'not_set' !== $this->settings['model'] ) {
+					$model = $product->get_attribute( 'pa_' . $this->settings['model'] );
+					if ( $model ) {
+						$yml .= '        <model>' . wp_strip_all_tags( $model ) . '</model>' . PHP_EOL;
+					}
+				}
+
+				// Vendor code.
+				if ( $offer->get_sku() ) {
+					$yml .= '        <vendorCode>' . $offer->get_sku() . '</vendorCode>' . PHP_EOL;
+				}
+
+				// Description.
+				$description = $this->get_description( $this->settings['description'] );
+				if ( $description ) {
+					$yml .= '        <description><![CDATA[' . $description . ']]></description>' . PHP_EOL;
+				}
+
+				// Sales notes.
+				$sales = get_post_custom_values( 'me_sales_notes', $product->get_id() );
+				if ( isset( $sales ) ) {
+					$yml .= '        <sales_notes>' . $sales[0] . '</sales_notes>' . PHP_EOL;
+				} elseif ( strlen( $this->settings['sales_notes'] ) > 0 ) {
+					$yml .= '        <sales_notes>' . wp_strip_all_tags( $this->settings['sales_notes'] ) . '</sales_notes>' . PHP_EOL;
+				}
+
+				// Manufacturer warranty.
+				if ( isset( $this->settings['warranty'] ) && 'not_set' !== $this->settings['warranty'] ) {
+					$warranty = $offer->get_attribute( 'pa_' . $this->settings['warranty'] );
+					if ( $warranty ) {
+						$yml .= '        <manufacturer_warranty>' . wp_strip_all_tags( $warranty ) . '</manufacturer_warranty>' . PHP_EOL;
+					}
+				}
+
+				// Coutry of origin.
+				if ( isset( $this->settings['origin'] ) && 'not_set' !== $this->settings['origin'] ) {
+					$origin = $offer->get_attribute( 'pa_' . $this->settings['origin'] );
+					if ( $origin ) {
+						$yml .= '        <country_of_origin>' . wp_strip_all_tags( $origin ) . '</country_of_origin>' . PHP_EOL;
+					}
+				}
+
+				// Params: size and weight.
+				// TODO: refactor. Too many nested if...else statements.
+				if ( isset( $this->settings['size'] ) && $this->settings['size'] ) {
+					$weight_unit = esc_attr( get_option( 'woocommerce_weight_unit' ) );
+					if ( $offer->has_weight() && 'kg' === $weight_unit ) {
+						$yml .= '        <weight>' . $offer->get_weight() . '</weight>' . PHP_EOL;
+					}
+
+					$size_unit = esc_attr( get_option( 'woocommerce_dimension_unit' ) );
+					if ( $offer->has_dimensions() ) {
+
+						if ( self::woo_latest_versions() ) {
+							// WooCommerce version 3.0 and higher.
+							$dimensions = $offer->get_dimensions( false );
+						} else {
+							// WooCommerce 2.6 and lower.
+							$dimensions = array(
+								'length' => $offer->get_length(),
+								'width'  => $offer->get_width(),
+								'height' => $offer->get_height(),
+							);
+						}
+
+						$a = 'asd';
+
+						switch ( $size_unit ) {
+							case 'm':
+								$dimensions = array(
+									'length' => $dimensions['length'] * 100,
+									'width'  => $dimensions['width'] * 100,
+									'height' => $dimensions['height'] * 100,
+								);
+								break;
+							case 'mm':
+								$dimensions = array(
+									'length' => $dimensions['length'] / 10,
+									'width'  => $dimensions['width'] / 10,
+									'height' => $dimensions['height'] / 10,
+								);
+								break;
+							case 'in':
+								$dimensions = array(
+									'length' => $dimensions['length'] * 2.54,
+									'width'  => $dimensions['width'] * 2.54,
+									'height' => $dimensions['height'] * 2.54,
+								);
+								break;
+							case 'yd':
+								$dimensions = array(
+									'length' => $dimensions['length'] * 91.44,
+									'width'  => $dimensions['width'] * 91.44,
+									'height' => $dimensions['height'] * 91.44,
+								);
+								break;
+							case 'cm':
+							case 'default':
+								// Nothing to do.
+								break;
+						}
+
+						$dimensions = implode( '/', $dimensions );
+						$yml .= '        <dimensions>' . $dimensions . '</dimensions>' . PHP_EOL;
+					} // End if().
+				} // End if().
+
+				// Params: stock_quantity
+				if ( isset( $this->settings['stock_quantity'] ) && $this->settings['stock_quantity'] ) {
+					// Compatibility for WC versions from 2.5.x to 3.0+
+					if ( method_exists( $product, 'get_manage_stock' ) ) {
+						$stock_status = $product->get_manage_stock(); // For version 3.0+
+					} else {
+						$stock_status = $product->manage_stock; // Older than version 3.0
+					}
+
+					if ( $stock_status ) {
+						// Compatibility for WC versions from 2.5.x to 3.0+
+						if ( method_exists( $product, 'get_stock_quantity' ) ) {
+							$stock_quqntity = $product->get_stock_quantity(); // For version 3.0+
+						} else {
+							$stock_quqntity = $product->stock_quqntity; // Older than version 3.0
+						}
+
+						if ( isset( $stock_quqntity ) && 0 < $stock_quqntity ) {
+							$yml .= '        <stock_quantity>' . absint( $stock_quqntity ) . '</stock_quantity>' . PHP_EOL;
+						}
+					}
+				}
+
+				// Params: selected parameters.
+				if ( isset( $this->settings['params'] ) && ! empty( $this->settings['params'] ) ) {
+					$attributes = $product->get_attributes();
+					foreach ( $this->settings['params'] as $param_id ) {
+						// Encode the name, because cyrillic letters won't work in array_key_exists.
+						// TODO: this is the worst possible solution. REFACTOR!
+						$selected_attribute = urlencode( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						$selected_attribute = strtolower( $selected_attribute );
+
+						if ( ! array_key_exists( $selected_attribute, $attributes ) ) {
+							continue;
+						}
+
+						// TODO: refactor
+						// See https://wordpress.org/support/topic/атрибуты-вариантивного-товара/#post-9607195.
+						$param_value = $offer->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						if ( empty( $param_value ) ) {
+							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						}
+
+						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $param_value . '</param>' . PHP_EOL;
+					}
+				} elseif ( isset( $this->settings['params_all'] ) && $this->settings['params_all'] ) {
+					$attributes = $product->get_attributes();
+					/* @var WC_Product_Attribute|array $param */
+					foreach ( $attributes as $param ) {
+						$a = 'a';
+						if ( self::woo_latest_versions() ) {
+							$taxonomy = wc_attribute_taxonomy_name_by_id( $param->get_id() );
+						} else {
+							$taxonomy = $param['name'];
+						}
+
+						if ( isset( $param['variation'] ) && true === $param['variation'] || isset( $param['is_variation'] ) && 1 === $param['is_variation'] ) {
+							$param_value = $offer->get_attribute( $taxonomy );
+						} else {
+							$param_value = $product->get_attribute( $taxonomy );
+						}
+
+						// Skip if empty value (when cyrillic letter are used in attribute slug).
+						if ( ! isset( $param_value ) || empty( $param_value ) ) {
+							continue;
+						}
+						/* @var WC_Product_Attribute $param */
+						$yml .= '        <param name="' . wc_attribute_label( $taxonomy ) . '">' . $param_value . '</param>' . PHP_EOL;
+					}
+				} // End if().
+
+				// Downloadable.
+				if ( $product->is_downloadable() ) {
+					$yml .= '        <downloadable>true</downloadable>';
+				}
+
+				$yml .= '      </offer>' . PHP_EOL;
+			
+			}
 
 		} // End while().
-
+} // End while().
 		return $yml;
 	}
 
