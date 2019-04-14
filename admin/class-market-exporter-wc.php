@@ -273,6 +273,11 @@ class ME_WC {
 			}
 
 			// We use a separate variable for offer because we will be rewriting it for variable products.
+            
+            if (apply_filters('market_exporter_exclude_post', false, $query->post, $product)) {
+                continue;
+            }
+
 			$offer = $product;
 
 			/*
