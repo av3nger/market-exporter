@@ -77,3 +77,8 @@
 #market-exporter table td > input[type="checkbox"] {
 	margin: 0 0 0 8px;
 }
+
+#me_pages .me-important-notice {
+	border: 3px solid green;
+	padding: 0 20px;
+}

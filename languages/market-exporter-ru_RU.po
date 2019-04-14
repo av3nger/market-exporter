@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Market Exporter\n"
-"POT-Creation-Date: 2019-04-14 19:02+0300\n"
-"PO-Revision-Date: 2019-04-14 19:12+0300\n"
+"POT-Creation-Date: 2019-04-14 20:25+0300\n"
+"PO-Revision-Date: 2019-04-14 20:26+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -441,6 +441,29 @@ msgid "File exported successfully: <a href=\"%1$s\">%2$s</a>."
 msgstr "Файл создан: <a href=\"%s\">%s</a>."
 
 #: admin/partials/market-exporter-admin-display.php:92
+msgid "Important information!"
+msgstr "Важная информация!"
+
+#: admin/partials/market-exporter-admin-display.php:98
+#, php-format
+msgid ""
+"In the upcoming version (hopefully, released in April), Market Press will be "
+"available in two versions: free and pro. This will allow the plugin to "
+"become better and get new functionality. This change in no way affects the "
+"free users - the plugin will continue to recieve updates and support. More "
+"information %1$shere%2$s."
+msgstr ""
+"В ближайшее время (надеюсь, до конца апреля) появится платная версия "
+"плагина. Это позволит плагину развиваться и получать новый функционал. "
+"Данное изменения никак не затронет бесплатную версию, она так же будет "
+"получать обновления и исправления. Детальная информация доступна %1$sздесь"
+"%2$s."
+
+#: admin/partials/market-exporter-admin-display.php:106
+msgid "About the plugin"
+msgstr "О плагине"
+
+#: admin/partials/market-exporter-admin-display.php:109
 msgid ""
 "This plugin is used to generate a valid YML file for exporting your products "
 "in WooCommerce to Yandex Market."
@@ -448,7 +471,7 @@ msgstr ""
 "Данный плагин используется для генерации валидного YML файла для "
 "экспортированная товаров из WooCommerce в Яндекс Маркет."
 
-#: admin/partials/market-exporter-admin-display.php:96
+#: admin/partials/market-exporter-admin-display.php:113
 msgid ""
 "Please be patient while the YML file is generated. This can take a while if "
 "your server is slow (inexpensive hosting) or if you have many products in "
@@ -462,44 +485,44 @@ msgstr ""
 "WooCommerce. Не уходите с этой страницы, пока этот процесс не будет "
 "завершен, или файл YML не будет создан. Вы будете уведомлены при завершении."
 
-#: admin/partials/market-exporter-admin-display.php:100
+#: admin/partials/market-exporter-admin-display.php:117
 msgid "To begin, just press the button below."
 msgstr "Чтобы начать, нажмите на кнопку ниже."
 
-#: admin/partials/market-exporter-admin-display.php:103
+#: admin/partials/market-exporter-admin-display.php:120
 msgid "Generate YML file"
 msgstr "Генерировать YML файл"
 
-#: admin/partials/market-exporter-admin-display.php:108
-#: admin/partials/market-exporter-admin-display.php:157
+#: admin/partials/market-exporter-admin-display.php:125
+#: admin/partials/market-exporter-admin-display.php:174
 msgid "You must enable Javascript in order to proceed!"
 msgstr "Для продолжения необходимо активировать Javascript в Вашем браузере!"
 
-#: admin/partials/market-exporter-admin-display.php:125
+#: admin/partials/market-exporter-admin-display.php:142
 msgid "Generated YML files"
 msgstr "Доступные YML файлы"
 
-#: admin/partials/market-exporter-admin-display.php:133
+#: admin/partials/market-exporter-admin-display.php:150
 msgid "File name"
 msgstr "Имя файла"
 
-#: admin/partials/market-exporter-admin-display.php:134
+#: admin/partials/market-exporter-admin-display.php:151
 msgid "Action"
 msgstr "Действие"
 
-#: admin/partials/market-exporter-admin-display.php:148
+#: admin/partials/market-exporter-admin-display.php:165
 msgid "Open file"
 msgstr "Открыть файл"
 
-#: admin/partials/market-exporter-admin-display.php:155
+#: admin/partials/market-exporter-admin-display.php:172
 msgid "Delete selected files"
 msgstr "Удалить выбранные файлы"
 
-#: admin/partials/market-exporter-admin-display.php:177
+#: admin/partials/market-exporter-admin-display.php:194
 msgid "Settings Saved"
 msgstr "Настройки сохранены"
 
-#: admin/partials/market-exporter-admin-display.php:194
+#: admin/partials/market-exporter-admin-display.php:211
 msgid "Save Settings"
 msgstr "Сохранить"
 
@@ -521,12 +544,12 @@ msgstr ""
 "Поддержите разработку плагина, <a href=\"https://wordpress.org/plugins/"
 "market-exporter/\">оставив отзыв</a>!"
 
-#: includes/class-market-exporter.php:339
+#: includes/class-market-exporter.php:353
 #, php-format
 msgid "Hey %1$s"
 msgstr "Привет, %1$s"
 
-#: includes/class-market-exporter.php:340
+#: includes/class-market-exporter.php:354
 #, php-format
 msgid ""
 "Please help us improve %2$s! If you opt-in, some data about your usage of "
