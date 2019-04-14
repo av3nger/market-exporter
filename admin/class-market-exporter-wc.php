@@ -267,6 +267,11 @@ class ME_WC {
 			$query->the_post();
 
 			$product = wc_get_product( $query->post->ID );
+
+			if ( apply_filters( 'market_exporter_exclude_post', false, $query->post, $product ) ) {
+				continue;
+			}
+
 			// We use a separate variable for offer because we will be rewriting it for variable products.
 			$offer = $product;
 
