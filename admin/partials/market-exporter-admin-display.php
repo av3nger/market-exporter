@@ -88,6 +88,7 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 
 			<form method="post" id="me-export-form">
 				<?php wp_nonce_field( $this->plugin_name . '-generate' ) ?>
+				<!--
 				<div class="me-important-notice">
 					<h2><?php esc_html_e( 'Important information!', 'market-exporter' ); ?></h2>
 
@@ -102,6 +103,7 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 						?>
 					</p>
 				</div>
+				-->
 
 				<h2><?php esc_html_e( 'About the plugin', 'market-exporter' ); ?></h2>
 
