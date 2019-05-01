@@ -52,7 +52,7 @@ class Market_Exporter {
 	public function __construct() {
 
 		$this->plugin_name = 'market-exporter';
-		self::$version = '1.0.4';
+		self::$version     = '1.0.5';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -90,6 +90,12 @@ class Market_Exporter {
 	 * @access private
 	 */
 	private function load_dependencies() {
+
+		// Include Freemius SDK.
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'freemius/start.php';
+		$this->init_fremius();
+		// Signal that SDK was initiated.
+		do_action( 'market_exporter_fremius_loaded' );
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
@@ -157,6 +163,9 @@ class Market_Exporter {
 		$this->loader->add_action( 'wp_ajax_dismiss_rate_notice', $this, 'dismiss_notice' );
 		// Add support to update file on product update.
 		$this->loader->add_action( 'woocommerce_update_product', $plugin_admin, 'generate_file_on_update' );
+
+		// Freemius.
+        $this->init_fremius()->add_filter( 'connect_message_on_update', array( $this, 'connect_message_on_update' ), 10, 6 );
 	}
 
 	/**
@@ -287,5 +296,68 @@ class Market_Exporter {
 		update_option( 'market_exporter_notice_hide', 'true' );
 		wp_die(); // All ajax handlers die when finished.
 	}
+
+	/**
+     * Init Freemius.
+     *
+     * @since 1.0.5
+     *
+	 * @return Freemius
+	 * @throws Freemius_Exception
+	 */
+	private function init_fremius() {
+
+		global $market_exporter_fremius;
+
+		if ( ! isset( $market_exporter_fremius ) ) {
+			$market_exporter_fremius = fs_dynamic_init( array(
+				'id'             => '3640',
+				'slug'           => 'market-exporter',
+				'type'           => 'plugin',
+				'public_key'     => 'pk_8e3bfb7fdecdacb5e4b56998fbe73',
+				'is_premium'     => false,
+				'has_addons'     => false,
+				'has_paid_plans' => false,
+				'menu'           => array(
+					'slug'    => 'market-exporter',
+					'account' => false,
+					'contact' => false,
+					'support' => false,
+					'parent'  => array(
+						'slug' => 'woocommerce',
+					),
+				),
+			) );
+		}
+
+		return $market_exporter_fremius;
+
+    }
+
+	/**
+     * Show opt-in message for current users.
+     *
+     * @since 1.0.5
+     *
+	 * @param string $message          Current message.
+	 * @param string $user_first_name  User name.
+	 * @param string $plugin_title     Plugin title.
+	 * @param string $user_login       User login.
+	 * @param string $site_link        Link to site.
+	 * @param string $freemius_link    Link to Freemius.
+	 *
+	 * @return string
+	 */
+    public function connect_message_on_update( $message, $user_first_name, $plugin_title, $user_login, $site_link, $freemius_link ) {
+	    return sprintf(
+		    __( 'Hey %1$s', 'market-exporter' ) . ',<br>' .
+		    __( 'Please help us improve %2$s! If you opt-in, some data about your usage of %2$s will be sent to %5$s. If you skip this, that\'s okay! %2$s will still work just fine.', 'market-exporter' ),
+		    $user_first_name,
+		    '<b>' . $plugin_title . '</b>',
+		    '<b>' . $user_login . '</b>',
+		    $site_link,
+		    $freemius_link
+	    );
+    }
 
 }

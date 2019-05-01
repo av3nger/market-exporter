@@ -220,10 +220,11 @@ class ME_WC {
 			$args['include'] = $this->settings['include_cat'];
 		}
 		foreach ( get_categories( $args ) as $category ) :
+			$name = apply_filters( 'me_filter_category_name', $category->name );
 			if ( 0 === $category->parent ) {
-				$yml .= '      <category id="' . $category->cat_ID . '">' . wp_strip_all_tags( $category->name ) . '</category>' . PHP_EOL;
+				$yml .= '      <category id="' . $category->cat_ID . '">' . wp_strip_all_tags( $name ) . '</category>' . PHP_EOL;
 			} else {
-				$yml .= '      <category id="' . $category->cat_ID . '" parentId="' . $category->parent . '">' . wp_strip_all_tags( $category->name ) . '</category>' . PHP_EOL;
+				$yml .= '      <category id="' . $category->cat_ID . '" parentId="' . $category->parent . '">' . wp_strip_all_tags( $name ) . '</category>' . PHP_EOL;
 			}
 		endforeach;
 		$yml .= '    </categories>' . PHP_EOL;
@@ -267,6 +268,11 @@ class ME_WC {
 			$query->the_post();
 
 			$product = wc_get_product( $query->post->ID );
+
+			if ( apply_filters( 'me_exclude_post', false, $query->post, $product ) ) {
+				continue;
+			}
+
 			// We use a separate variable for offer because we will be rewriting it for variable products.
 			$offer = $product;
 
@@ -353,7 +359,7 @@ class ME_WC {
 				if ( ! $main_image ) {
 					$main_image = get_the_post_thumbnail_url( $product->get_id(), 'full' );
 				}
-				if ( strlen( utf8_decode( $main_image ) ) <= 512 ) {
+				if ( false !== $main_image && strlen( utf8_decode( $main_image ) ) <= 512 ) {
 					$yml .= '        <picture>' . esc_url( $main_image ) . '</picture>' . PHP_EOL;
 				}
 
@@ -375,7 +381,7 @@ class ME_WC {
 						}
 
 						$image = wp_get_attachment_url( $attachment_ids[ $exported - 1 ] );
-						if ( strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
+						if ( false !== $image && strlen( utf8_decode( $image ) ) <= 512 && $image !== $main_image ) {
 							$yml .= '        <picture>' . esc_url( $image ) . '</picture>' . PHP_EOL;
 						}
 						$exported ++;
@@ -563,7 +569,11 @@ class ME_WC {
 							$param_value = $product->get_attribute( wc_attribute_taxonomy_name_by_id( $param_id ) );
 						}
 
-						$yml .= '        <param name="' . wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) ) . '">' . $param_value . '</param>' . PHP_EOL;
+						$param_name  = wc_attribute_label( wc_attribute_taxonomy_name_by_id( $param_id ) );
+						$param_name  = apply_filters( 'me_param_name', $param_name );
+						$param_value = apply_filters( 'me_param_value', $param_value );
+
+						$yml .= '        <param name="' . $param_name . '">' . $param_value . '</param>' . PHP_EOL;
 					}
 				} elseif ( isset( $this->settings['params_all'] ) && $this->settings['params_all'] ) {
 					$attributes = $product->get_attributes();
@@ -586,8 +596,12 @@ class ME_WC {
 						if ( ! isset( $param_value ) || empty( $param_value ) ) {
 							continue;
 						}
+
+						$param_name  = apply_filters( 'me_param_name', wc_attribute_label( $taxonomy ) );
+						$param_value = apply_filters( 'me_param_value', $param_value );
+
 						/* @var WC_Product_Attribute $param */
-						$yml .= '        <param name="' . wc_attribute_label( $taxonomy ) . '">' . $param_value . '</param>' . PHP_EOL;
+						$yml .= '        <param name="' . $param_name . '">' . $param_value . '</param>' . PHP_EOL;
 					}
 				} // End if().
 

@@ -1,10 +1,10 @@
  === Market Exporter ===
 Contributors: vanyukov
 Donate link: http://yasobe.ru/na/market_exporter
-Tags: market, export, yml, woocommerce, yandex market 
+Tags: market, export, yml, woocommerce, yandex market
 Requires at least: 4.7.3
-Tested up to: 4.9.6
-Stable tag: 1.0.4
+Tested up to: 5.1.1
+Stable tag: 1.0.5
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,7 +34,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 В качестве основной валюты (для которой установлено rate="1") могут быть использованы только рубль (RUR, RUB) и гривна (UAH). Если в WooCommerce установлены доллары (USD) или евро (EUR), то используется курс Центрального Банка той страны, которая указана в настройках магазина на Яндекс Маркет. Применяется курс, установленный на текущий день. Курс обновляется ежедневно в 00.00.
 
-= Как поменять настойки плагина? =
+= Как поменять настройки плагина? =
 
 Настройки плагина можно осуществить на вкладке 'Настройки' в менюю 'WooCommerce' - 'Market Exporter'.
 
@@ -67,8 +67,16 @@ WooCommerce также тестировался на последних верс
 
 == Changelog ==
 
+= 1.0.5 =
+* NEW: Добавлена поддержка Freemius
+* NEW: Фильтр me_exclude_post для исключения индивидуальных товаров
+* NEW: Фильтр me_filter_category_name для изменения названий категорий
+* NEW: Фильтры me_param_name и me_param_value для модификации названий и значений параметров
+* FIXED: Выгрузка изображений
+* FIXED: Небольшие улучшения кода
+
 = 1.0.4 =
-* NEW: Возможность задавать sales_notes для отдельных товаров (необходимо создать произвольное поле для товара с именем me_sales_notes, в каечестве значение указывается sales_notes для товара)
+* NEW: Возможность задавать sales_notes для отдельных товаров (необходимо создать произвольное поле для товара с именем me_sales_notes, в качестве значение указывается sales_notes для товара)
 * NEW: Фильтр me_product_price для внесения изменений в цену товарного предложения
 * NEW: Поддержка элемента stock_quantity
 * NEW: Обновлены файлы переводов

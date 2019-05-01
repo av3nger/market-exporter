@@ -88,6 +88,25 @@ if ( ! isset( $_GET['tab'] ) ) { // Input var ok.
 
 			<form method="post" id="me-export-form">
 				<?php wp_nonce_field( $this->plugin_name . '-generate' ) ?>
+				<!--
+				<div class="me-important-notice">
+					<h2><?php esc_html_e( 'Important information!', 'market-exporter' ); ?></h2>
+
+					<p>
+						<?php
+							printf(
+								/* translators: %1$s - a link, %2$s - </a> */
+								esc_html__( 'In the upcoming version (hopefully, released in April), Market Press will be available in two versions: free and pro. This will allow the plugin to become better and get new functionality. This change in no way affects the free users - the plugin will continue to recieve updates and support. More information %1$shere%2$s.', 'market-exporter' ),
+								'<a href="https://wooya.ru" target="_blank">',
+								'</a>'
+							)
+						?>
+					</p>
+				</div>
+				-->
+
+				<h2><?php esc_html_e( 'About the plugin', 'market-exporter' ); ?></h2>
+
 				<p>
 					<?php esc_html_e( 'This plugin is used to generate a valid YML file for exporting your products in WooCommerce to Yandex Market.', 'market-exporter' ); ?>
 				</p>
